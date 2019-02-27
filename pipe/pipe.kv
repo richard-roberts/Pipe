@@ -1,0 +1,281 @@
+#:kivy 1.10.1
+#:import Factory kivy.factory.Factory
+
+
+<InputArgumentSet>:
+    size_hint: 0.1, 1
+
+<OutputArgumentSet>:
+    size_hint: 0.1, 1
+
+<Node>:
+    size_hint: 0.2, 0.1
+    input_set: input_set
+    output_set: output_set
+
+    canvas:
+        Color: 
+            hsv: .56, .53, .7
+            a: 1
+        Rectangle:
+            size: root.size
+            pos: root.pos
+
+    InputArgumentSet:
+        size_hint: 0.1, 1
+        id: input_set
+        orientation: "vertical"
+    
+    Label:
+        size_hint: 0.8, 1
+        text: root.name
+    
+    OutputArgumentSet:
+        size_hint: 0.1, 1
+        id: output_set
+        orientation: "vertical"
+
+<NewNodePopup@Popup>:
+    size_hint: 0.5, 0.2
+    title: "Create a new node"
+    on_open: self.ids.name.focus=True
+
+    BoxLayout:
+        size_hint: 0.9, 0.9
+        pos: root.pos
+        orientation: "vertical"
+
+        TextInput:
+            id: name
+            multiline: False
+            on_text_validate: root.dismiss()
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            Label:
+                text: "Inputs"
+            
+            TextInput:
+                id: n_inputs
+                multiline: False
+                on_text_validate: root.dismiss()
+                input_type: 'number'
+                text: "1"
+
+            Label:
+                text: "Outputs"
+
+            TextInput:
+                id: n_outputs
+                multiline: False
+                on_text_validate: root.dismiss()
+                input_type: 'number'
+                text: "1"
+
+<Edge>:
+    size_hint: None, None
+    canvas.after:
+        Color: 
+            rgba: [1, 1, 1, 1]
+        Line:
+            width: 3
+            points: self.from_x, self.from_y, self.to_x, self.to_y
+
+<Editor>:    
+    canvas.before:
+        Color: 
+            hsv: 0, 0, .2
+            a: 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<ImportGraphPopup@Popup>:
+    size_hint: 0.7, 0.7
+    title: 'Import pipe graph'
+
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+
+        FileChooserIconView:
+            id: filechooser
+            size_hint: 1, 0.9
+            path: '.'
+            filters: ["*.json"]
+
+        BoxLayout:
+            size_hint: 1, 0.1
+
+            Button:
+                text: "Import"
+                on_release: root.dismiss()
+
+<ExportGraphPopup@Popup>:
+    size_hint: 0.7, 0.7
+    title: 'Export pipe graph'
+    
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+
+        FileChooserIconView:
+            id: filechooser
+            size_hint: 1, 0.8
+            path: '.'
+            filters: ["*.json"]
+            on_selection: root.ids.text_input.text = self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint: 1, 0.1
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            size_hint: 1, 0.1
+            Button:
+                text: "Export"
+                on_release: root.dismiss()
+
+<ExportAssembledProgram@Popup>:
+    size_hint: 0.7, 0.7
+    title: 'Export assembled program'
+    
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+
+        FileChooserIconView:
+            id: filechooser
+            size_hint: 1, 0.8
+            path: '.'
+            filters: ["*.py"]
+            on_selection: root.ids.text_input.text = self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint: 1, 0.1
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            size_hint: 1, 0.1
+            Button:
+                text: "Export"
+                on_release: root.dismiss()
+
+<Desktop>:
+    
+    BoxLayout:
+        size_hint: 1, 1
+        orientation: "vertical"
+
+        BoxLayout:
+            size_hint: 1,0.95
+            orientation: 'horizontal'
+
+            BoxLayout:
+                background_color: (1, 1, 1, 1)
+                size_hint: 0.7, 1
+                orientation: 'vertical'
+                pos: self.parent.x + self.parent.width * 0.5, self.parent.y
+                
+                Editor:
+                    id: editor
+                    size_hint: 1.0, 0.9
+                    pos: root.pos
+            
+            BoxLayout:
+                size_hint: 0.3, 1
+                orientation: 'vertical'
+
+                GridLayout:
+                    size_hint: 1, 0.05
+                    cols: 2
+                    Label:
+                        text: root.ids.editor.node_editor.selected.name if root.ids.editor.node_editor.selected else "nothing selected"
+                        canvas.before:
+                            Color: 
+                                hsv: 0.0, .56, 1.0
+                                a: 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        
+
+                Label:
+                    size_hint: 1, 0.025
+                    text: "Documentation"
+                    canvas.before:
+                        Color: 
+                            hsv: 0.0, .56, 1.0
+                            a: 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                TextInput:
+                    size_hint: 1, 0.2
+                    id: documentation_panel
+                    text: root.ids.editor.node_editor.selected.documentation if root.ids.editor.node_editor.selected else "nothing selected"
+                    on_text: if root.ids.editor.node_editor.selected: root.ids.editor.node_editor.selected.documentation = self.text
+
+                Label:
+                    size_hint: 1, 0.025
+                    text: "Implementation"
+                    canvas.before:
+                        Color: 
+                            hsv: 0.0, .56, 1.0
+                            a: 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                CodeInput:
+                    id: code_panel
+                    size_hint: 1, 0.5
+                    text: root.ids.editor.node_editor.selected.code if root.ids.editor.node_editor.selected else "nothing selected"
+                    on_text: if root.ids.editor.node_editor.selected: root.ids.editor.node_editor.selected.code = self.text
+
+                GridLayout:
+                    cols: 5
+                    size_hint: 1, 0.1
+
+                    Button:
+                        text: 'Delete'
+                        on_release: root.ids.editor.delete_selected()
+                    Button:
+                        text: 'Import'
+                        on_release: root.import_graph()
+                    Button:
+                        text: 'Export'
+                        on_release: root.export_graph()
+                    Button:
+                        text: 'Assemble'
+                        on_release: root.assemble_and_save()
+                    Button:
+                        text: 'Execute'
+                        on_release: root.assemble_and_execute()
+
+        Label:
+            id: status_bar
+            size_hint: 1, 0.05
+            text: "    Status Bar"
+            halign: 'left'
+            valign: 'center'
+            text_size: self.size
+
+            canvas.before:
+                Color: 
+                    hsv: .56, .53, .7
+                    a: 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    
+
