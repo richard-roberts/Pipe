@@ -1,0 +1,2 @@
+pipe\main.py
+pause
