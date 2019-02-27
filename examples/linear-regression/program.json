@@ -1,0 +1,100 @@
+{
+    "edges": [
+        {
+            "from": "MatrixFormulation_0",
+            "to": "LinearRegression_0"
+        },
+        {
+            "from": "MatrixFormulation_1",
+            "to": "LinearRegression_1"
+        },
+        {
+            "from": "LinearRegression_0",
+            "to": "SaveFittedLine_0"
+        },
+        {
+            "from": "SavePoints_0",
+            "to": "Render_0"
+        },
+        {
+            "from": "SaveFittedLine_0",
+            "to": "Render_1"
+        },
+        {
+            "from": "GetPoints_0",
+            "to": "SavePoints_0"
+        },
+        {
+            "from": "GetPoints_0",
+            "to": "MatrixFormulation_0"
+        }
+    ],
+    "nodes": [
+        {
+            "code": "import numpy as np\n\nclass MatrixFormulation:\n    def __init__(self, input0):\n        points = input0\n        \n        A_rows = []\n        for point in points:\n            A_row = [1] + point[:-1]\n            A_rows.append(A_row)\n        \n        b_rows = []\n        for point in points:\n            b_row = [point[-1]]\n            b_rows.append(b_row)\n        \n        A = np.matrix(A_rows)\n        b = np.matrix(b_rows)\n        \n        self.output0 = A\n        self.output1 = b\n",
+            "documentation": "Organizes a given set of points into a set of linear equations.",
+            "n_inputs": 1,
+            "n_outputs": 2,
+            "name": "MatrixFormulation",
+            "position": [
+                0.045214285714285735,
+                0.4659047619047618
+            ]
+        },
+        {
+            "code": "import numpy as np\n\nclass LinearRegression:\n    def __init__(self, input0, input1):\n        A = input0\n        b = input1\n        ret = (A.T * A).I * (A.T * b)\n        \n        m = ret.item(0)\n        b = ret.item(1)\n        \n        def line(x):\n            y = m * x + b\n            return y\n\n        self.output0 = [\n            [-3, line(-3)],\n            [ 3, line( 3)]\n        ]\n",
+            "documentation": "Performs linear regression to solve the given system of equations. Returns the fitted line spanning between x=[-3, 3].",
+            "n_inputs": 2,
+            "n_outputs": 1,
+            "name": "LinearRegression",
+            "position": [
+                0.2541428571428571,
+                0.4668095238095239
+            ]
+        },
+        {
+            "code": "import os\n\nclass SavePoints:\n    def __init__(self, input0):\n        points = input0\n\n        def as_csv():\n            csv = \"x,y\\n\"\n            for point in points:\n                csv += \"%2.4f,%2.4f\\n\" % (point[0], point[1])\n            return csv\n\n        dirname = os.path.dirname(__file__)\n        filename = os.path.join(dirname, 'points.csv')\n        f = open(filename, \"w\")\n        f.write(as_csv())\n        f.close()\n        \n        self.output0 = filename\n",
+            "documentation": "Save's the given of points to a temporary file.",
+            "n_inputs": 1,
+            "n_outputs": 1,
+            "name": "SavePoints",
+            "position": [
+                0.4928571428571429,
+                0.639904761904762
+            ]
+        },
+        {
+            "code": "import os\n\nclass SaveFittedLine:\n    def __init__(self, input0):\n        points = input0\n        def as_csv():\n            csv = \"x,y\\n\"\n            for point in points:\n                csv += \"%2.4f,%2.4f\\n\" % (point[0], point[1])\n            return csv\n        \n        dirname = os.path.dirname(__file__)\n        filename = os.path.join(dirname, 'line.csv')\n        f = open(filename, \"w\")\n        f.write(as_csv())\n        f.close()\n\n        self.output0 = filename\n",
+            "documentation": "Save's the given points, comprising al ine, to a temporary file.",
+            "n_inputs": 1,
+            "n_outputs": 1,
+            "name": "SaveFittedLine",
+            "position": [
+                0.49264285714285716,
+                0.5325238095238095
+            ]
+        },
+        {
+            "code": "import os\n\nclass Render:\n    def __init__(self, input0, input1):\n        dirname = os.path.dirname(__file__)\n\n        r_plotter = os.path.join(dirname, 'examples/linear-regression/plot.R')\n        points_file = input0\n        line_file = input1\n        output_file = os.path.join(dirname, 'linear-regression.pdf')\n\n        os.system(\n            \"RScript %s %s %s %s\" % (\n                r_plotter, \n                points_file,\n                line_file,\n                output_file\n            )\n        )\n        os.remove(\"Rplots.pdf\")\n        os.remove(input0)\n        os.remove(input1)\n\n\n",
+            "documentation": "Plots the given set of points and the fitted line using an R script. Also cleans up temporary files.",
+            "n_inputs": 2,
+            "n_outputs": 0,
+            "name": "Render",
+            "position": [
+                0.7841904761904762,
+                0.5866666666666668
+            ]
+        },
+        {
+            "code": "import time\nimport random as r\nr.seed(time.time())\n\nclass GetPoints:\n    def __init__(self):\n        mean = 0.5\n        std = 1.0\n\n        points = []\n        for i in range(1000):\n            point = [r.gauss(mean, std), r.gauss(mean, std)]\n            points.append(point)\n        \n        self.output0 = points\n",
+            "documentation": "Generates a list of points. Each point is randomly choosen, using a Gaussian random function, with mean set to 0.5 and standard deviation set to 1.0.",
+            "n_inputs": 0,
+            "n_outputs": 1,
+            "name": "GetPoints",
+            "position": [
+                0.015,
+                0.815
+            ]
+        }
+    ]
+}
