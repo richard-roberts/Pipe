@@ -1,0 +1,62 @@
+{
+    "edges": [
+        {
+            "from": "MultiplyByDotProducts_0",
+            "to": "Log_0"
+        },
+        {
+            "from": "A_0",
+            "to": "MultiplyByDotProducts_0"
+        },
+        {
+            "from": "B_0",
+            "to": "MultiplyByDotProducts_1"
+        }
+    ],
+    "nodes": [
+        {
+            "code": "class A:\n    def __init__(self):\n        self.output0 = [\n            [1],\n            [2],\n            [3]\n        ]\n",
+            "documentation": "A description of the A node's behavior.",
+            "n_inputs": 0,
+            "n_outputs": 1,
+            "name": "A",
+            "position": [
+                0.028511904761904773,
+                0.722857142857143
+            ]
+        },
+        {
+            "code": "class Log:\n    def __init__(self, input0):\n        print(input0)\n",
+            "documentation": "A description of the Log node's behavior.",
+            "n_inputs": 1,
+            "n_outputs": 0,
+            "name": "Log",
+            "position": [
+                0.5654761904761905,
+                0.6266666666666668
+            ]
+        },
+        {
+            "code": "class MultiplyByDotProducts:\n    def __init__(self, input0, input1):\n        A = input0\n        B = input1\n        \n        # Get row / column counts\n        mA = len(A)\n        nA = len(A[0])\n        mB = len(B)\n        nB = len(B[0])\n        \n        mAB = mA\n        nAB = nB\n        \n        if not nA == mB:\n            raise ValueError(\n                \"Need A columns and B rows to be equal for matrix-multiplication\"\n            )\n        \n        # A function to dot a column from A with\n        # a row from B\n        def dot(i, j):\n            values_a = [A[i][x] for x in range(nA)]\n            values_b = [B[y][j] for y in range(mB)]\n            dotted = 0\n            for (a, b) in zip(values_a, values_b):\n              dotted += a * b\n            return dotted\n        \n        # Build AB matrix\n        AB = []\n        for r in range(mAB):\n            row = []\n            for c in range(nAB):\n              value = dot(r, c)\n              row.append(value)\n            AB.append(row)\n        \n        self.output0 = AB\n",
+            "documentation": "A description of the MultiplyByDotProducts node's behavior.",
+            "n_inputs": 2,
+            "n_outputs": 1,
+            "name": "MultiplyByDotProducts",
+            "position": [
+                0.31369047619047613,
+                0.624761904761905
+            ]
+        },
+        {
+            "code": "class B:\n    def __init__(self):\n        self.output0 = [\n            [1, 2, 3]\n        ]\n",
+            "documentation": "A description of the B node's behavior.",
+            "n_inputs": 0,
+            "n_outputs": 1,
+            "name": "B",
+            "position": [
+                0.030952380952380967,
+                0.559047619047619
+            ]
+        }
+    ]
+}
