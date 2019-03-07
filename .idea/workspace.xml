@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0a0051f0-dae2-4878-a8c1-8a246e4a62ec" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/testing/graphs/Testing.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/testing/graphs/Testing.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/assembly/assemblers.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/assembly/assemblers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/edges.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/edges.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/graph_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/graph_widgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/graphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/graphs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/nodes.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/nodes.py" afterDir="false" />
-    </list>
+    <list default="true" id="0a0051f0-dae2-4878-a8c1-8a246e4a62ec" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -325,7 +317,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="140" y="43" width="1400" height="987" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.2533137" />
@@ -336,7 +327,7 @@
       <window_info anchor="bottom" id="Message" order="3" />
       <window_info anchor="bottom" id="Find" order="4" weight="0.32960895" />
       <window_info anchor="bottom" id="Version Control" order="5" />
-      <window_info active="true" anchor="bottom" id="Run" order="6" visible="true" weight="0.32960895" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.32960895" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
