@@ -1,0 +1,15 @@
+{
+    "name": "o",
+    "templates": {
+        "k": {
+            "code": "class k:\n    def __init__(self, a):\n        pass\n",
+            "collection_name": "o",
+            "documentation": "A description of the k node's behavior.",
+            "inputs": [
+                "a"
+            ],
+            "name": "k",
+            "outputs": []
+        }
+    }
+}
