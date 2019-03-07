@@ -72,14 +72,14 @@ class Graph:
     def get_node_by_id(self, node_id):
         return self.nodes[node_id]
 
-    def get_edge_by_argument_from(self, argument):
+    def get_edge_by_argument_from(self, node, argument):
         for edge in self.edges.values():
-            if edge.argument_from == argument:
+            if edge.argument_from == argument and edge.argument_from.get_node() == node:
                 return edge
 
-    def get_edge_by_argument_to(self, argument):
+    def get_edge_by_argument_to(self, node, argument):
         for edge in self.edges.values():
-            if edge.argument_to == argument:
+            if edge.argument_to == argument and edge.argument_to.get_node() == node:
                 return edge
 
     def as_json(self):

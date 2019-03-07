@@ -44,7 +44,7 @@ class GraphWidget(FloatLayout):
         for node in self.graph.nodes.values():
             new_node_widget = node_widgets.NodeWidget()
             self.add_widget(new_node_widget)
-            new_node_widget .setup(node)
+            new_node_widget.setup(node)
             self.node_widgets[new_node_widget] = new_node_widget
 
         for edge in self.graph.edges.values():
@@ -153,6 +153,7 @@ class GraphWidget(FloatLayout):
         popup.open()
 
     def handle_argument_touched(self, argument_widget, argument_widget_state):
+
         if type(argument_widget) == argument_widgets.InputArgumentWidget:
 
             if argument_widget_state == "down":

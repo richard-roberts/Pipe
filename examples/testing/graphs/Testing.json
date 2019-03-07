@@ -2,21 +2,9 @@
     "edges": [
         {
             "arg_from_name": "o",
-            "arg_to_name": "b",
-            "node_id_from": 1,
-            "node_id_to": 2
-        },
-        {
-            "arg_from_name": "o",
-            "arg_to_name": "a",
-            "node_id_from": 0,
-            "node_id_to": 2
-        },
-        {
-            "arg_from_name": "o",
             "arg_to_name": "x",
-            "node_id_from": 2,
-            "node_id_to": 3
+            "node_id_from": 0,
+            "node_id_to": 1
         }
     ],
     "name": "Testing",
@@ -24,32 +12,16 @@
         {
             "node_id": 0,
             "position": [
-                0.1529761904761904,
-                0.6819047619047621
+                0.14250000000000007,
+                0.6483333333333332
             ],
-            "template": "Literals::Five"
+            "template": "Gen::Five"
         },
         {
             "node_id": 1,
             "position": [
-                0.11845238095238098,
-                0.5599999999999997
-            ],
-            "template": "Literals::Two"
-        },
-        {
-            "node_id": 2,
-            "position": [
-                0.355952380952381,
-                0.5873809523809526
-            ],
-            "template": "Math::Add"
-        },
-        {
-            "node_id": 3,
-            "position": [
-                0.5375000000000001,
-                0.5933333333333332
+                0.48749999999999993,
+                0.6283333333333332
             ],
             "template": "Utils::Log"
         }

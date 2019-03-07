@@ -27,6 +27,7 @@ class Edge:
 
     @staticmethod
     def from_json(graph, data):
+        print(data)
         node_from = graph.get_node_by_id(data["node_id_from"])
         argument_from = node_from.get_output_argument_by_name(data["arg_from_name"])
         node_to = graph.get_node_by_id(data["node_id_to"])

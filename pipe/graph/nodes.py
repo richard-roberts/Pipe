@@ -1,14 +1,11 @@
-import itertools
-
 import globals
 from . import arguments
 
 
 class Node:
-    node_ids = itertools.count(0)
 
     def __init__(self, template, position, node_id=None):
-        self.node_id = next(self.node_ids) if node_id is None else node_id
+        self.node_id = id(self) if node_id is None else node_id
         self.template = template
         self.position = position
 

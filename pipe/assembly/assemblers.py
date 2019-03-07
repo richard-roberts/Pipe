@@ -26,7 +26,7 @@ class Assembler:
                 # Build the argument sting (recursively compiling the execution of those arguments)
                 argument_str = ""
                 for input_arg in node.inputs.values():
-                    edge = graph.get_edge_by_argument_to(input_arg)
+                    edge = graph.get_edge_by_argument_to(node, input_arg)
                     child_node = graph.nodes[edge.argument_from.get_node().get_id()]
                     compiled_child = assemble(child_node, edge.argument_from)
                     argument_str += compiled_child + ", "
