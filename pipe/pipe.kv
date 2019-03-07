@@ -2,16 +2,16 @@
 #:import Factory kivy.factory.Factory
 
 
-<InputArgumentSet>:
+<InputArgumentSetWidget>:
     size_hint: 0.1, 1
 
-<OutputArgumentSet>:
+<OutputArgumentSetWidget>:
     size_hint: 0.1, 1
 
-<Node>:
+<NodeWidget>:
     size_hint: 0.2, 0.1
-    input_set: input_set
-    output_set: output_set
+    input_widgets: input_widgets
+    output_widgets: output_widgets
 
     canvas:
         Color: 
@@ -21,59 +21,21 @@
             size: root.size
             pos: root.pos
 
-    InputArgumentSet:
+    InputArgumentSetWidget:
         size_hint: 0.1, 1
-        id: input_set
+        id: input_widgets
         orientation: "vertical"
     
     Label:
         size_hint: 0.8, 1
-        text: root.name
+        text: root.node.template.name if root.node is not None else "Untitled"
     
-    OutputArgumentSet:
+    OutputArgumentSetWidget:
         size_hint: 0.1, 1
-        id: output_set
+        id: output_widgets
         orientation: "vertical"
 
-<NewNodePopup@Popup>:
-    size_hint: 0.5, 0.2
-    title: "Create a new node"
-    on_open: self.ids.name.focus=True
-
-    BoxLayout:
-        size_hint: 0.9, 0.9
-        pos: root.pos
-        orientation: "vertical"
-
-        TextInput:
-            id: name
-            multiline: False
-            on_text_validate: root.dismiss()
-
-        BoxLayout:
-            orientation: "horizontal"
-
-            Label:
-                text: "Inputs"
-            
-            TextInput:
-                id: n_inputs
-                multiline: False
-                on_text_validate: root.dismiss()
-                input_type: 'number'
-                text: "1"
-
-            Label:
-                text: "Outputs"
-
-            TextInput:
-                id: n_outputs
-                multiline: False
-                on_text_validate: root.dismiss()
-                input_type: 'number'
-                text: "1"
-
-<Edge>:
+<EdgeWidget>:
     size_hint: None, None
     canvas.after:
         Color: 
@@ -82,18 +44,122 @@
             width: 3
             points: self.from_x, self.from_y, self.to_x, self.to_y
 
-<Editor>:    
-    canvas.before:
-        Color: 
-            hsv: 0, 0, .2
-            a: 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
+<NewNodePopup@Popup>:
+    names: []
+    size_hint: 0.5, 0.2
+    title: "Create a new node"
 
-<ImportGraphPopup@Popup>:
+    BoxLayout:
+        orientation: "vertical"
+
+        Spinner:
+            id: options
+            size_hint: 0.9, 0.9
+            pos: root.pos
+            text: 'Select template'
+            values: root.names
+        
+        Button:
+            text: 'Create'
+            on_release: root.dismiss()
+
+<SwitchGraphPopup@Popup>:
+    names: []
+    size_hint: 0.5, 0.2
+    title: "Switch to a graph"
+
+    BoxLayout:
+        orientation: "vertical"
+
+        Spinner:
+            id: options
+            size_hint: 0.9, 0.9
+            pos: root.pos
+            text: 'Select graph'
+            values: root.names
+        
+        Button:
+            text: 'Switch'
+            on_release: root.dismiss()
+
+<NewTemplatePopup@Popup>:
+    size_hint: 0.8, 0.5
+    title: "Create a new template"
+    on_open: self.ids.name.focus=True
+
+    BoxLayout:
+        size_hint: 0.9, 0.9
+        pos: root.pos
+        orientation: "vertical"
+        
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Collection"
+            TextInput:
+                id: collection
+                multiline: False
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Template Name"
+            TextInput:
+                id: name
+                multiline: False
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Input Arguments"
+            TextInput:
+                id: inputs
+                multiline: False
+                text: ''
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Output Arguments"
+            TextInput:
+                id: outputs
+                multiline: False
+                input_type: 'number'
+                text: ''
+        
+        BoxLayout:
+            orientation: "horizontal"
+            Button:
+                text: 'Create'
+                on_release: root.dismiss()
+
+<NewGraphPopup@Popup>:
+    size_hint: 0.8, 0.5
+    title: "Create a new graph"
+    on_open: self.ids.name.focus=True
+
+    BoxLayout:
+        size_hint: 0.9, 0.9
+        pos: root.pos
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Graph Name"
+            TextInput:
+                id: name
+                multiline: False
+
+        BoxLayout:
+            orientation: "horizontal"
+            Button:
+                text: 'Create'
+                on_release: root.dismiss()
+
+<OpenProjectPopup@Popup>:
     size_hint: 0.7, 0.7
-    title: 'Import pipe graph'
+    title: 'Open Project'
 
     BoxLayout:
         size: root.size
@@ -113,9 +179,9 @@
                 text: "Import"
                 on_release: root.dismiss()
 
-<ExportGraphPopup@Popup>:
+<SaveProjectPopup@Popup>:
     size_hint: 0.7, 0.7
-    title: 'Export pipe graph'
+    title: 'Save Project'
     
     BoxLayout:
         size: root.size
@@ -126,7 +192,7 @@
             id: filechooser
             size_hint: 1, 0.8
             path: '.'
-            filters: ["*.json"]
+            filters: ["*."]
             on_selection: root.ids.text_input.text = self.selection[0] or ''
 
         TextInput:
@@ -169,6 +235,15 @@
                 text: "Export"
                 on_release: root.dismiss()
 
+<GraphWidget>:
+    canvas.before:
+        Color:
+            hsv: 0, 0, .2
+            a: 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
 <Desktop>:
     
     BoxLayout:
@@ -185,7 +260,7 @@
                 orientation: 'vertical'
                 pos: self.parent.x + self.parent.width * 0.5, self.parent.y
                 
-                Editor:
+                GraphWidget:
                     id: editor
                     size_hint: 1.0, 0.9
                     pos: root.pos
@@ -198,7 +273,21 @@
                     size_hint: 1, 0.05
                     cols: 2
                     Label:
-                        text: root.ids.editor.node_editor.selected.name if root.ids.editor.node_editor.selected else "nothing selected"
+                        id: graph_name
+                        text: root.ids.editor.graph.name if root.ids.editor.graph else "uninitialized"
+                        canvas.before:
+                            Color: 
+                                hsv: 0.0, .56, 1.0
+                                a: 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+
+                GridLayout:
+                    size_hint: 1, 0.05
+                    cols: 2
+                    Label:
+                        text: root.ids.editor.selected_node_widget.node.template.name if root.ids.editor.selected_node_widget else "nothing selected"
                         canvas.before:
                             Color: 
                                 hsv: 0.0, .56, 1.0
@@ -222,8 +311,8 @@
                 TextInput:
                     size_hint: 1, 0.2
                     id: documentation_panel
-                    text: root.ids.editor.node_editor.selected.documentation if root.ids.editor.node_editor.selected else "nothing selected"
-                    on_text: if root.ids.editor.node_editor.selected: root.ids.editor.node_editor.selected.documentation = self.text
+                    text: root.ids.editor.selected_node_widget.node.template.documentation if root.ids.editor.selected_node_widget else "nothing selected"
+                    on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.documentation = self.text
 
                 Label:
                     size_hint: 1, 0.025
@@ -238,29 +327,55 @@
 
                 CodeInput:
                     id: code_panel
-                    size_hint: 1, 0.5
-                    text: root.ids.editor.node_editor.selected.code if root.ids.editor.node_editor.selected else "nothing selected"
-                    on_text: if root.ids.editor.node_editor.selected: root.ids.editor.node_editor.selected.code = self.text
+                    size_hint: 1, 0.45
+                    text: root.ids.editor.selected_node_widget.node.template.code if root.ids.editor.selected_node_widget else "nothing selected"
+                    on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.code = self.text
 
                 GridLayout:
-                    cols: 5
-                    size_hint: 1, 0.1
+                    cols: 3
+                    size_hint: 1, 0.3
 
                     Button:
-                        text: 'Delete'
+                        text: 'Open'
+                        on_release: root.open_project()
+                    Button:
+                        text: 'Save'
+                        on_release: root.save_project()
+                    Button:
+                        text: '  '
+                        on_release: pass
+
+                    Button:
+                        text: 'New Template'
+                        on_release: root.start_new_template_prompt()
+                    Button:
+                        text: 'New Graph'
+                        on_release: root.start_new_graph_prompt()
+                    Button:
+                        text: 'Switch Graph'
+                        on_release: root.start_switch_graph_prompt()
+
+                    
+                    Button:
+                        text: 'Delete Node'
                         on_release: root.ids.editor.delete_selected()
                     Button:
-                        text: 'Import'
-                        on_release: root.import_graph()
+                        text: '  '
+                        on_release: pass
                     Button:
-                        text: 'Export'
-                        on_release: root.export_graph()
+                        text: '  '
+                        on_release: pass
+                    
                     Button:
                         text: 'Assemble'
                         on_release: root.assemble_and_save()
                     Button:
                         text: 'Execute'
                         on_release: root.assemble_and_execute()
+                    Button:
+                        text: '  '
+                        on_release: pass
+                        
 
         Label:
             id: status_bar

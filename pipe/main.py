@@ -1,95 +1,102 @@
 #!/usr/local/bin/python3
 
 import os
-import json
 import subprocess
 
 import kivy
 from kivy.app import App
 from kivy.factory import Factory
-from kivy.uix.popup import Popup
-from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.floatlayout import FloatLayout
-from kivy.config import Config
-kivy.require("1.10.1")
 
-import editor
-from assembly import assembler
-Assembler = assembler.Assembler
+import globals
+from graph import graph_manager
+from graph import graph_widgets
+from templates import template_collection_manager
+
+kivy.require("1.10.1")
+Factory.register("GraphWidget", graph_widgets.GraphWidget)
+
+
+class DesktopManager:
+
+    def __init__(self):
+        self.graphs = graph_manager.GraphManager()
+        self.templates = template_collection_manager.TemplateCollectionManager()
+
+    def clear(self):
+        self.graphs.clear()
+        self.templates.clear()
 
 
 class Desktop(FloatLayout):
-    
+
     def __init__(self, **kwargs):
         super(Desktop, self).__init__(**kwargs)
 
-    def as_json(self):
-        return self.ids.editor.as_json()
+        self.manager = DesktopManager()
 
-    def from_json(self, data):
-        self.ids.editor.from_json(data)
-        self.set_status("Imported program")
+        # Setup first graph
+        graph = self.manager.graphs.new_graph("Default")
+        self.ids.editor.setup_from_graph(graph)
+        # self.ids.graph_name.text = graph.name
 
     def set_status(self, message):
-        message = message.replace('\n','')
-        message = message.replace('\t','')
-        message = message.replace('\r\t','')
-        self.ids.status_bar.text = "    %s"  % message
+        message = message.replace('\n', '')
+        message = message.replace('\t', '')
+        message = message.replace('\r\t', '')
+        self.ids.status_bar.text = "    %s" % message
 
-    def import_graph(self):
-        def fn(popup):
-            has_selection = len(popup.ids.filechooser.selection) > 0
-            if not has_selection:
-                self.set_status("Import cancelled (no file specified)")
-                return
+    def open_project(self):
+        def fn(pop):
+            project_directory = pop.ids.filechooser.path
+            if not project_directory:
+                self.set_status("Import cancelled (no directory specified)")
 
-            path = popup.ids.filechooser.path
-            filename = popup.ids.filechooser.selection[0]
+            self.manager.clear()
 
-            with open(os.path.join(path, filename)) as stream:
-                string = stream.read()
-                data = json.loads(string)
-                self.from_json(data)
+            templates_directory = os.path.join(project_directory, "templates")
+            self.manager.templates.import_collections(templates_directory)
 
-            self.set_status("Import successful")
-                
+            graphs_directory = os.path.join(project_directory, "graphs")
+            self.manager.graphs.import_graphs(graphs_directory)
 
-        popup = Factory.ImportGraphPopup()
+            self.set_status("Project opened successfully")
+
+        popup = Factory.OpenProjectPopup()
         popup.bind(on_dismiss=fn)
         popup.open()
 
-    def export_graph(self):
-        def fn(popup):
-            path = popup.ids.filechooser.path
-            filename = popup.ids.text_input.text
-            if not filename:
-                self.set_status("Export cancelled (no file specified)")
+    def save_project(self):
+        def fn(pop):
+            project_directory = pop.ids.filechooser.path
+            if not project_directory:
+                self.set_status("Export cancelled (no directory specified)")
                 return
 
-            with open(os.path.join(path, filename), 'w') as stream:
-                string = json.dumps(
-                    self.as_json(),
-                    sort_keys=True,
-                    indent=4,
-                    separators=(',', ': ')
-                )
-                stream.write(string)
+            # Save templates
+            templates_directory = os.path.join(project_directory, "templates")
+            if not os.path.exists(templates_directory):
+                os.makedirs(templates_directory)
+            self.manager.templates.export_collections(templates_directory)
 
-            self.set_status("Export successful")
+            # Save graphs
+            graphs_directory = os.path.join(project_directory, "graphs")
+            if not os.path.exists(graphs_directory):
+                os.makedirs(graphs_directory)
+            self.manager.graphs.export_graphs(graphs_directory)
 
-        popup = Factory.ExportGraphPopup()
+            self.set_status("Project saved successfully")
+
+        popup = Factory.SaveProjectPopup()
         popup.bind(on_dismiss=fn)
         popup.open()
 
     def assemble_and_execute(self):
         filepath = "./tmp.py"
-        with open(filepath, 'w') as stream:
-            stream.write(
-                Assembler.assemble(
-                    self.ids.editor.node_editor, self.ids.editor.edge_editor
-                )
-            )
+        self.ids.editor.graphassemble_and_save_to_filepath(filepath)
         command = 'python %s' % filepath
+
+        # TODO: figure out what exception this should be
         try:
             result = subprocess.check_output(command, shell=True)
         except:
@@ -104,28 +111,94 @@ class Desktop(FloatLayout):
             self.set_status("Execution successful")
 
     def assemble_and_save(self):
-        def fn(popup):
-            filepath = popup.ids.text_input.text
-
-            path = popup.ids.filechooser.path
-            filename = popup.ids.text_input.text
-            if not filename:
+        def fn(pop):
+            filepath = pop.ids.text_input.text
+            if not filepath:
                 self.set_status("Export assembled cancelled (no file specified)")
                 return
+            self.ids.editor.graphassemble_and_save_to_filepath(filepath)
+            self.set_status("Exported assembled program successfully")
 
-            with open(filepath, 'w') as stream:
-                stream.write(
-                    Assembler.assemble(
-                        self.ids.editor.node_editor, self.ids.editor.edge_editor
-                    )
-                )
         popup = Factory.ExportAssembledProgram()
         popup.bind(on_dismiss=fn)
         popup.open()
 
+    def start_new_template_prompt(self):
+        def fn(pop):
+            collection = pop.ids.collection.text
+            name = pop.ids.name.text
+            
+            # If no collection was entered, it's probably a cancel?
+            if collection == "":
+                self.set_status("Warning: operation cancelled (no collection specified)")
+                return
+
+            # If no named was entered, it's probably a cancel?
+            if name == "":
+                self.set_status("Warning: operation cancelled (no name specified)")
+                return
+
+            # Check its not a duplicate
+            if globals.TemplateInfo().manager.already_exists(collection, name):
+                self.set_status("Error: %s already has template named `%s`." % (name, collection))
+                return
+
+            # Process arguments and check at least one exists
+            inputs_str = pop.ids.inputs.text.strip()
+            outputs_str = pop.ids.outputs.text.strip()
+            inputs = [] if inputs_str is "" else [arg.strip() for arg in inputs_str.split(",")]
+            outputs = [] if outputs_str is "" else [arg.strip() for arg in outputs_str.split(",")]
+            if len(inputs) == 0 and len(outputs) == 0:
+                self.set_status("Error: a node must have at least one argument")
+                return
+
+            self.manager.templates.new_template(collection, name, inputs, outputs)
+            self.set_status("A new template named %s has been created" % name)
+
+        popup = Factory.NewTemplatePopup()
+        popup.bind(on_dismiss=fn)
+        popup.open()
+
+    def start_new_graph_prompt(self):
+        def fn(pop):
+            name = pop.ids.name.text
+
+            # If no named was entered, it's probably a cancel?
+            if name == "":
+                self.set_status("Warning: operation cancelled (no name specified)")
+                return
+
+            # Check its not a duplicate
+            if globals.GraphInfo().manager.already_exists(name):
+                self.set_status("Error: there is already has graph named `%s`." % name)
+                return
+
+            graph = self.manager.graphs.new_graph(name)
+            self.ids.editor.setup_from_graph(graph)
+            self.set_status("A new graph named %s has been created" % name)
+
+        popup = Factory.NewGraphPopup()
+        popup.bind(on_dismiss=fn)
+        popup.open()
+
+    def start_switch_graph_prompt(self):
+        def fn(pop):
+            name = pop.ids.options.text
+            if name == "Select graph":
+                self.set_status("Warning: switch graph cancelled (no graph selected)")
+                return
+
+            graph = globals.GraphInfo().manager.get_by_name(name)
+            self.ids.editor.setup_from_graph(graph)
+
+        popup = Factory.SwitchGraphPopup()
+        popup.names = globals.GraphInfo().manager.get_names()
+        popup.bind(on_dismiss=fn)
+        popup.open()
+
     def on_touch_down(self, touch):
-        print(touch)
-        if super(Desktop, self).on_touch_down(touch): return True
+        if super(Desktop, self).on_touch_down(touch):
+            return True
         touch.grab(self)
         if self.ids.editor.collide_point(*touch.pos):
             self.ids.editor.handle_touch_down(touch)
@@ -144,9 +217,11 @@ class Desktop(FloatLayout):
             return True
         return super(Desktop, self).on_touch_up(touch)
 
+
 class PipeApp(App):
     def build(self):
         return Desktop()
+
 
 if __name__ == '__main__':
     PipeApp().run()
