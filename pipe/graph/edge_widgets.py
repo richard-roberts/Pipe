@@ -1,8 +1,6 @@
 from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import NumericProperty
 
-from . import edges
-
 
 class EdgeWidget(FloatLayout):
 
@@ -22,6 +20,7 @@ class EdgeWidget(FloatLayout):
         self.from_y = self.widget_from.y + self.widget_from.height / 2
         self.to_x = self.widget_to.x
         self.to_y = self.widget_to.y + self.widget_to.height / 2
+        self.canvas.ask_update()
 
     def setup(self, edge, widget_from, widget_to):
         self.edge = edge

@@ -27,7 +27,7 @@ class GraphManager:
 
     def import_graphs(self, directory):
         filepaths = []
-        for filename in os.listdir(directory):
+        for filename in [f for f in os.listdir(directory) if f.endswith(".json")]:
             filepath = os.path.join(directory, filename)
             if os.path.isfile(filepath):
                 filepaths.append(filepath)
@@ -38,6 +38,10 @@ class GraphManager:
     def export_graphs(self, directory):
         for graph in self.graphs.values():
             graph.export_to_directory(directory)
+
+    def assemble_graphs(self, directory):
+        for graph in self.graphs.values():
+            graph.assemble_to_directory(directory)
 
     def get_names(self):
         return [graph.name for graph in self.graphs.values()]

@@ -1,9 +1,9 @@
 {
-    "name": "Utilities",
+    "name": "Utils",
     "templates": {
         "Log": {
-            "code": "class Log:\n    def __init__(self, x):\n        pass\n",
-            "collection_name": "Utilities",
+            "code": "class Log:\n    def __init__(self, x):\n        print(x)\n",
+            "collection_name": "Utils",
             "documentation": "A description of the Log node's behavior.",
             "inputs": [
                 "x"

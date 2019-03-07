@@ -34,7 +34,7 @@ class Node:
     def as_json(self):
         return {
             "node_id": self.node_id,
-            "template": self.template.name,
+            "template": self.template.get_long_name(),
             "position": self.position,
         }
 

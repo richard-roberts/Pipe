@@ -1,53 +1,60 @@
+import globals
+
+
 class Assembler:
 
     @staticmethod
-    def assemble(node_editor, edge_editor):
+    def assemble_collection(collection):
+        def assemble(template):
+            return template.code
 
-            def header():
-                header_str = ""
-                header_str += "\n"
-                return header_str
-            
-            def functions():
-                function_str = ""
-                for node in node_editor.nodes.values():
-                    function_str += node.code + "\n"
-                return function_str
+        assembled_str = ""
+        for item in collection.templates.values():
+            assembled_str += assemble(item) + "\n"
+        return assembled_str
 
-            def execution():
-                def compile_execution(node, argument):
-                    suffix = ("" if argument is None else ".%s" % argument.get_argument_name())
+    @staticmethod
+    def assemble_graph(graph):
 
-                    if node.is_root():
-                        return "%s()%s" % (node.function_name, suffix)
-                    else:
+        def assemble(node, argument):
+            suffix = ("" if argument is None else ".%s" % argument.name)
 
-                        # Build the argument sting (recursively compiling the execution of those arguments)
-                        argument_str = ""
-                        for input_arg in node.input_set.args:
-                            edge = edge_editor.get_input_edge_by_argument(input_arg)
-                            connected_output_arg = edge.get_output_argument()
-                            child_node = node_editor.nodes[connected_output_arg.get_node_name()]
-                            compiled_child = compile_execution(child_node, connected_output_arg)
-                            argument_str += compiled_child + ", "
-                        argument_str = argument_str[:-2]
-
-                        # Compile the invocation
-                        return "%s(%s)%s" % (
-                            node.function_name,
-                            argument_str,
-                            suffix
-                        )
-
-                execution_str = "if __name__ == \"__main__\":\n"
-                leaves = [node for node in node_editor.nodes.values() if node.is_leaf()]
-                for leaf in leaves:
-                    execution_str += "    " + compile_execution(leaf, None) + "\n"
-                return execution_str
-
-            if len(node_editor.nodes) == 0:
-                return header()
-            elif len(node_editor.nodes) < 2:
-                return header() + functions()
+            if node.template.is_root():
+                return "%s()%s" % (node.template.function_name, suffix)
             else:
-                return header() + functions() + execution()
+
+                # Build the argument sting (recursively compiling the execution of those arguments)
+                argument_str = ""
+                for input_arg in node.inputs.values():
+                    edge = graph.get_edge_by_argument_to(input_arg)
+                    child_node = graph.nodes[edge.argument_from.get_node().get_id()]
+                    compiled_child = assemble(child_node, edge.argument_from)
+                    argument_str += compiled_child + ", "
+                argument_str = argument_str[:-2]
+
+                # Compile the invocation
+                return "%s(%s)%s" % (
+                    node.template.function_name,
+                    argument_str,
+                    suffix
+                )
+
+        assembled_str = ""
+
+        # Imports
+        for name in globals.TemplateInfo().manager.get_collection_names():
+            assembled_str += "from templates.%s import *\n" % name
+        assembled_str += "\n"
+
+        # Execution function
+        assembled_str += "def execute():\n"
+        leaves = [node for node in graph.nodes.values() if node.template.is_leaf()]
+        for leaf in leaves:
+            assembled_str += "    " + assemble(leaf, None) + "\n"
+        assembled_str += "\n"
+
+        # Execution call
+        assembled_str += "if __name__ == \"__main__\":\n"
+        assembled_str += "    execute()"
+
+        return assembled_str

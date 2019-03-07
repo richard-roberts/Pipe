@@ -1,6 +1,7 @@
 import os
 import json
 
+from assembly import assemblers
 from . import templates
 
 
@@ -58,3 +59,11 @@ class TemplateCollection:
     def export_to_directory(self, directory):
         filepath = os.path.join(directory, "%s.json" % self.name)
         self.export_to_filepath(filepath)
+
+    def assemble_to_filepath(self, filepath):
+        with open(filepath, 'w') as stream:
+            stream.write(assemblers.Assembler.assemble_collection(self))
+
+    def assemble_to_directory(self, directory):
+        filepath = os.path.join(directory, self.name + ".py")
+        self.assemble_to_filepath(filepath)

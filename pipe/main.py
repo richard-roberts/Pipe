@@ -1,7 +1,9 @@
 #!/usr/local/bin/python3
 
 import os
+import shutil
 import subprocess
+import pathlib
 
 import kivy
 from kivy.app import App
@@ -27,18 +29,40 @@ class DesktopManager:
         self.graphs.clear()
         self.templates.clear()
 
+    def open_project(self, project_directory):
+        templates_directory = os.path.join(project_directory, "templates")
+        graphs_directory = os.path.join(project_directory, "graphs")
+        self.clear()
+        self.templates.import_collections(templates_directory)
+        self.graphs.import_graphs(graphs_directory)
+
+    def save_project(self, project_directory):
+        templates_directory = os.path.join(project_directory, "templates")
+        graphs_directory = os.path.join(project_directory, "graphs")
+        if not os.path.exists(templates_directory):
+            os.makedirs(templates_directory)
+        if not os.path.exists(graphs_directory):
+            os.makedirs(graphs_directory)
+        self.templates.export_collections(templates_directory)
+        self.graphs.export_graphs(graphs_directory)
+
+    def assemble_project(self, project_directory):
+        templates_directory = os.path.join(project_directory, "templates")
+        graphs_directory = project_directory
+        if not os.path.exists(templates_directory):
+            os.makedirs(templates_directory)
+            pathlib.Path(os.path.join(templates_directory, "__init__.py")).touch()
+        if not os.path.exists(graphs_directory):
+            os.makedirs(graphs_directory)
+        self.templates.assemble_collections(templates_directory)
+        self.graphs.assemble_graphs(graphs_directory)
+
 
 class Desktop(FloatLayout):
 
     def __init__(self, **kwargs):
         super(Desktop, self).__init__(**kwargs)
-
         self.manager = DesktopManager()
-
-        # Setup first graph
-        graph = self.manager.graphs.new_graph("Default")
-        self.ids.editor.setup_from_graph(graph)
-        # self.ids.graph_name.text = graph.name
 
     def set_status(self, message):
         message = message.replace('\n', '')
@@ -47,64 +71,46 @@ class Desktop(FloatLayout):
         self.ids.status_bar.text = "    %s" % message
 
     def open_project(self):
-        def fn(pop):
-            project_directory = pop.ids.filechooser.path
-            if not project_directory:
-                self.set_status("Import cancelled (no directory specified)")
-
-            self.manager.clear()
-
-            templates_directory = os.path.join(project_directory, "templates")
-            self.manager.templates.import_collections(templates_directory)
-
-            graphs_directory = os.path.join(project_directory, "graphs")
-            self.manager.graphs.import_graphs(graphs_directory)
-
-            self.set_status("Project opened successfully")
-
-        popup = Factory.OpenProjectPopup()
-        popup.bind(on_dismiss=fn)
-        popup.open()
+        # def fn(pop):
+        #     project_directory = pop.ids.filechooser.path
+        #     if not project_directory:
+        #         self.set_status("Import cancelled (no directory specified)")
+        #     self.manager.open_project(project_directory)
+        #     self.set_status("Project opened successfully")
+        # popup = Factory.OpenProjectPopup()
+        # popup.bind(on_dismiss=fn)
+        # popup.open()
+        self.manager.open_project("/Users/richard-roberts/Development/Pipe/examples/testing")
+        self.set_status("Project opened successfully")
 
     def save_project(self):
-        def fn(pop):
-            project_directory = pop.ids.filechooser.path
-            if not project_directory:
-                self.set_status("Export cancelled (no directory specified)")
-                return
-
-            # Save templates
-            templates_directory = os.path.join(project_directory, "templates")
-            if not os.path.exists(templates_directory):
-                os.makedirs(templates_directory)
-            self.manager.templates.export_collections(templates_directory)
-
-            # Save graphs
-            graphs_directory = os.path.join(project_directory, "graphs")
-            if not os.path.exists(graphs_directory):
-                os.makedirs(graphs_directory)
-            self.manager.graphs.export_graphs(graphs_directory)
-
-            self.set_status("Project saved successfully")
-
-        popup = Factory.SaveProjectPopup()
-        popup.bind(on_dismiss=fn)
-        popup.open()
+        # def fn(pop):
+        #     project_directory = pop.ids.filechooser.path
+        #     if not project_directory:
+        #         self.set_status("Export cancelled (no directory specified)")
+        #         return
+        #     self.manager.save_project(project_directory)
+        #     self.set_status("Project saved successfully")
+        # popup = Factory.SaveProjectPopup()
+        # popup.bind(on_dismiss=fn)
+        # popup.open()
+        self.manager.save_project("/Users/richard-roberts/Development/Pipe/examples/testing")
+        self.set_status("Project opened successfully")
 
     def assemble_and_execute(self):
-        filepath = "./tmp.py"
-        self.ids.editor.graphassemble_and_save_to_filepath(filepath)
-        command = 'python %s' % filepath
+        temporary = "./tmp"
+        self.manager.assemble_project(temporary)
+        command = 'python ./tmp/%s.py' % self.ids.editor.graph.name
 
         # TODO: figure out what exception this should be
         try:
             result = subprocess.check_output(command, shell=True)
         except:
             self.set_status("Execution failed")
-            os.remove(filepath)
+            shutil.rmtree(temporary)
             return
 
-        os.remove(filepath)
+        shutil.rmtree(temporary)
         if result:
             self.set_status("Execution successful: %s" % result.decode("utf-8"))
         else:
@@ -112,12 +118,12 @@ class Desktop(FloatLayout):
 
     def assemble_and_save(self):
         def fn(pop):
-            filepath = pop.ids.text_input.text
-            if not filepath:
-                self.set_status("Export assembled cancelled (no file specified)")
-                return
-            self.ids.editor.graphassemble_and_save_to_filepath(filepath)
-            self.set_status("Exported assembled program successfully")
+            project_directory = pop.ids.filechooser.path
+            if not project_directory:
+                self.set_status("Import cancelled (no directory specified)")
+
+            self.manager.assemble_project(project_directory)
+            self.set_status("Project assembled successfully")
 
         popup = Factory.ExportAssembledProgram()
         popup.bind(on_dismiss=fn)
@@ -187,10 +193,9 @@ class Desktop(FloatLayout):
             if name == "Select graph":
                 self.set_status("Warning: switch graph cancelled (no graph selected)")
                 return
-
             graph = globals.GraphInfo().manager.get_by_name(name)
             self.ids.editor.setup_from_graph(graph)
-
+            self.set_status("Switched to %s" % graph.name)
         popup = Factory.SwitchGraphPopup()
         popup.names = globals.GraphInfo().manager.get_names()
         popup.bind(on_dismiss=fn)

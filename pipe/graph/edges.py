@@ -4,6 +4,14 @@ class Edge:
         self.argument_from = argument_from
         self.argument_to = argument_to
 
+    def __str__(self):
+        return "%s.%s-%s.%s" % (
+            self.argument_from.get_node().template.name,
+            self.argument_from.name,
+            self.argument_to.get_node().template.name,
+            self.argument_to.name
+        )
+
     def as_json(self):
         return {
             "node_id_from": self.argument_from.get_node().get_id(),

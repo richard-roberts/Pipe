@@ -42,36 +42,41 @@ class GraphWidget(FloatLayout):
         self.clear()
         self.graph = graph
         for node in self.graph.nodes.values():
-            widget = node_widgets.NodeWidget()
-            widget.setup(node)
-            self.node_widgets[widget] = widget
+            new_node_widget = node_widgets.NodeWidget()
+            self.add_widget(new_node_widget)
+            new_node_widget .setup(node)
+            self.node_widgets[new_node_widget] = new_node_widget
 
         for edge in self.graph.edges.values():
-            widget = edge_widgets.EdgeWidget()
+            new_edge_widget = edge_widgets.EdgeWidget()
+            self.add_widget(new_edge_widget)
 
             node_widget_from = None
             for widget in self.node_widgets.values():
                 if widget.node == edge.argument_from.get_node():
                     node_widget_from = widget
                     break
+            if node_widget_from is None:
+                raise ValueError("Could not find from-node widget (edge `%s`)" % edge)
+
+            arg_widget_from = node_widget_from.get_output_argument_widget_by_argument_name(edge.argument_from.name)
+            if arg_widget_from is None:
+                raise ValueError("Could not find from-argument widget (edge `%s`)" % edge)
 
             node_widget_to = None
             for widget in self.node_widgets.values():
-                if widget.node == edge.argument_from.get_node():
+                if widget.node == edge.argument_to.get_node():
                     node_widget_to = widget
                     break
+            if node_widget_to is None:
+                raise ValueError("Could not find to-node widget (edge `%s`)" % edge)
 
-            if node_widget_from is None or node_widget_to is None:
-                raise ValueError("Could not find node widgets corresponding to the edge named `%s`" % edge.name)
-
-            arg_widget_from = node_widget_from.get_output_argument_widget_by_argument_name(edge.argument_from.name)
             arg_widget_to = node_widget_to.get_input_argument_widget_by_argument_name(edge.argument_to.name)
+            if arg_widget_to is None:
+                raise ValueError("Could not find to-argument widget (edge `%s`)" % edge)
 
-            if arg_widget_from is None or arg_widget_to is None:
-                raise ValueError("Could not find argument widgets corresponding to the edge named `%s`" % edge.name)
-
-            widget.setup(edge, arg_widget_from, arg_widget_to)
-            self.edge_widgets[widget] = widget
+            new_edge_widget.setup(edge, arg_widget_from, arg_widget_to)
+            self.edge_widgets[new_edge_widget] = new_edge_widget
 
     def set_status(self, message):
         self.parent.parent.parent.parent.set_status(message)
@@ -209,16 +214,15 @@ class GraphWidget(FloatLayout):
         self.start_new_node_prompt(touch.spos)
 
     def handle_touch_move(self, touch):
-        for node_widget in self.node_widgets.values():
-            if node_widget.collide_point(*touch.pos):
-                node_widget.amend_position(
-                    touch.sx - touch.psx,
-                    touch.sy - touch.psy
-                )
+        if self.selected_node_widget is None:
+            return
 
-                # Update all edges
-                # TODO: should optimise this so that only connected edges are updated
-                for edge_widget in self.edge_widgets:
-                    edge_widget.update_position()
+        self.selected_node_widget.amend_position(
+            touch.sx - touch.psx,
+            touch.sy - touch.psy
+        )
 
-                break
+        # Update all edges
+        # TODO: should optimise this so that only connected edges are updated
+        for edge_widget in self.edge_widgets:
+            edge_widget.update_position()

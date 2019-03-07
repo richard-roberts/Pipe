@@ -1,0 +1,25 @@
+{
+    "name": "Literals",
+    "templates": {
+        "Five": {
+            "code": "class Five:\n    def __init__(self):\n        self.o = 5\n",
+            "collection_name": "Literals",
+            "documentation": "A description of the Five node's behavior.",
+            "inputs": [],
+            "name": "Five",
+            "outputs": [
+                "o"
+            ]
+        },
+        "Two": {
+            "code": "class Two:\n    def __init__(self):\n        self.o = 2\n",
+            "collection_name": "Literals",
+            "documentation": "A description of the Two node's behavior.",
+            "inputs": [],
+            "name": "Two",
+            "outputs": [
+                "o"
+            ]
+        }
+    }
+}

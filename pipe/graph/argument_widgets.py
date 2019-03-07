@@ -46,6 +46,12 @@ class ArgumentSetWidget(BoxLayout):
         for arg in self.args.values():
             if arg.argument.name == name:
                 return arg
+        raise IndexError(
+            "%s was not found in %s" % (
+                name,
+                str([arg.argument.name for arg in self.args.values()])
+            )
+        )
 
 
 class InputArgumentSetWidget(ArgumentSetWidget):

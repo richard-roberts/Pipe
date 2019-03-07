@@ -1,3 +1,4 @@
+from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 
@@ -25,8 +26,8 @@ class NodeWidget(BoxLayout):
 
     def update_position(self):
         self.pos = (
-            self.node.position[0] * self.parent.width,
-            self.node.position[1] * self.parent.height
+            self.node.position[0] * Window.width,
+            self.node.position[1] * Window.height
         )
 
     def amend_position(self, delta_x, delta_y):
@@ -43,7 +44,7 @@ class NodeWidget(BoxLayout):
         self.output_widgets.reset_state()
 
     def get_input_argument_widget_by_argument_name(self, name):
-        self.input_widgets.get_argument_by_name(name)
+        return self.input_widgets.get_argument_by_name(name)
 
     def get_output_argument_widget_by_argument_name(self, name):
-        self.input_widgets.get_argument_by_name(name)
+        return self.output_widgets.get_argument_by_name(name)

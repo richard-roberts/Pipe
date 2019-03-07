@@ -45,9 +45,13 @@ class Graph:
         filepath = os.path.join(directory, self.name + ".json")
         self.export_to_filepath(filepath)
 
-    def assemble_and_save_to_filepath(self, filepath):
+    def assemble_to_filepath(self, filepath):
         with open(filepath, 'w') as stream:
-            stream.write(assemblers.Assembler.assemble(self))
+            stream.write(assemblers.Assembler.assemble_graph(self))
+
+    def assemble_to_directory(self, directory):
+        filepath = os.path.join(directory, self.name + ".py")
+        self.assemble_to_filepath(filepath)
 
     def create_node(self, template, position):
         node = nodes.Node(template, position)

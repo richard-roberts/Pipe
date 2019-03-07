@@ -37,7 +37,7 @@ class TemplateCollectionManager:
 
     def import_collections(self, directory):
         filepaths = []
-        for filename in os.listdir(directory):
+        for filename in [f for f in os.listdir(directory) if f.endswith(".json")]:
             filepath = os.path.join(directory, filename)
             if os.path.isfile(filepath):
                 filepaths.append(filepath)
@@ -48,6 +48,13 @@ class TemplateCollectionManager:
     def export_collections(self, directory):
         for collection in self.collections.values():
             collection.export_to_directory(directory)
+
+    def assemble_collections(self, directory):
+        for collection in self.collections.values():
+            collection.assemble_to_directory(directory)
+
+    def get_collection_names(self):
+        return [collection.name for collection in self.collections.values()]
 
     def get_names(self):
         all_names = []
