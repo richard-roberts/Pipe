@@ -262,8 +262,14 @@
                 
                 GraphWidget:
                     id: editor
-                    size_hint: 1.0, 0.9
+                    size_hint: 1.0, 0.95
                     pos: root.pos
+
+                GridLayout:
+                    cols: 3
+                    size_hint: 1, 0.05
+                    id: graph_menu
+
             
             BoxLayout:
                 size_hint: 0.3, 1

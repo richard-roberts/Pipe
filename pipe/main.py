@@ -82,6 +82,9 @@ class Desktop(FloatLayout):
         # popup.open()
         self.manager.open_project("/Users/richard-roberts/Development/Pipe/examples/testing")
         self.set_status("Project opened successfully")
+        graph = globals.GraphInfo().manager.get_by_name("Bob")
+        self.ids.editor.setup_from_graph(graph)
+        self.set_status("Switched to %s" % graph.name)
 
     def save_project(self):
         # def fn(pop):
