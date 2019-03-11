@@ -67,6 +67,7 @@ class Graph:
         del self.nodes[node.get_id()]
 
     def delete_edge(self, edge):
+        edge.disconnect()
         del self.edges[edge]
 
     def get_node_by_id(self, node_id):

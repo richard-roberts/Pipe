@@ -8,11 +8,25 @@ class ArgumentWidget(ToggleButton):
     def __init__(self, **kwargs):
         super(ArgumentWidget, self).__init__(**kwargs)
         self.argument = None
+        self.edge_widget = None
 
     def setup(self, argument):
         self.argument = argument
         self.text = argument.name
         self.bind(state=self.parent.parent.parent.handle_argument_touched)
+
+    def disconnect(self):
+        self.edge_widget = None
+
+    def connect(self, edge_widget):
+        self.edge_widget = edge_widget
+        self.argument.connect(edge_widget.edge)
+
+    def is_connected(self):
+        return self.edge_widget is not None
+
+    def get_edge_widget(self):
+        return self.edge_widget
 
 
 class InputArgumentWidget(ArgumentWidget):

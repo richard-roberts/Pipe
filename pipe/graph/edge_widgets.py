@@ -22,8 +22,14 @@ class EdgeWidget(FloatLayout):
         self.to_y = self.widget_to.y + self.widget_to.height / 2
         self.canvas.ask_update()
 
+    def disconnect(self):
+        self.widget_from.disconnect()
+        self.widget_to.disconnect()
+
     def setup(self, edge, widget_from, widget_to):
         self.edge = edge
         self.widget_from = widget_from
         self.widget_to = widget_to
+        self.widget_from.connect(self)
+        self.widget_to.connect(self)
         self.update_position()

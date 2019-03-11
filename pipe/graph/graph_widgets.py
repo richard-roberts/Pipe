@@ -104,6 +104,7 @@ class GraphWidget(FloatLayout):
 
     def delete_edge_by_widget(self, edge_widget):
         self.graph.delete_edge(edge_widget.edge)
+        edge_widget.disconnect()
         self.remove_widget(edge_widget)
         del self.edge_widgets[edge_widget]
 
@@ -183,12 +184,6 @@ class GraphWidget(FloatLayout):
             raise ValueError("Error: %s is not a valid argument type (this shouldn't happen)?" % type(argument_widget))
 
         if self.activated_input_argument is not None and self.activated_output_argument is not None:
-            self.set_status(
-                "New edge created from %s to %s" % (
-                    self.activated_output_argument.argument.name,
-                    self.activated_input_argument.argument.name
-                )
-            )
 
             if self.edge_already_exists(
                 self.activated_output_argument,
@@ -198,30 +193,59 @@ class GraphWidget(FloatLayout):
                     self.activated_output_argument,
                     self.activated_input_argument
                 )
-            else:
-                self.create_new_edge(
-                    self.activated_output_argument,
-                    self.activated_input_argument
+                self.activated_output_argument.state = "normal"
+                self.activated_input_argument.state = "normal"
+                self.set_status("Edge deleted")
+                return
+
+            if self.activated_input_argument.is_connected():
+                self.set_status("Error: the input argument is already connected")
+                self.activated_output_argument.state = "normal"
+                self.activated_input_argument.state = "normal"
+                return
+
+            # Note:
+            #   Need to have print first, since args
+            #   get reset during edge creation
+            self.set_status(
+                "New edge created from %s to %s" % (
+                    self.activated_output_argument.argument.name,
+                    self.activated_input_argument.argument.name
                 )
+            )
+
+            self.create_new_edge(
+                self.activated_output_argument,
+                self.activated_input_argument
+            )
             self.activated_output_argument.state = "normal"
             self.activated_input_argument.state = "normal"
 
+
     def handle_touch_down(self, touch):
+        if touch.is_double_tap:
+            self.start_new_node_prompt(touch.spos)
+            return True
+
         for widget in self.node_widgets.values():
             if widget.collide_point(*touch.pos):
                 self.selected_node_widget = widget
                 return True
-
-        self.start_new_node_prompt(touch.spos)
+        self.selected_node_widget = None
+        return False
 
     def handle_touch_move(self, touch):
         if self.selected_node_widget is None:
-            return
-
-        self.selected_node_widget.amend_position(
-            touch.sx - touch.psx,
-            touch.sy - touch.psy
-        )
+            for node_widget in self.node_widgets:
+                node_widget.amend_position(
+                    touch.sx - touch.psx,
+                    touch.sy - touch.psy
+                )
+        else:
+            self.selected_node_widget.amend_position(
+                touch.sx - touch.psx,
+                touch.sy - touch.psy
+            )
 
         # Update all edges
         # TODO: should optimise this so that only connected edges are updated

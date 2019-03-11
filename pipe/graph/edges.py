@@ -3,6 +3,8 @@ class Edge:
     def __init__(self, argument_from, argument_to):
         self.argument_from = argument_from
         self.argument_to = argument_to
+        self.argument_from.connect(self)
+        self.argument_to.connect(self)
 
     def __str__(self):
         return "%s.%s-%s.%s" % (
@@ -19,6 +21,10 @@ class Edge:
             "node_id_to": self.argument_to.get_node().get_id(),
             "arg_to_name": self.argument_to.name,
         }
+
+    def disconnect(self):
+        self.argument_from.disconnect()
+        self.argument_to.disconnect()
 
     def is_connected_to_node(self, node):
         matches_from = node == self.argument_from.get_node()
