@@ -1,0 +1,27 @@
+{
+    "name": "Execution",
+    "templates": {
+        "ExeGraph": {
+            "code": "import Testing\n\nclass ExeGraph:\n    def __init__(self, o):\n        Testing.execute(o)\n",
+            "collection_name": "Execution",
+            "documentation": "A description of the ExeGraph node's behavior.",
+            "inputs": [
+                "o"
+            ],
+            "name": "ExeGraph",
+            "outputs": []
+        },
+        "ExeGraph11": {
+            "code": "import Testing\n\nclass ExeGraph11:\n    def __init__(self, o):\n        self.x = Testing.execute(o)\n",
+            "collection_name": "Execution",
+            "documentation": "A description of the ExeGraph11 node's behavior.",
+            "inputs": [
+                "o"
+            ],
+            "name": "ExeGraph11",
+            "outputs": [
+                "x"
+            ]
+        }
+    }
+}
