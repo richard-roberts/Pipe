@@ -221,7 +221,6 @@ class GraphWidget(FloatLayout):
             self.activated_output_argument.state = "normal"
             self.activated_input_argument.state = "normal"
 
-
     def handle_touch_down(self, touch):
         if touch.is_double_tap:
             self.start_new_node_prompt(touch.spos)

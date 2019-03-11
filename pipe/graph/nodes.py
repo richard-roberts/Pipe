@@ -28,6 +28,47 @@ class Node:
     def get_output_argument_by_name(self, name):
         return self.outputs[name]
 
+    def list_disconnected_inputs(self):
+        disconnected = []
+        for input_ in self.inputs.values():
+            if not input_.is_connected():
+                disconnected.append(input_)
+        return disconnected
+
+    def list_disconnected_outputs(self):
+        disconnected = []
+        for output in self.outputs.values():
+            if not output.is_connected():
+                disconnected.append(output)
+        return disconnected
+
+    def has_outputs(self):
+        return self.count_number_of_disconnected_outputs() > 0
+
+    def count_number_of_disconnected_inputs(self):
+        n = 0
+        for input_ in self.inputs.values():
+            if not input_.is_connected():
+                n += 1
+        return n
+
+    def count_number_of_disconnected_outputs(self):
+        n = 0
+        for output in self.outputs.values():
+            if not output.is_connected():
+                n += 1
+        return n
+
+    def count_number_of_connected_outputs(self):
+        n = 0
+        for output in self.outputs.values():
+            if output.is_connected():
+                n += 1
+        return n
+
+    def terminates_execution(self):
+        return self.count_number_of_connected_outputs() == 0
+
     def as_json(self):
         return {
             "node_id": self.node_id,

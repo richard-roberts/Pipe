@@ -95,7 +95,7 @@ class Desktop(FloatLayout):
         # popup.bind(on_dismiss=fn)
         # popup.open()
         self.manager.save_project("/Users/richard-roberts/Development/Pipe/examples/testing")
-        self.set_status("Project opened successfully")
+        self.set_status("Project saved successfully")
 
     def assemble_and_execute(self):
         temporary = "./tmp"
@@ -117,17 +117,18 @@ class Desktop(FloatLayout):
             self.set_status("Execution successful")
 
     def assemble_and_save(self):
-        def fn(pop):
-            project_directory = pop.ids.filechooser.path
-            if not project_directory:
-                self.set_status("Import cancelled (no directory specified)")
-
-            self.manager.assemble_project(project_directory)
-            self.set_status("Project assembled successfully")
-
-        popup = Factory.ExportAssembledProgram()
-        popup.bind(on_dismiss=fn)
-        popup.open()
+        # def fn(pop):
+        #     project_directory = pop.ids.filechooser.path
+        #     if not project_directory:
+        #         self.set_status("Import cancelled (no directory specified)")
+        #
+        #     self.manager.assemble_project(project_directory)
+        #     self.set_status("Project assembled successfully")
+        #
+        # popup = Factory.ExportAssembledProgram()
+        # popup.bind(on_dismiss=fn)
+        # popup.open()
+        self.manager.assemble_project("/Users/richard-roberts/Desktop/tmp")
 
     def start_new_template_prompt(self):
         def fn(pop):

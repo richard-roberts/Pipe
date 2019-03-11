@@ -1,9 +1,11 @@
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, ObjectProperty
 
 
 class EdgeWidget(FloatLayout):
 
+    widget_from = ObjectProperty()
+    widget_to = ObjectProperty()
     from_x = NumericProperty()
     from_y = NumericProperty()
     to_x = NumericProperty()

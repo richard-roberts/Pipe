@@ -2,28 +2,28 @@
     "edges": [
         {
             "arg_from_name": "o",
-            "arg_to_name": "x",
-            "node_id_from": 0,
-            "node_id_to": 1
+            "arg_to_name": "b",
+            "node_id_from": 4605297664,
+            "node_id_to": 4563735776
         }
     ],
     "name": "Testing",
     "nodes": [
         {
-            "node_id": 0,
+            "node_id": 4563735776,
             "position": [
-                0.14250000000000007,
-                0.6483333333333332
+                0.3011904761904762,
+                0.6333333333333333
             ],
-            "template": "Gen::Five"
+            "template": "Math::Add"
         },
         {
-            "node_id": 1,
+            "node_id": 4605297664,
             "position": [
-                0.48749999999999993,
-                0.6283333333333332
+                0.11119047619047617,
+                0.47738095238095224
             ],
-            "template": "Utils::Log"
+            "template": "Literals::Five"
         }
     ]
 }
