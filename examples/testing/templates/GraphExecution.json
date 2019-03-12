@@ -1,0 +1,26 @@
+{
+    "name": "GraphExecution",
+    "templates": {
+        "Add5": {
+            "code": "class Add5:\n    def __init__(self, Add_a, Renamer_o):\n        import Add5 as graph\n        result = graph.execute(Add_a, Renamer_o)\n        self.Add_o = result[\"Add_o\"]\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the Add5 node's behavior.",
+            "inputs": [
+                "Add_a",
+                "Renamer_o"
+            ],
+            "name": "Add5",
+            "outputs": [
+                "Add_o"
+            ]
+        },
+        "Main": {
+            "code": "class Main:\n    def __init__(self):\n        import Main as graph\n        execute()\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the Main node's behavior.",
+            "inputs": [],
+            "name": "Main",
+            "outputs": []
+        }
+    }
+}

@@ -1,6 +1,12 @@
 #:kivy 1.10.1
 #:import Factory kivy.factory.Factory
+#:import Globals globals
 
+<InputArgumentWidget>:
+    widgets: None
+
+<OutputArgumentWidget>:
+    widgets: None
 
 <InputArgumentSetWidget>:
     size_hint: 0.1, 1
@@ -21,19 +27,39 @@
             size: root.size
             pos: root.pos
 
-    InputArgumentSetWidget:
-        size_hint: 0.1, 1
-        id: input_widgets
-        orientation: "vertical"
-    
-    Label:
-        size_hint: 0.8, 1
-        text: root.node.template.name if root.node is not None else "Untitled"
-    
-    OutputArgumentSetWidget:
-        size_hint: 0.1, 1
-        id: output_widgets
-        orientation: "vertical"
+    BoxLayout:
+        orientation: "horizontal"
+        size_hint: 1, 1
+
+        InputArgumentSetWidget:
+            size_hint: 0.1, 1
+            id: input_widgets
+            orientation: "vertical"
+
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 0.8, 1
+
+            Label:
+                size_hint: 1, 0.8
+                text: root.node.template.name if root.node is not None else "Untitled"
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: 1, 0.2
+
+                Button:
+                    text: "x"
+                    on_release: Globals.GraphWidget().instance.delete_node_and_connected_edges_by_widget(self.parent.parent.parent.parent)
+
+                Button:
+                    text: "e"
+                    on_release: Globals.GraphWidget().instance.edit_node_by_widget(self.parent.parent.parent.parent)
+
+        OutputArgumentSetWidget:
+            size_hint: 0.1, 1
+            id: output_widgets
+            orientation: "vertical"
 
 <EdgeWidget>:
     size_hint: None, None
@@ -46,41 +72,22 @@
 
 <NewNodePopup@Popup>:
     names: []
-    size_hint: 0.5, 0.2
+    size_hint: 0.9, 0.9
+    used: False
+    new_template_callback: None
     title: "Create a new node"
 
     BoxLayout:
         orientation: "vertical"
 
-        Spinner:
-            id: options
-            size_hint: 0.9, 0.9
-            pos: root.pos
-            text: 'Select template'
-            values: root.names
-        
+        BoxLayout:
+            size_hint: 1, 0.95
+            id: options_menu
+
         Button:
-            text: 'Create'
-            on_release: root.dismiss()
-
-<SwitchGraphPopup@Popup>:
-    names: []
-    size_hint: 0.5, 0.2
-    title: "Switch to a graph"
-
-    BoxLayout:
-        orientation: "vertical"
-
-        Spinner:
-            id: options
-            size_hint: 0.9, 0.9
-            pos: root.pos
-            text: 'Select graph'
-            values: root.names
-        
-        Button:
-            text: 'Switch'
-            on_release: root.dismiss()
+            size_hint: 1, 0.05
+            text: "From new template"
+            on_release: root.new_template_callback()
 
 <NewTemplatePopup@Popup>:
     size_hint: 0.8, 0.5
@@ -127,6 +134,56 @@
                 input_type: 'number'
                 text: ''
         
+        BoxLayout:
+            orientation: "horizontal"
+            Button:
+                text: 'Create'
+                on_release: root.dismiss()
+
+<EditTemplatePopup@Popup>:
+    size_hint: 0.8, 0.5
+    title: "Edit template"
+
+    BoxLayout:
+        size_hint: 0.9, 0.9
+        pos: root.pos
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Collection"
+            TextInput:
+                id: collection
+                multiline: False
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Template Name"
+            TextInput:
+                id: name
+                multiline: False
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Input Arguments"
+            TextInput:
+                id: inputs
+                multiline: False
+                text: ''
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Output Arguments"
+            TextInput:
+                id: outputs
+                multiline: False
+                input_type: 'number'
+                text: ''
+
         BoxLayout:
             orientation: "horizontal"
             Button:
@@ -265,11 +322,13 @@
                     size_hint: 1.0, 0.95
                     pos: root.pos
 
-                GridLayout:
-                    cols: 3
+                BoxLayout:
                     size_hint: 1, 0.05
-                    id: graph_menu
+                    id: graph_selection_menu
 
+                    Button:
+                        text: '+'
+                        on_release: root.start_new_graph_prompt()
             
             BoxLayout:
                 size_hint: 0.3, 1
@@ -333,13 +392,13 @@
 
                 CodeInput:
                     id: code_panel
-                    size_hint: 1, 0.45
+                    size_hint: 1, 0.65
                     text: root.ids.editor.selected_node_widget.node.template.code if root.ids.editor.selected_node_widget else "nothing selected"
                     on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.code = self.text
 
                 GridLayout:
-                    cols: 3
-                    size_hint: 1, 0.3
+                    cols: 2
+                    size_hint: 1, 0.1
 
                     Button:
                         text: 'Open'
@@ -348,40 +407,12 @@
                         text: 'Save'
                         on_release: root.save_project()
                     Button:
-                        text: '  '
-                        on_release: pass
-
-                    Button:
-                        text: 'New Template'
-                        on_release: root.start_new_template_prompt()
-                    Button:
-                        text: 'New Graph'
-                        on_release: root.start_new_graph_prompt()
-                    Button:
-                        text: 'Switch Graph'
-                        on_release: root.start_switch_graph_prompt()
-
-                    
-                    Button:
-                        text: 'Delete Node'
-                        on_release: root.ids.editor.delete_selected()
-                    Button:
-                        text: '  '
-                        on_release: pass
-                    Button:
-                        text: '  '
-                        on_release: pass
-                    
-                    Button:
                         text: 'Assemble'
                         on_release: root.assemble_and_save()
                     Button:
                         text: 'Execute'
                         on_release: root.assemble_and_execute()
-                    Button:
-                        text: '  '
-                        on_release: pass
-                        
+
 
         Label:
             id: status_bar

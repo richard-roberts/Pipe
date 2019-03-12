@@ -8,19 +8,26 @@ class Node:
         self.node_id = id(self) if node_id is None else node_id
         self.template = template
         self.position = position
-
         self.inputs = {}
+        self.outputs = {}
+        self.update_args_from_template()
+
+    def update_args_from_template(self):
+        self.inputs = {}
+        self.outputs = {}
         for name in self.template.inputs:
             arg = arguments.Argument(self, name)
             self.inputs[arg.name] = arg
-
-        self.outputs = {}
         for name in self.template.outputs:
             arg = arguments.Argument(self, name)
             self.outputs[arg.name] = arg
 
     def get_id(self):
         return self.node_id
+
+    def replace_template(self, new_template):
+        self.template = new_template
+        self.update_args_from_template()
 
     def get_input_argument_by_name(self, name):
         return self.inputs[name]

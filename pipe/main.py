@@ -9,6 +9,7 @@ import kivy
 from kivy.app import App
 from kivy.factory import Factory
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.button import Button
 
 import globals
 from graph import graph_manager
@@ -37,6 +38,7 @@ class DesktopManager:
         self.graphs.import_graphs(graphs_directory)
 
     def save_project(self, project_directory):
+        shutil.rmtree(project_directory)
         templates_directory = os.path.join(project_directory, "templates")
         graphs_directory = os.path.join(project_directory, "graphs")
         if not os.path.exists(templates_directory):
@@ -57,18 +59,35 @@ class DesktopManager:
         self.templates.assemble_collections(templates_directory)
         self.graphs.assemble_graphs(graphs_directory)
 
+    def list_graphs(self):
+        return self.graphs.graphs.values()
+
 
 class Desktop(FloatLayout):
 
     def __init__(self, **kwargs):
         super(Desktop, self).__init__(**kwargs)
         self.manager = DesktopManager()
+        self.graph_buttons = []
 
     def set_status(self, message):
         message = message.replace('\n', '')
         message = message.replace('\t', '')
         message = message.replace('\r\t', '')
         self.ids.status_bar.text = "    %s" % message
+
+    def add_button_for_graph(self, graph):
+        def fn(*args):
+            self.ids.editor.setup_from_graph(graph)
+
+        button = Button(text=graph.name, on_release=fn)
+        self.ids.graph_selection_menu.add_widget(button)
+        self.graph_buttons.append(button)
+
+    def remove_buttons_for_graph(self):
+        for button in self.graph_buttons:
+            self.ids.graph_selection_menu.remove_widget(button)
+        self.graph_buttons = []
 
     def open_project(self):
         # def fn(pop):
@@ -80,11 +99,15 @@ class Desktop(FloatLayout):
         # popup = Factory.OpenProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
-        self.manager.open_project("/Users/richard-roberts/Development/Pipe/examples/testing")
+
+        self.remove_buttons_for_graph()
+        self.manager.open_project("C:/Development/Pipe/examples/testing")
         self.set_status("Project opened successfully")
-        graph = globals.GraphInfo().manager.get_by_name("Bob")
-        self.ids.editor.setup_from_graph(graph)
-        self.set_status("Switched to %s" % graph.name)
+        for graph in self.manager.list_graphs():
+            self.add_button_for_graph(graph)
+        self.ids.editor.setup_from_graph(globals.GraphInfo().manager.get_by_name("Main"))
+        self.set_status("Switched to %s" % "Bob")
+        self.ids.editor.redraw()
 
     def save_project(self):
         # def fn(pop):
@@ -97,11 +120,12 @@ class Desktop(FloatLayout):
         # popup = Factory.SaveProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
-        self.manager.save_project("/Users/richard-roberts/Development/Pipe/examples/testing")
+        self.manager.save_project("C:/Development/Pipe/examples/testing")
         self.set_status("Project saved successfully")
 
     def assemble_and_execute(self):
         temporary = "./tmp"
+        globals.TemplateInfo().manager.create_or_update_graph_template(self.ids.editor.graph)
         self.manager.assemble_project(temporary)
         command = 'python ./tmp/%s.py' % self.ids.editor.graph.name
 
@@ -131,43 +155,8 @@ class Desktop(FloatLayout):
         # popup = Factory.ExportAssembledProgram()
         # popup.bind(on_dismiss=fn)
         # popup.open()
-        self.manager.assemble_project("/Users/richard-roberts/Desktop/tmp")
-
-    def start_new_template_prompt(self):
-        def fn(pop):
-            collection = pop.ids.collection.text
-            name = pop.ids.name.text
-            
-            # If no collection was entered, it's probably a cancel?
-            if collection == "":
-                self.set_status("Warning: operation cancelled (no collection specified)")
-                return
-
-            # If no named was entered, it's probably a cancel?
-            if name == "":
-                self.set_status("Warning: operation cancelled (no name specified)")
-                return
-
-            # Check its not a duplicate
-            if globals.TemplateInfo().manager.already_exists(collection, name):
-                self.set_status("Error: %s already has template named `%s`." % (name, collection))
-                return
-
-            # Process arguments and check at least one exists
-            inputs_str = pop.ids.inputs.text.strip()
-            outputs_str = pop.ids.outputs.text.strip()
-            inputs = [] if inputs_str is "" else [arg.strip() for arg in inputs_str.split(",")]
-            outputs = [] if outputs_str is "" else [arg.strip() for arg in outputs_str.split(",")]
-            if len(inputs) == 0 and len(outputs) == 0:
-                self.set_status("Error: a node must have at least one argument")
-                return
-
-            self.manager.templates.new_template(collection, name, inputs, outputs)
-            self.set_status("A new template named %s has been created" % name)
-
-        popup = Factory.NewTemplatePopup()
-        popup.bind(on_dismiss=fn)
-        popup.open()
+        globals.TemplateInfo().manager.create_or_update_graph_template(self.ids.editor.graph)
+        self.manager.assemble_project("D:\\tmp")
 
     def start_new_graph_prompt(self):
         def fn(pop):
@@ -184,24 +173,11 @@ class Desktop(FloatLayout):
                 return
 
             graph = self.manager.graphs.new_graph(name)
+            self.add_button_for_graph(graph)
             self.ids.editor.setup_from_graph(graph)
             self.set_status("A new graph named %s has been created" % name)
 
         popup = Factory.NewGraphPopup()
-        popup.bind(on_dismiss=fn)
-        popup.open()
-
-    def start_switch_graph_prompt(self):
-        def fn(pop):
-            name = pop.ids.options.text
-            if name == "Select graph":
-                self.set_status("Warning: switch graph cancelled (no graph selected)")
-                return
-            graph = globals.GraphInfo().manager.get_by_name(name)
-            self.ids.editor.setup_from_graph(graph)
-            self.set_status("Switched to %s" % graph.name)
-        popup = Factory.SwitchGraphPopup()
-        popup.names = globals.GraphInfo().manager.get_names()
         popup.bind(on_dismiss=fn)
         popup.open()
 

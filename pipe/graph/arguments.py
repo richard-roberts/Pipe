@@ -19,3 +19,6 @@ class Argument:
 
     def get_connected(self):
         return self.edge
+
+    def pretty(self):
+        return "%s.%s" % (self.get_node().template.name, self.name)

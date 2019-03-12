@@ -1,0 +1,57 @@
+{
+    "edges": [
+        {
+            "arg_from_name": "o",
+            "arg_to_name": "b",
+            "node_id_from": 2178172803784,
+            "node_id_to": 2178232974360
+        },
+        {
+            "arg_from_name": "z",
+            "arg_to_name": "a",
+            "node_id_from": 3281751779088,
+            "node_id_to": 2178172803784
+        },
+        {
+            "arg_from_name": "o",
+            "arg_to_name": "b",
+            "node_id_from": 3281598333560,
+            "node_id_to": 2178172803784
+        }
+    ],
+    "name": "Add5",
+    "nodes": [
+        {
+            "node_id": 2178172803784,
+            "position": [
+                0.30039062500000024,
+                0.4984066330209087
+            ],
+            "template": "Math::Add"
+        },
+        {
+            "node_id": 2178232974360,
+            "position": [
+                0.4910937500000001,
+                0.610449411199231
+            ],
+            "template": "Math::Add"
+        },
+        {
+            "node_id": 3281751779088,
+            "position": [
+                0.11718750000000003,
+                0.6409516943042538
+            ],
+            "template": "Utils::Renamer"
+        },
+        {
+            "node_id": 3281598333560,
+            "position": [
+                0.13828125000000005,
+                0.40519105984138415
+            ],
+            "template": "Literals::Five"
+        }
+    ]
+}

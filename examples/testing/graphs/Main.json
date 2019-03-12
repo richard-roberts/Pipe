@@ -1,0 +1,57 @@
+{
+    "edges": [
+        {
+            "arg_from_name": "o",
+            "arg_to_name": "Add_a",
+            "node_id_from": 2178169323360,
+            "node_id_to": 3281748593128
+        },
+        {
+            "arg_from_name": "Add_o",
+            "arg_to_name": "o",
+            "node_id_from": 3281748593128,
+            "node_id_to": 3281709268776
+        },
+        {
+            "arg_from_name": "o",
+            "arg_to_name": "Renamer_o",
+            "node_id_from": 3281688441352,
+            "node_id_to": 3281748593128
+        }
+    ],
+    "name": "Main",
+    "nodes": [
+        {
+            "node_id": 2178169323360,
+            "position": [
+                0.12062499999999993,
+                0.6175186253304497
+            ],
+            "template": "Literals::Two"
+        },
+        {
+            "node_id": 3281748593128,
+            "position": [
+                0.34335937499999974,
+                0.47873107426099526
+            ],
+            "template": "GraphExecution::Add5"
+        },
+        {
+            "node_id": 3281709268776,
+            "position": [
+                0.5296874999999995,
+                0.5984138428262438
+            ],
+            "template": "Utils::Log"
+        },
+        {
+            "node_id": 3281688441352,
+            "position": [
+                0.12851562499999997,
+                0.3713049747656815
+            ],
+            "template": "Literals::Three"
+        }
+    ]
+}

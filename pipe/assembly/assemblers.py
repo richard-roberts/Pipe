@@ -60,7 +60,7 @@ class Assembler:
         argument_string = ""
         for node in all_nodes:
             for input_arg in node.list_disconnected_inputs():
-                argument_string += ("%s_%s=None, " % (node.template.name, input_arg.name))
+                argument_string += ("%s_%s, " % (node.template.name, input_arg.name))
         assembled_str += function_header % argument_string[:-2] # [:-2] to trim last comma.
 
         # Write function body
@@ -82,7 +82,7 @@ class Assembler:
             if node.has_outputs():
                 for output in node.list_disconnected_outputs():
                     var_name = "%s_%s" % (node.template.name, output.name)
-                    assembled_str += "        \"%s\": %s\n" % (var_name, var_name)
+                    assembled_str += "        \"%s\": %s,\n" % (var_name, var_name)
         assembled_str += "    }\n"
         assembled_str += "\n"
 

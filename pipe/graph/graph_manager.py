@@ -23,6 +23,7 @@ class GraphManager:
         graph = graphs.Graph()
         graph.import_from_filepath(filepath)
         self.graphs[graph.name] = graph
+        globals.TemplateInfo().manager.create_or_update_graph_template(graph)
         return graph
 
     def import_graphs(self, directory):
@@ -51,3 +52,22 @@ class GraphManager:
 
     def get_by_name(self, name):
         return self.graphs[name]
+
+    def replace_template_a_with_b(self, a, b):
+        for graph in self.graphs.values():
+            graph.replace_template_a_with_b(a, b)
+
+    def delete_any_nodes_using_template(self, template):
+        for graph in self.graphs.values():
+            graph.delete_nodes_using_template(template)
+
+    def assemble_templates_for_graph(self, graph_name):
+        self.graphs[graph_name].assemble_template()
+
+    def count_uses_of_template(self, template):
+        count = 0
+        for graph in self.graphs.values():
+            n = graph.count_uses_of_template(template)
+            print("Graph %s used %s %d times" % (graph.name, template.name, n))
+            count += n
+        return count

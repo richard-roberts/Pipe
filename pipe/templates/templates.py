@@ -1,7 +1,7 @@
 import config
 
 
-class Template:
+class Template(object):
 
     def __init__(self):
         self.collection_name = ""
@@ -18,8 +18,8 @@ class Template:
         self.function_name = name.replace(" ", "_")
         self.inputs = inputs
         self.outputs = outputs
-        self.documentation = config.Defaults.Template.documentation(name)
-        self.code = config.Defaults.Template.code(self.function_name, inputs, outputs)
+        self.documentation = config.Defaults.Template.new_template_documentation(name)
+        self.code = config.Defaults.Template.new_template_code(self.function_name, inputs, outputs)
 
     def as_json(self):
         return {
@@ -47,5 +47,18 @@ class Template:
     def is_leaf(self):
         return len(self.outputs) == 0
 
+    def input_string(self):
+        return ", ".join(self.inputs)
+
+    def output_string(self):
+        return ", ".join(self.outputs)
+
     def get_long_name(self):
         return "%s::%s" % (self.collection_name, self.name)
+
+
+class GraphTemplate(Template):
+
+    def setup(self, collection_name, name, inputs, outputs):
+        super(GraphTemplate, self).setup(collection_name, name, inputs, outputs)
+        self.code = config.Defaults.Template.graph_execution_template_code(self.function_name, inputs, outputs)

@@ -11,6 +11,16 @@
                 "o"
             ]
         },
+        "Three": {
+            "code": "class Three:\n    def __init__(self):\n        self.o = 3\n",
+            "collection_name": "Literals",
+            "documentation": "A description of the Three node's behavior.",
+            "inputs": [],
+            "name": "Three",
+            "outputs": [
+                "o"
+            ]
+        },
         "Two": {
             "code": "class Two:\n    def __init__(self):\n        self.o = 2\n",
             "collection_name": "Literals",

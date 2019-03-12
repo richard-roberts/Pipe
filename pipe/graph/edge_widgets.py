@@ -17,12 +17,16 @@ class EdgeWidget(FloatLayout):
         self.widget_from = None
         self.widget_to = None
 
+    def pretty(self):
+        return "Edge<%s-%s>" % (self.widget_from.pretty(), self.widget_to.pretty())
+
     def update_position(self):
-        self.from_x = self.widget_from.x + self.widget_from.width
-        self.from_y = self.widget_from.y + self.widget_from.height / 2
-        self.to_x = self.widget_to.x
-        self.to_y = self.widget_to.y + self.widget_to.height / 2
+        self.from_x = self.widget_from.connector_position[0]
+        self.from_y = self.widget_from.connector_position[1]
+        self.to_x = self.widget_to.connector_position[0]
+        self.to_y = self.widget_to.connector_position[1]
         self.canvas.ask_update()
+        # print(self.pretty(), self.from_x, self.from_y, self.to_x, self.to_y)
 
     def disconnect(self):
         self.widget_from.disconnect()

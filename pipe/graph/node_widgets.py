@@ -29,6 +29,18 @@ class NodeWidget(BoxLayout):
             self.node.position[0] * Window.width,
             self.node.position[1] * Window.height
         )
+        self.input_widgets.update_connector_position(
+            (
+                self.pos[0],
+                self.pos[1]
+            )
+        )
+        self.output_widgets.update_connector_position(
+            (
+                self.pos[0] + self.width,
+                self.pos[1]
+            )
+        )
 
     def amend_position(self, delta_x, delta_y):
         self.node.position = (

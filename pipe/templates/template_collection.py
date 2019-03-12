@@ -3,6 +3,7 @@ import json
 
 from assembly import assemblers
 from . import templates
+import globals
 
 
 class TemplateCollection:
@@ -22,6 +23,7 @@ class TemplateCollection:
         }
 
     def get_names(self):
+        print("%s has %s" % (self.name, [template.name for template in self.templates.values()]))
         return [template.name for template in self.templates.values()]
 
     def template_exists(self, name):
@@ -30,11 +32,24 @@ class TemplateCollection:
     def get_template(self, name):
         return self.templates[name]
 
-    def create_new_template(self, name, inputs, outputs):
-        template = templates.Template()
+    def create_new_template(self, clazz, name, inputs, outputs):
+        template = clazz()
         template.setup(self.name, name, inputs, outputs)
         self.templates[template.name] = template
         return template
+
+    def delete_template(self, template):
+        if template.name not in self.templates.keys():
+            raise IndexError("No template named %s in %s collection" % (template.name, self.name))
+        del self.templates[template.name]
+        if len(self.templates) == 0:
+            globals.TemplateInfo().manager.delete_collection(self)
+
+    def delete_template_by_name(self, name):
+        self.delete_template(self.get_template(name))
+
+    def is_empty(self):
+        return len(self.templates)
 
     def from_json(self, data):
         self.name = data["name"]
