@@ -1,8 +1,9 @@
+import config
 import globals
 from . import arguments
 
 
-class Node:
+class Node(object):
 
     def __init__(self, template, position, node_id=None):
         self.node_id = id(self) if node_id is None else node_id
@@ -24,6 +25,9 @@ class Node:
 
     def get_id(self):
         return self.node_id
+
+    def is_graph_execution_node(self):
+        return globals.TemplateInfo().manager.template_is_graph_execution(self.template)
 
     def replace_template(self, new_template):
         self.template = new_template
@@ -92,3 +96,9 @@ class Node:
             data["position"],
             node_id=data["node_id"]
         )
+
+
+class GraphNode(Node):
+
+    def __init__(self, template, position):
+        super(GraphNode, self).__init__(template, position, node_id=template.name)

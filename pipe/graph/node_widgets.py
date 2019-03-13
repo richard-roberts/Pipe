@@ -1,17 +1,32 @@
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.graphics import Color, Rectangle
+
+import config
 
 
 class NodeWidget(BoxLayout):
     node = ObjectProperty(None, allownone=True)
+    background_color = ObjectProperty()
     input_widgets = ObjectProperty()
     output_widgets = ObjectProperty()
-    template = ObjectProperty()
 
     def __init__(self, **kwargs):
+        self.background_color = config.Colors.Node
         super(NodeWidget, self).__init__(**kwargs)
         self.node = None
+
+    def redraw(self):
+        self.canvas.before.clear()
+        with self.canvas.before:
+            Color(
+                self.background_color.r,
+                self.background_color.g,
+                self.background_color.b,
+                self.background_color.a
+            )
+            Rectangle(pos=self.pos, size=self.size)
 
     def setup_arguments(self):
         self.input_widgets.pos = self.node.position
@@ -60,3 +75,10 @@ class NodeWidget(BoxLayout):
 
     def get_output_argument_widget_by_argument_name(self, name):
         return self.output_widgets.get_argument_by_name(name)
+
+
+class GraphNodeWidget(NodeWidget):
+
+    def __init__(self, **kwargs):
+        super(GraphNodeWidget, self).__init__(**kwargs)
+        self.background_color = config.Colors.GraphNode

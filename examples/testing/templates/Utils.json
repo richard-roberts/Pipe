@@ -2,7 +2,7 @@
     "name": "Utils",
     "templates": {
         "Log": {
-            "code": "class Log:\n    def __init__(self, o):\n        print(o)\n",
+            "code": "class Log:\n    def __init__(self, o):\n        pass\n",
             "collection_name": "Utils",
             "documentation": "A description of the Log node's behavior.",
             "inputs": [
@@ -10,18 +10,6 @@
             ],
             "name": "Log",
             "outputs": []
-        },
-        "Renamer": {
-            "code": "class Renamer:\n    def __init__(self, o):\n        self.z = o\n",
-            "collection_name": "Utils",
-            "documentation": "A description of the Renamer node's behavior.",
-            "inputs": [
-                "o"
-            ],
-            "name": "Renamer",
-            "outputs": [
-                "z"
-            ]
         }
     }
 }

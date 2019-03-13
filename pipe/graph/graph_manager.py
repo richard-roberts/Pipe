@@ -23,7 +23,8 @@ class GraphManager:
         graph = graphs.Graph()
         graph.import_from_filepath(filepath)
         self.graphs[graph.name] = graph
-        globals.TemplateInfo().manager.create_or_update_graph_template(graph)
+        if not globals.TemplateInfo().manager.graph_template_already_exists(graph.name):
+            globals.TemplateInfo().manager.create_or_update_graph_template(graph)
         return graph
 
     def import_graphs(self, directory):

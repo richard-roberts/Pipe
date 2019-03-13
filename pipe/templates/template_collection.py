@@ -23,7 +23,6 @@ class TemplateCollection:
         }
 
     def get_names(self):
-        print("%s has %s" % (self.name, [template.name for template in self.templates.values()]))
         return [template.name for template in self.templates.values()]
 
     def template_exists(self, name):

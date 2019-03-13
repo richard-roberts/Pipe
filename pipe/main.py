@@ -10,8 +10,10 @@ from kivy.app import App
 from kivy.factory import Factory
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
+from kivy.graphics import Color, Rectangle
 
 import globals
+from config import Colors
 from graph import graph_manager
 from graph import graph_widgets
 from templates import template_collection_manager
@@ -69,16 +71,37 @@ class Desktop(FloatLayout):
         super(Desktop, self).__init__(**kwargs)
         self.manager = DesktopManager()
         self.graph_buttons = []
+        globals.PipeInterface().set_instance(self)
 
-    def set_status(self, message):
-        message = message.replace('\n', '')
-        message = message.replace('\t', '')
-        message = message.replace('\r\t', '')
-        self.ids.status_bar.text = "    %s" % message
+    def _set_status(self, message, color):
+        bar = self.ids.status_bar
+        bar.canvas.before.clear()
+        with bar.canvas.before:
+            Color(color.r, color.g, color.b, color.a)
+            Rectangle(pos=bar.pos, size=bar.size)
+        bar.text = "    %s" % message
+
+    def show_message(self, message):
+        self._set_status("Status: " + message, Colors.Message)
+
+    def show_warning(self, message):
+        self._set_status("Warning: " + message, Colors.Warning)
+
+    def show_error(self, message):
+        self._set_status("Error: " + message, Colors.Error)
+
+    def show_execution(self, message):
+        self._set_status("Execution: " + message.replace("\r\n", " \\\\ ").replace("\n", " \\\\ "), Colors.Execution)
+
+    def setup_from_graph(self, graph):
+        self.ids.editor.setup_from_graph(graph)
+
+    def setup_from_graph_by_name(self, name):
+        self.setup_from_graph(globals.GraphInfo().manager.get_by_name(name))
 
     def add_button_for_graph(self, graph):
         def fn(*args):
-            self.ids.editor.setup_from_graph(graph)
+            self.setup_from_graph(graph)
 
         button = Button(text=graph.name, on_release=fn)
         self.ids.graph_selection_menu.add_widget(button)
@@ -93,35 +116,35 @@ class Desktop(FloatLayout):
         # def fn(pop):
         #     project_directory = pop.ids.filechooser.path
         #     if not project_directory:
-        #         self.set_status("Import cancelled (no directory specified)")
+        #         self.show_message("Import cancelled (no directory specified)")
         #     self.manager.open_project(project_directory)
-        #     self.set_status("Project opened successfully")
+        #     self.show_message("Project opened successfully")
         # popup = Factory.OpenProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
 
         self.remove_buttons_for_graph()
         self.manager.open_project("C:/Development/Pipe/examples/testing")
-        self.set_status("Project opened successfully")
+        self.show_message("Project opened successfully")
         for graph in self.manager.list_graphs():
             self.add_button_for_graph(graph)
         self.ids.editor.setup_from_graph(globals.GraphInfo().manager.get_by_name("Main"))
-        self.set_status("Switched to %s" % "Bob")
+        self.show_message("Switched to %s" % "Bob")
         self.ids.editor.redraw()
 
     def save_project(self):
         # def fn(pop):
         #     project_directory = pop.ids.filechooser.path
         #     if not project_directory:
-        #         self.set_status("Export cancelled (no directory specified)")
+        #         self.show_message("Export cancelled (no directory specified)")
         #         return
         #     self.manager.save_project(project_directory)
-        #     self.set_status("Project saved successfully")
+        #     self.show_message("Project saved successfully")
         # popup = Factory.SaveProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
         self.manager.save_project("C:/Development/Pipe/examples/testing")
-        self.set_status("Project saved successfully")
+        self.show_message("Project saved successfully")
 
     def assemble_and_execute(self):
         temporary = "./tmp"
@@ -133,24 +156,24 @@ class Desktop(FloatLayout):
         try:
             result = subprocess.check_output(command, shell=True)
         except:
-            self.set_status("Execution failed")
+            self.show_error("Execution failed")
             shutil.rmtree(temporary)
             return
 
         shutil.rmtree(temporary)
         if result:
-            self.set_status("Execution successful: %s" % result.decode("utf-8"))
+            self.show_execution(result.decode("utf-8"))
         else:
-            self.set_status("Execution successful")
+            self.show_execution("no result return")
 
     def assemble_and_save(self):
         # def fn(pop):
         #     project_directory = pop.ids.filechooser.path
         #     if not project_directory:
-        #         self.set_status("Import cancelled (no directory specified)")
+        #         self.show_message("Import cancelled (no directory specified)")
         #
         #     self.manager.assemble_project(project_directory)
-        #     self.set_status("Project assembled successfully")
+        #     self.show_message("Project assembled successfully")
         #
         # popup = Factory.ExportAssembledProgram()
         # popup.bind(on_dismiss=fn)
@@ -164,18 +187,18 @@ class Desktop(FloatLayout):
 
             # If no named was entered, it's probably a cancel?
             if name == "":
-                self.set_status("Warning: operation cancelled (no name specified)")
+                self.show_warning("operation cancelled (no name specified)")
                 return
 
             # Check its not a duplicate
             if globals.GraphInfo().manager.already_exists(name):
-                self.set_status("Error: there is already has graph named `%s`." % name)
+                self.show_error("there is already has graph named `%s`." % name)
                 return
 
             graph = self.manager.graphs.new_graph(name)
             self.add_button_for_graph(graph)
             self.ids.editor.setup_from_graph(graph)
-            self.set_status("A new graph named %s has been created" % name)
+            self.show_message("A new graph named %s has been created" % name)
 
         popup = Factory.NewGraphPopup()
         popup.bind(on_dismiss=fn)

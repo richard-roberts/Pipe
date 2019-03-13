@@ -1,11 +1,46 @@
 class Colors:
 
-    class Node:
-        generic_alpha = 0.2
-        selected_alpha = 0.2
+    class Message:
+        r = 54.0 / 255
+        g = 54.0 / 255
+        b = 54.0 / 255
+        a = 1.0
+
+    class Warning:
+        r = 232.0 / 255
+        g = 179.0 / 255
+        b = 69.0 / 255
+        a = 1.0
+
+    class Error:
+        r = 255.0 / 255
+        g = 98.0 / 255
+        b = 88.0 / 255
+        a = 1.0
+
+    class Execution:
+        r = 141.0 / 255
+        g = 69.0 / 255
+        b = 232.0 / 255
+        a = 1.0
 
     class Edge:
-        generic = [1.0, 1.0, 1.0]
+        r = 240.0 / 255
+        g = 240.0 / 255
+        b = 240.0 / 255
+        a = 1.0
+
+    class Node:
+        r = 212.0 / 255
+        g = 117.0 / 255
+        b = 209.0 / 255
+        a = 1.0
+
+    class GraphNode:
+        r = 255.0 / 255
+        g = 175.0 / 255
+        b = 95.0 / 255
+        a = 1.0
 
 
 class Defaults:

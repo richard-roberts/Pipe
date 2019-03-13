@@ -1,4 +1,4 @@
-class SingletonClazz(object):
+class GraphWidget:
     __shared_state = {
         "instance": None
     }
@@ -11,8 +11,17 @@ class SingletonClazz(object):
         self.__shared_state["instance"] = instance
 
 
-class GraphWidget(SingletonClazz):
-    pass
+class PipeInterface:
+    __shared_state = {
+        "instance": None
+    }
+
+    def __init__(self):
+        self.__dict__ = self.__shared_state
+        self.instance = self.__shared_state["instance"]
+
+    def set_instance(self, instance):
+        self.__shared_state["instance"] = instance
 
 
 class TemplateInfo:
@@ -39,3 +48,5 @@ class GraphInfo:
 
     def set_manager(self, manager):
         self.__shared_state["manager"] = manager
+
+

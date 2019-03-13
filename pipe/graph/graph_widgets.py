@@ -50,7 +50,11 @@ class GraphWidget(FloatLayout):
 
         self.graph = graph
         for node in self.graph.nodes.values():
-            new_node_widget = node_widgets.NodeWidget()
+            new_node_widget = None
+            if node.is_graph_execution_node():
+                new_node_widget = node_widgets.GraphNodeWidget()
+            else:
+                new_node_widget = node_widgets.NodeWidget()
             self.add_widget(new_node_widget)
             new_node_widget.setup(node)
             self.node_widgets[new_node_widget] = new_node_widget
@@ -91,18 +95,17 @@ class GraphWidget(FloatLayout):
     def rebuild(self):
         self.setup_from_graph(self.graph)
 
-    def set_status(self, message):
-        print("STATUS:", message)
-        self.parent.parent.parent.parent.set_status(message)
-
     def create_new_node(self, template, position):
         node = self.graph.create_node(template, position)
-        widget = node_widgets.NodeWidget()
+        if node.is_graph_execution_node():
+            widget = node_widgets.GraphNodeWidget()
+        else:
+            widget = node_widgets.NodeWidget()
         self.add_widget(widget)
         widget.setup(node)
         self.selected_node_widget = widget
         self.node_widgets[widget] = widget
-        self.set_status("Created new node from %s template" % node.template.name)
+        globals.PipeInterface().instance.show_message("Created new node from %s template" % node.template.name)
 
     def new_template_and_node_prompt(self, position):
         def fn(pop):
@@ -111,17 +114,21 @@ class GraphWidget(FloatLayout):
 
             # If no collection was entered, it's probably a cancel?
             if collection == "":
-                self.set_status("Warning: operation cancelled (no collection specified)")
+                globals.PipeInterface().instance.show_warning("operation cancelled (no collection specified)")
                 return
+
+            # Avoid adding stuff to the graph execution collection
+            if globals.TemplateInfo().manager.is_graph_execution_name(collection):
+                globals.PipeInterface().instance.show_error("cannot add templates to the graph execution category")
 
             # If no named was entered, it's probably a cancel?
             if name == "":
-                self.set_status("Warning: operation cancelled (no name specified)")
+                globals.PipeInterface().instance.show_warning("operation cancelled (no name specified)")
                 return
 
             # Check its not a duplicate
             if globals.TemplateInfo().manager.already_exists(collection, name):
-                self.set_status("Error: %s already has template named `%s`." % (name, collection))
+                globals.PipeInterface().instance.show_error("%s already has template named `%s`." % (name, collection))
                 return
 
             # Process arguments and check at least one exists
@@ -130,18 +137,23 @@ class GraphWidget(FloatLayout):
             inputs = [] if inputs_str is "" else [arg.strip() for arg in inputs_str.split(",")]
             outputs = [] if outputs_str is "" else [arg.strip() for arg in outputs_str.split(",")]
             if len(inputs) == 0 and len(outputs) == 0:
-                self.set_status("Error: a node must have at least one argument")
+                globals.PipeInterface().instance.show_error("a node must have at least one argument")
                 return
 
             template = globals.TemplateInfo().manager.new_template(collection, name, inputs, outputs)
             self.create_new_node(template, position)
-            self.set_status("A new template named %s has been created" % name)
+            globals.PipeInterface().instance.show_message("A new template named %s has been created" % name)
 
         popup = Factory.NewTemplatePopup()
         popup.bind(on_dismiss=fn)
         popup.open()
 
-    def edit_node_by_widget(self, node_widget):
+    def edit_template_via_node_widget(self, node_widget):
+
+        if globals.TemplateInfo().manager.template_is_graph_execution(node_widget.node.template):
+            globals.PipeInterface().instance.show_error("cannot edit graph execution templates")
+            return
+
         old_template = node_widget.node.template
 
         def fn(pop):
@@ -151,12 +163,12 @@ class GraphWidget(FloatLayout):
 
             # If no new_collection was entered, it's probably a cancel?
             if new_collection == "":
-                self.set_status("Warning: operation cancelled (no new_collection specified)")
+                globals.PipeInterface().instance.show_warning("operation cancelled (no new_collection specified)")
                 return
 
             # If no named was entered, it's probably a cancel?
             if new_name == "":
-                self.set_status("Warning: operation cancelled (no new_name specified)")
+                globals.PipeInterface().instance.show_warning("operation cancelled (no new_name specified)")
                 return
 
             # Process arguments and check at least one exists
@@ -165,7 +177,7 @@ class GraphWidget(FloatLayout):
             inputs = [] if inputs_str is "" else [arg.strip() for arg in inputs_str.split(",")]
             outputs = [] if outputs_str is "" else [arg.strip() for arg in outputs_str.split(",")]
             if len(inputs) == 0 and len(outputs) == 0:
-                self.set_status("Error: a node must have at least one argument")
+                globals.PipeInterface().instance.show_error("a node must have at least one argument")
                 return
 
             globals.TemplateInfo().manager.delete_template(old_template)
@@ -194,6 +206,7 @@ class GraphWidget(FloatLayout):
         self.graph.delete_node(node_widget.node)
         self.remove_widget(node_widget)
         del self.node_widgets[node_widget]
+        globals.PipeInterface().instance.show_message("deleted %s" % node_widget.node.template.name)
 
     def delete_edge_by_widget(self, edge_widget):
         self.graph.delete_edge(edge_widget.edge)
@@ -226,7 +239,7 @@ class GraphWidget(FloatLayout):
         if self.selected_node_widget is not None:
             self.delete_node_and_connected_edges_by_widget(self.selected_node_widget)
         else:
-            self.set_status("Warning: no node selected to delete")
+            globals.PipeInterface().instance.show_warning("no node selected to delete")
 
     def start_new_node_prompt(self, position):
         popup = Factory.NewNodePopup()
@@ -240,7 +253,7 @@ class GraphWidget(FloatLayout):
 
         def cancelled(_):
             if not popup.used:
-                self.set_status("Warning: cancelled new node operation")
+                globals.PipeInterface().instance.show_warning("cancelled new node operation")
 
         def make_change_to_fn(collection_name, template_name):
             def fn(instance, value):
@@ -295,23 +308,23 @@ class GraphWidget(FloatLayout):
 
             if argument_widget_state == "down":
                 self.activated_input_argument = argument_widget
-                self.set_status("Set activate input argument to %s" % argument_widget.argument.name)
+                # globals.PipeInterface().instance.show_message("Set activate input argument to %s" % argument_widget.argument.name)
             elif argument_widget_state == "normal":
                 self.activated_input_argument = None
-                self.set_status("Deactivated argument")
+                # globals.PipeInterface().instance.show_message("Deactivated argument")
             else:
-                self.set_status("Error: The state %s is not valid" % argument_widget_state)
+                globals.PipeInterface().instance.show_error("The state %s is not valid" % argument_widget_state)
 
         elif type(argument_widget) == argument_widgets.OutputArgumentWidget:
 
             if argument_widget_state == "down":
                 self.activated_output_argument = argument_widget
-                self.set_status("Set activate output argument to %s" % argument_widget.argument.name)
+                # globals.PipeInterface().instance.show_message("Set activate output argument to %s" % argument_widget.argument.name)
             elif argument_widget_state == "normal":
                 self.activated_output_argument = None
-                self.set_status("Deactivated argument")
+                # globals.PipeInterface().instance.show_message("Deactivated argument")
             else:
-                self.set_status("Error: the state %s is not valid" % argument_widget_state)
+                globals.PipeInterface().instance.show_error("the state %s is not valid" % argument_widget_state)
                 return
 
         else:
@@ -329,11 +342,11 @@ class GraphWidget(FloatLayout):
                 )
                 self.activated_output_argument.state = "normal"
                 self.activated_input_argument.state = "normal"
-                self.set_status("Edge deleted")
+                globals.PipeInterface().instance.show_message("Edge deleted")
                 return
 
             if self.activated_input_argument.is_connected():
-                self.set_status("Error: the input argument is already connected")
+                globals.PipeInterface().instance.show_error("the input argument is already connected")
                 self.activated_output_argument.state = "normal"
                 self.activated_input_argument.state = "normal"
                 return
@@ -341,7 +354,7 @@ class GraphWidget(FloatLayout):
             # Note:
             #   Need to have print first, since args
             #   get reset during edge creation
-            self.set_status(
+            globals.PipeInterface().instance.show_message(
                 "New edge created from %s to %s" % (
                     self.activated_output_argument.argument.name,
                     self.activated_input_argument.argument.name
@@ -359,18 +372,33 @@ class GraphWidget(FloatLayout):
         # TODO: should optimise this so that only connected edges are updated
         for node_widget in self.node_widgets:
             node_widget.update_position()
+            node_widget.redraw()
         for edge_widget in self.edge_widgets:
             edge_widget.update_position()
+            edge_widget.redraw()
 
     def handle_touch_down(self, touch):
         if touch.is_double_tap:
+            # Handle double click if on node
+            for widget in self.node_widgets.values():
+                if widget.collide_point(*touch.pos):
+                    if widget.node.is_graph_execution_node():
+                        globals.PipeInterface().instance.setup_from_graph_by_name(widget.node.template.name)
+                        return True
+                    else:
+                        # ignore touch
+                        return True
+
+            # double click not on background, so want to spawn new node
             self.start_new_node_prompt(touch.spos)
             return True
 
+        # Handle single click, selects node
         for widget in self.node_widgets.values():
             if widget.collide_point(*touch.pos):
                 self.selected_node_widget = widget
                 return True
+
         self.selected_node_widget = None
         return False
 

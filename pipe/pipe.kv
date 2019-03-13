@@ -19,14 +19,6 @@
     input_widgets: input_widgets
     output_widgets: output_widgets
 
-    canvas:
-        Color: 
-            hsv: .56, .53, .7
-            a: 1
-        Rectangle:
-            size: root.size
-            pos: root.pos
-
     BoxLayout:
         orientation: "horizontal"
         size_hint: 1, 1
@@ -54,7 +46,7 @@
 
                 Button:
                     text: "e"
-                    on_release: Globals.GraphWidget().instance.edit_node_by_widget(self.parent.parent.parent.parent)
+                    on_release: Globals.GraphWidget().instance.edit_template_via_node_widget(self.parent.parent.parent.parent)
 
         OutputArgumentSetWidget:
             size_hint: 0.1, 1
@@ -333,20 +325,6 @@
             BoxLayout:
                 size_hint: 0.3, 1
                 orientation: 'vertical'
-
-                GridLayout:
-                    size_hint: 1, 0.05
-                    cols: 2
-                    Label:
-                        id: graph_name
-                        text: root.ids.editor.graph.name if root.ids.editor.graph else "uninitialized"
-                        canvas.before:
-                            Color: 
-                                hsv: 0.0, .56, 1.0
-                                a: 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
 
                 GridLayout:
                     size_hint: 1, 0.05

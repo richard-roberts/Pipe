@@ -26,7 +26,9 @@ class EdgeWidget(FloatLayout):
         self.to_x = self.widget_to.connector_position[0]
         self.to_y = self.widget_to.connector_position[1]
         self.canvas.ask_update()
-        # print(self.pretty(), self.from_x, self.from_y, self.to_x, self.to_y)
+
+    def redraw(self):
+        pass
 
     def disconnect(self):
         self.widget_from.disconnect()

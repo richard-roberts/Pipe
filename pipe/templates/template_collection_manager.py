@@ -34,8 +34,10 @@ class TemplateCollectionManager:
 
     def create_or_update_graph_template(self, graph):
         graph_collection = self.collections[GRAPH_EXE_COLLECTION_NAME]
+        old_template = None
 
         if graph_collection.template_exists(graph.name):
+            old_template = graph_collection.get_template(graph.name)
             graph_collection.delete_template_by_name(graph.name)
 
         new_template = graph_collection.create_new_template(
@@ -45,7 +47,16 @@ class TemplateCollectionManager:
             [o.pretty().replace(".", "_") for o in graph.disconnected_outputs()]
         )
 
+        if old_template is not None:
+            globals.GraphInfo().manager.replace_template_a_with_b(old_template, new_template)
+
         return new_template
+
+    def template_is_graph_execution(self, template):
+        return self.collections[GRAPH_EXE_COLLECTION_NAME].template_exists(template.name)
+
+    def is_graph_execution_name(self, name):
+        return name == GRAPH_EXE_COLLECTION_NAME
 
     def delete_template(self, template):
         if template.collection_name not in self.collections.keys():
@@ -68,6 +79,9 @@ class TemplateCollectionManager:
 
         collection = self.collections[collection_name]
         return collection.template_exists(template_name)
+
+    def graph_template_already_exists(self, template_name):
+        return self.collections[GRAPH_EXE_COLLECTION_NAME].template_exists(template_name)
 
     def import_collection(self, filepath):
         name = os.path.splitext(os.path.basename(filepath))[0]

@@ -55,7 +55,10 @@ class Graph:
         self.assemble_to_filepath(filepath)
 
     def create_node(self, template, position):
-        node = nodes.Node(template, position)
+        if globals.TemplateInfo().manager.template_is_graph_execution(template):
+            node = nodes.GraphNode(template, position)
+        else:
+            node = nodes.Node(template, position)
         self.nodes[node.get_id()] = node
         return node
 
@@ -68,12 +71,15 @@ class Graph:
         edge.disconnect()
         del self.edges[edge]
 
-    def delete_node(self, node):
-        del self.nodes[node.get_id()]
+    def delete_edges_connected_to_node(self, node):
         edges_copy = [e for e in self.edges.values()]
         for edge in edges_copy:
             if edge.is_connected_to_node(node):
                 self.delete_edge(edge)
+
+    def delete_node(self, node):
+        del self.nodes[node.get_id()]
+        self.delete_edges_connected_to_node(node)
 
     def get_node_by_id(self, node_id):
         return self.nodes[node_id]
@@ -91,6 +97,12 @@ class Graph:
     def replace_template_a_with_b(self, a, b):
         for node in self.nodes.values():
             if node.template == a:
+                for arg in node.inputs.values():
+                    if arg.name not in b.inputs:
+                        self.delete_edge(arg.get_connected())
+                for arg in node.outputs.values():
+                    if arg.name not in b.outputs:
+                        self.delete_edge(arg.get_connected())
                 node.replace_template(b)
 
     def delete_nodes_using_template(self, template):
