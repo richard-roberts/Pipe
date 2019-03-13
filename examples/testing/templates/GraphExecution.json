@@ -1,4 +1,15 @@
 {
     "name": "GraphExecution",
-    "templates": {}
+    "templates": {
+        "Main": {
+            "code": "class Main:\n    def __init__(self, ToNum_a):\n        import Main as graph\n        execute(ToNum_a)\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the Main node's behavior.",
+            "inputs": [
+                "ToNum_a"
+            ],
+            "name": "Main",
+            "outputs": []
+        }
+    }
 }

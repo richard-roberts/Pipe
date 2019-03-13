@@ -3,23 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="0a0051f0-dae2-4878-a8c1-8a246e4a62ec" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/testing/graphs/Add5.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/testing/graphs/Main.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/testing/graphs/Main.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/testing/templates/GraphExecution.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/testing/templates/GraphExecution.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/testing/templates/Literals.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/testing/templates/Math.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/testing/templates/Utils.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/testing/templates/Utils.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/globals.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/globals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/edge_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/edge_widgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/graph_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/graph_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/graph_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/graph_widgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/graphs.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/graphs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/node_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/node_widgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/nodes.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/nodes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pipe/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pipe/pipe.kv" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/pipe.kv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/templates/template_collection.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/templates/template_collection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pipe/templates/template_collection_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/templates/template_collection_manager.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Pipe$Open.coverage" NAME="Open Coverage Results" MODIFIED="1552452316139" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Pipe$Open.coverage" NAME="Open Coverage Results" MODIFIED="1552453678193" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-898449445">
@@ -44,26 +32,26 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="kv" value="6" />
-          <entry key="py" value="114" />
+          <entry key="py" value="115" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="6" />
-          <entry key="Python" value="114" />
+          <entry key="Python" value="115" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="30" />
-          <entry key="kv" value="1254" />
-          <entry key="py" value="15157" />
+          <entry key="kv" value="1345" />
+          <entry key="py" value="15504" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="1284" />
-          <entry key="Python" value="15157" />
+          <entry key="PLAIN_TEXT" value="1375" />
+          <entry key="Python" value="15504" />
         </counts>
       </usages-collector>
     </session>
@@ -73,18 +61,27 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipe/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="107" column="41" lean-forward="true" selection-start-line="107" selection-start-column="41" selection-end-line="107" selection-end-column="41" />
+            <state relative-caret-position="284">
+              <caret line="96" column="34" selection-start-line="96" selection-start-column="34" selection-end-line="96" selection-end-column="34" />
               <folding>
                 <element signature="e#26#35#0" expanded="true" />
-                <marker date="1552449807474" expanded="true" signature="2834:2903" ph="..." />
-                <marker date="1552449807474" expanded="true" signature="2935:3005" ph="..." />
-                <marker date="1552449807474" expanded="true" signature="3035:3471" ph="..." />
-                <marker date="1552449807474" expanded="true" signature="3388:3471" ph="..." />
-                <marker date="1552449807474" expanded="true" signature="3573:3583" ph="..." />
-                <marker date="1552449807474" expanded="true" signature="3630:3639" ph="..." />
-                <marker date="1552449807474" expanded="true" signature="3908:3914" ph="..." />
+                <marker date="1552453437784" expanded="true" signature="2834:2903" ph="..." />
+                <marker date="1552453437784" expanded="true" signature="2935:3005" ph="..." />
+                <marker date="1552453437784" expanded="true" signature="3035:3471" ph="..." />
+                <marker date="1552453437784" expanded="true" signature="3388:3471" ph="..." />
+                <marker date="1552453437784" expanded="true" signature="3573:3583" ph="..." />
+                <marker date="1552453437784" expanded="true" signature="3630:3639" ph="..." />
+                <marker date="1552453437784" expanded="true" signature="3908:3914" ph="..." />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/kivy/uix/behaviors/button.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="275">
+              <caret line="178" selection-start-line="178" selection-end-line="178" />
             </state>
           </provider>
         </entry>
@@ -106,32 +103,33 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipe/pipe.kv">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret lean-forward="true" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pipe/templates/template_collection_manager.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="50" column="62" lean-forward="true" selection-start-line="50" selection-start-column="62" selection-end-line="50" selection-end-column="62" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-                <marker date="1552443418658" expanded="true" signature="1967:1973" ph="..." />
-                <marker date="1552443418658" expanded="true" signature="2600:2606" ph="..." />
-                <marker date="1552443418658" expanded="true" signature="2961:3057" ph="..." />
-              </folding>
+            <state relative-caret-position="692">
+              <caret line="415" column="37" selection-start-line="415" selection-start-column="20" selection-end-line="415" selection-end-column="37" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pipe/templates/template_collection_manager.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+                <marker date="1552453678182" expanded="true" signature="1976:1977" ph="..." />
+                <marker date="1552453678182" expanded="true" signature="2323:2329" ph="..." />
+                <marker date="1552453678182" expanded="true" signature="2956:2962" ph="..." />
+                <marker date="1552453678182" expanded="true" signature="3317:3413" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipe/templates/template_collection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+            <state relative-caret-position="459">
+              <caret line="27" column="36" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
                 <marker date="1552452339179" expanded="true" signature="464:541" ph="..." />
@@ -143,34 +141,16 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pipe/config.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="20" lean-forward="true" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
-              <folding>
-                <marker date="1552445674335" expanded="true" signature="33:124" ph="..." />
-                <marker date="1552445674335" expanded="true" signature="138:231" ph="..." />
-                <marker date="1552445674335" expanded="true" signature="543:549" ph="..." />
-                <marker date="1552445674335" expanded="true" signature="1687:2486" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipe/graph/graph_widgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="215" lean-forward="true" selection-start-line="215" selection-end-line="215" />
+            <state relative-caret-position="267">
+              <caret line="46" selection-start-line="46" selection-end-line="46" />
               <folding>
                 <element signature="e#501#772#0" />
-                <element signature="e#803#953#0" />
                 <element signature="e#997#1168#0" />
                 <element signature="e#1100#1168#0" />
                 <element signature="e#1212#1383#0" />
                 <element signature="e#1315#1383#0" />
-                <element signature="e#1432#3436#0" />
-                <element signature="e#1738#1978#0" />
                 <element signature="e#2001#3414#0" />
                 <element signature="e#2197#2317#0" />
                 <element signature="e#2266#2317#0" />
@@ -239,8 +219,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipe/graph/nodes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="28" column="31" selection-start-line="28" selection-start-column="8" selection-end-line="28" selection-end-column="31" />
+            <state relative-caret-position="284">
+              <caret line="29" column="61" lean-forward="true" selection-start-line="29" selection-start-column="61" selection-end-line="29" selection-end-column="61" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
                 <marker date="1552445938112" expanded="true" signature="803:898" ph="..." />
@@ -256,7 +236,7 @@
         <entry file="file://$PROJECT_DIR$/pipe/graph/edge_widgets.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="544">
-              <caret line="32" column="25" lean-forward="true" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
+              <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
               <folding>
                 <element signature="e#0#44#0" expanded="true" />
                 <marker date="1552446887735" expanded="true" signature="522:607" ph="..." />
@@ -269,7 +249,7 @@
         <entry file="file://$PROJECT_DIR$/pipe/graph/node_widgets.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="666">
-              <caret line="82" column="55" lean-forward="true" selection-start-line="82" selection-start-column="55" selection-end-line="82" selection-end-column="55" />
+              <caret line="82" column="55" selection-start-line="82" selection-start-column="55" selection-end-line="82" selection-end-column="55" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
                 <marker date="1552449959504" expanded="true" signature="557:878" ph="..." />
@@ -289,8 +269,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>treeview</find>
-      <find>delete</find>
       <find>shutil</find>
       <find>globals.GraphInfo()</find>
       <find>graph</find>
@@ -314,11 +292,13 @@
       <find>desktop</find>
       <find>newn</find>
       <find>create_new</find>
-      <find>canvas</find>
       <find>new_node</find>
       <find>Graph execution has</find>
       <find>Grasph</find>
+      <find>statu</find>
+      <find>canvas</find>
       <find>print</find>
+      <find>prin</find>
     </findStrings>
     <replaceStrings>
       <replace>node</replace>
@@ -369,17 +349,17 @@
         <option value="$PROJECT_DIR$/pipe/templates/templates.py" />
         <option value="$PROJECT_DIR$/pipe/assembly/assemblers.py" />
         <option value="$PROJECT_DIR$/pipe/graph/graph_manager.py" />
-        <option value="$PROJECT_DIR$/pipe/templates/template_collection_manager.py" />
         <option value="$PROJECT_DIR$/pipe/globals.py" />
         <option value="$PROJECT_DIR$/pipe/config.py" />
-        <option value="$PROJECT_DIR$/pipe/graph/nodes.py" />
         <option value="$PROJECT_DIR$/pipe/graph/edge_widgets.py" />
         <option value="$PROJECT_DIR$/pipe/graph/graphs.py" />
-        <option value="$PROJECT_DIR$/pipe/pipe.kv" />
-        <option value="$PROJECT_DIR$/pipe/main.py" />
         <option value="$PROJECT_DIR$/pipe/graph/graph_widgets.py" />
         <option value="$PROJECT_DIR$/pipe/graph/node_widgets.py" />
         <option value="$PROJECT_DIR$/pipe/templates/template_collection.py" />
+        <option value="$PROJECT_DIR$/pipe/pipe.kv" />
+        <option value="$PROJECT_DIR$/pipe/main.py" />
+        <option value="$PROJECT_DIR$/pipe/graph/nodes.py" />
+        <option value="$PROJECT_DIR$/pipe/templates/template_collection_manager.py" />
       </list>
     </option>
   </component>
@@ -598,13 +578,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/kivy/uix/behaviors/button.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="178" selection-start-line="178" selection-end-line="178" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pipe/assembly/assemblers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1326">
@@ -680,34 +653,13 @@
     <entry file="file://$PROJECT_DIR$/pipe/config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
-          <caret line="38" column="20" lean-forward="true" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
           <folding>
             <marker date="1552445674335" expanded="true" signature="33:124" ph="..." />
             <marker date="1552445674335" expanded="true" signature="138:231" ph="..." />
             <marker date="1552445674335" expanded="true" signature="543:549" ph="..." />
             <marker date="1552445674335" expanded="true" signature="1687:2486" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/graph/nodes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="28" column="31" selection-start-line="28" selection-start-column="8" selection-end-line="28" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <marker date="1552445938112" expanded="true" signature="803:898" ph="..." />
-            <marker date="1552445938112" expanded="true" signature="1017:1023" ph="..." />
-            <marker date="1552445938112" expanded="true" signature="2932:2933" ph="..." />
-            <marker date="1552445938112" expanded="true" signature="2932:2938" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/pipe.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
         </state>
       </provider>
     </entry>
@@ -723,36 +675,96 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/graph/edge_widgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+            <marker date="1552446887735" expanded="true" signature="522:607" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/graph/node_widgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="82" column="55" selection-start-line="82" selection-start-column="55" selection-end-line="82" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+            <marker date="1552449959504" expanded="true" signature="557:878" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/templates/template_collection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" column="36" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <marker date="1552452339179" expanded="true" signature="464:541" ph="..." />
+            <marker date="1552452339179" expanded="true" signature="1349:1355" ph="..." />
+            <marker date="1552452339179" expanded="true" signature="1409:1415" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/pipe.kv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="692">
+          <caret line="415" column="37" selection-start-line="415" selection-start-column="20" selection-end-line="415" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/kivy/uix/behaviors/button.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="178" selection-start-line="178" selection-end-line="178" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pipe/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="107" column="41" lean-forward="true" selection-start-line="107" selection-start-column="41" selection-end-line="107" selection-end-column="41" />
+        <state relative-caret-position="284">
+          <caret line="96" column="34" selection-start-line="96" selection-start-column="34" selection-end-line="96" selection-end-column="34" />
           <folding>
             <element signature="e#26#35#0" expanded="true" />
-            <marker date="1552449807474" expanded="true" signature="2834:2903" ph="..." />
-            <marker date="1552449807474" expanded="true" signature="2935:3005" ph="..." />
-            <marker date="1552449807474" expanded="true" signature="3035:3471" ph="..." />
-            <marker date="1552449807474" expanded="true" signature="3388:3471" ph="..." />
-            <marker date="1552449807474" expanded="true" signature="3573:3583" ph="..." />
-            <marker date="1552449807474" expanded="true" signature="3630:3639" ph="..." />
-            <marker date="1552449807474" expanded="true" signature="3908:3914" ph="..." />
+            <marker date="1552453437784" expanded="true" signature="2834:2903" ph="..." />
+            <marker date="1552453437784" expanded="true" signature="2935:3005" ph="..." />
+            <marker date="1552453437784" expanded="true" signature="3035:3471" ph="..." />
+            <marker date="1552453437784" expanded="true" signature="3388:3471" ph="..." />
+            <marker date="1552453437784" expanded="true" signature="3573:3583" ph="..." />
+            <marker date="1552453437784" expanded="true" signature="3630:3639" ph="..." />
+            <marker date="1552453437784" expanded="true" signature="3908:3914" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/graph/nodes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="29" column="61" lean-forward="true" selection-start-line="29" selection-start-column="61" selection-end-line="29" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <marker date="1552445938112" expanded="true" signature="803:898" ph="..." />
+            <marker date="1552445938112" expanded="true" signature="1017:1023" ph="..." />
+            <marker date="1552445938112" expanded="true" signature="2932:2933" ph="..." />
+            <marker date="1552445938112" expanded="true" signature="2932:2938" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pipe/graph/graph_widgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="215" lean-forward="true" selection-start-line="215" selection-end-line="215" />
+        <state relative-caret-position="267">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
           <folding>
             <element signature="e#501#772#0" />
-            <element signature="e#803#953#0" />
             <element signature="e#997#1168#0" />
             <element signature="e#1100#1168#0" />
             <element signature="e#1212#1383#0" />
             <element signature="e#1315#1383#0" />
-            <element signature="e#1432#3436#0" />
-            <element signature="e#1738#1978#0" />
             <element signature="e#2001#3414#0" />
             <element signature="e#2197#2317#0" />
             <element signature="e#2266#2317#0" />
@@ -817,50 +829,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/graph/edge_widgets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="32" column="25" lean-forward="true" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#44#0" expanded="true" />
-            <marker date="1552446887735" expanded="true" signature="522:607" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/graph/node_widgets.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="666">
-          <caret line="82" column="55" lean-forward="true" selection-start-line="82" selection-start-column="55" selection-end-line="82" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-            <marker date="1552449959504" expanded="true" signature="557:878" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pipe/templates/template_collection_manager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="50" column="62" lean-forward="true" selection-start-line="50" selection-start-column="62" selection-end-line="50" selection-end-column="62" />
+        <state relative-caret-position="255">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1552443418658" expanded="true" signature="1967:1973" ph="..." />
-            <marker date="1552443418658" expanded="true" signature="2600:2606" ph="..." />
-            <marker date="1552443418658" expanded="true" signature="2961:3057" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/templates/template_collection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <marker date="1552452339179" expanded="true" signature="464:541" ph="..." />
-            <marker date="1552452339179" expanded="true" signature="1349:1355" ph="..." />
-            <marker date="1552452339179" expanded="true" signature="1409:1415" ph="..." />
+            <marker date="1552453678182" expanded="true" signature="1976:1977" ph="..." />
+            <marker date="1552453678182" expanded="true" signature="2323:2329" ph="..." />
+            <marker date="1552453678182" expanded="true" signature="2956:2962" ph="..." />
+            <marker date="1552453678182" expanded="true" signature="3317:3413" ph="..." />
           </folding>
         </state>
       </provider>

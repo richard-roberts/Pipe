@@ -33,6 +33,9 @@ class TemplateCollectionManager:
         )
 
     def create_or_update_graph_template(self, graph):
+        if GRAPH_EXE_COLLECTION_NAME not in self.collections.keys():
+            self.collections[GRAPH_EXE_COLLECTION_NAME] = template_collection.TemplateCollection(GRAPH_EXE_COLLECTION_NAME)
+
         graph_collection = self.collections[GRAPH_EXE_COLLECTION_NAME]
         old_template = None
 
@@ -53,6 +56,9 @@ class TemplateCollectionManager:
         return new_template
 
     def template_is_graph_execution(self, template):
+        # This can be called before any graph executors are created
+        if GRAPH_EXE_COLLECTION_NAME not in self.collections.keys():
+            return False
         return self.collections[GRAPH_EXE_COLLECTION_NAME].template_exists(template.name)
 
     def is_graph_execution_name(self, name):

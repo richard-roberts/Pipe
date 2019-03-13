@@ -150,13 +150,13 @@ class Desktop(FloatLayout):
         temporary = "./tmp"
         globals.TemplateInfo().manager.create_or_update_graph_template(self.ids.editor.graph)
         self.manager.assemble_project(temporary)
-        command = 'python ./tmp/%s.py' % self.ids.editor.graph.name
+        command = 'python ./tmp/%s.py %s' % (self.ids.editor.graph.name, self.ids.command_line_args.text)
 
         # TODO: figure out what exception this should be
         try:
             result = subprocess.check_output(command, shell=True)
-        except:
-            self.show_error("Execution failed")
+        except subprocess.CalledProcessError as e:
+            self.show_error("%s" % str(e))
             shutil.rmtree(temporary)
             return
 

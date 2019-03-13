@@ -1,0 +1,29 @@
+{
+    "name": "Math",
+    "templates": {
+        "Square": {
+            "code": "class Square:\n    def __init__(self, x):\n        self.x = x * x\n",
+            "collection_name": "Math",
+            "documentation": "A description of the Square node's behavior.",
+            "inputs": [
+                "x"
+            ],
+            "name": "Square",
+            "outputs": [
+                "x"
+            ]
+        },
+        "SquareRoot": {
+            "code": "class SquareRoot:\n    def __init__(self, i):\n        import math\n        self.i = math.sqrt(i)\n",
+            "collection_name": "Math",
+            "documentation": "A description of the SquareRoot node's behavior.",
+            "inputs": [
+                "i"
+            ],
+            "name": "SquareRoot",
+            "outputs": [
+                "i"
+            ]
+        }
+    }
+}

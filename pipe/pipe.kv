@@ -391,21 +391,27 @@
                         text: 'Execute'
                         on_release: root.assemble_and_execute()
 
-
-        Label:
-            id: status_bar
+        BoxLayout:
+            orientation: "horizontal"
             size_hint: 1, 0.05
-            text: "    Status Bar"
-            halign: 'left'
-            valign: 'center'
-            text_size: self.size
 
-            canvas.before:
-                Color: 
-                    hsv: .56, .53, .7
-                    a: 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-                    
+            Label:
+                id: status_bar
+                size_hint: 0.8, 1.0
+                text: "    Status Bar"
+                halign: 'left'
+                valign: 'center'
+                text_size: self.size
 
+                canvas.before:
+                    Color:
+                        hsv: .56, .53, .7
+                        a: 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+            TextInput:
+                size_hint: 0.2, 1.0
+                id: command_line_args
+                text: ""
