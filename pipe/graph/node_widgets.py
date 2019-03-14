@@ -1,7 +1,6 @@
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
-from kivy.graphics import Color, Rectangle
 
 import config
 
@@ -17,17 +16,6 @@ class NodeWidget(BoxLayout):
         super(NodeWidget, self).__init__(**kwargs)
         self.node = None
 
-    def redraw(self):
-        self.canvas.before.clear()
-        with self.canvas.before:
-            Color(
-                self.background_color.r,
-                self.background_color.g,
-                self.background_color.b,
-                self.background_color.a
-            )
-            Rectangle(pos=self.pos, size=self.size)
-
     def setup_arguments(self):
         self.input_widgets.pos = self.node.position
         self.input_widgets.setup(self.node.inputs.values())
@@ -39,11 +27,7 @@ class NodeWidget(BoxLayout):
         self.setup_arguments()
         self.update_position()
 
-    def update_position(self):
-        self.pos = (
-            self.node.position[0] * Window.width,
-            self.node.position[1] * Window.height
-        )
+    def update_argument_positions(self):
         self.input_widgets.update_connector_position(
             (
                 self.pos[0],
@@ -56,6 +40,13 @@ class NodeWidget(BoxLayout):
                 self.pos[1]
             )
         )
+
+    def update_position(self):
+        self.pos = (
+            self.node.position[0] * Window.width,
+            self.node.position[1] * Window.height
+        )
+        self.update_argument_positions()
 
     def amend_position(self, delta_x, delta_y):
         self.node.position = (

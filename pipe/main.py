@@ -25,8 +25,8 @@ class Desktop(FloatLayout):
 
     def _set_status(self, message, color):
         bar = self.ids.status_bar
-        bar.canvas.before.clear()
-        with bar.canvas.before:
+        bar.canvas.clear()
+        with bar.canvas:
             Color(color.r, color.g, color.b, color.a)
             Rectangle(pos=bar.pos, size=bar.size)
         bar.text = "    %s" % message
@@ -73,13 +73,12 @@ class Desktop(FloatLayout):
         # popup.open()
 
         self.remove_buttons_for_graph()
-        self.operations.open_project("C:/Development/Pipe/examples/testing")
+        self.operations.open_project("./examples/testing")
         self.show_message("Project opened successfully")
         for graph in self.operations.list_graphs():
             self.add_button_for_graph(graph)
         self.ids.editor.setup_from_graph(globals.GraphInfo().manager.get_by_name("Main"))
         self.show_message("Switched to %s" % "Bob")
-        self.ids.editor.redraw()
 
     def save_project(self):
         # def fn(pop):

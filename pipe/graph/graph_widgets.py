@@ -57,12 +57,8 @@ class GraphWidget(FloatLayout):
             self.add_widget(new_node_widget)
             new_node_widget.setup(node)
             self.node_widgets[new_node_widget] = new_node_widget
-        self.redraw()
 
         for edge in self.graph.edges.values():
-            new_edge_widget = edge_widgets.EdgeWidget()
-            self.add_widget(new_edge_widget)
-
             node_widget_from = None
             for widget in self.node_widgets.values():
                 if widget.node == edge.argument_from.get_node():
@@ -87,9 +83,9 @@ class GraphWidget(FloatLayout):
             if arg_widget_to is None:
                 raise ValueError("Could not find to-argument widget (edge `%s`)" % edge)
 
-            new_edge_widget.setup(edge, arg_widget_from, arg_widget_to)
+            new_edge_widget = edge_widgets.EdgeWidget(edge, arg_widget_from, arg_widget_to)
+            self.add_widget(new_edge_widget)
             self.edge_widgets[new_edge_widget] = new_edge_widget
-        self.redraw()
 
     def rebuild(self):
         self.setup_from_graph(self.graph)
@@ -367,15 +363,6 @@ class GraphWidget(FloatLayout):
             self.activated_output_argument.state = "normal"
             self.activated_input_argument.state = "normal"
 
-    def redraw(self):
-        # TODO: should optimise this so that only connected edges are updated
-        for node_widget in self.node_widgets:
-            node_widget.update_position()
-            node_widget.redraw()
-        for edge_widget in self.edge_widgets:
-            edge_widget.update_position()
-            edge_widget.redraw()
-
     def handle_touch_down(self, touch):
         if touch.is_double_tap:
             # Handle double click if on node
@@ -413,4 +400,3 @@ class GraphWidget(FloatLayout):
                 touch.sx - touch.psx,
                 touch.sy - touch.psy
             )
-        self.redraw()

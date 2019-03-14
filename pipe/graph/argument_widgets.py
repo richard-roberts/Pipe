@@ -91,11 +91,11 @@ class InputArgumentSetWidget(ArgumentSetWidget):
             self.widgets[0].set_connector_position(
                 (
                     pos[0],
-                    pos[1] + self.size[1] / 2
+                    pos[1] + self.height / 2
                 )
             )
         else:
-            increment = self.size[1] / float(n)
+            increment = self.height / float(n)
             for ix, widget in enumerate(self.widgets):
                 widget.set_connector_position(
                     (
@@ -116,7 +116,7 @@ class OutputArgumentSetWidget(ArgumentSetWidget):
             self.widgets[0].set_connector_position(
                 (
                     pos[0],
-                    pos[1] + self.size[1] / 2
+                    pos[1] + self.height / 2
                 )
             )
         else:

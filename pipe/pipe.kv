@@ -19,6 +19,14 @@
     input_widgets: input_widgets
     output_widgets: output_widgets
 
+    canvas:
+        Color:
+            rgb: self.background_color.r, self.background_color.g, self.background_color.b
+            a: self.background_color.a
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     BoxLayout:
         orientation: "horizontal"
         size_hint: 1, 1
@@ -54,12 +62,17 @@
             orientation: "vertical"
 
 <EdgeWidget>:
-    size_hint: None, None
-    canvas.after:
-        Color: 
-            rgba: [1, 1, 1, 1]
+    from_x: self.widget_from.x + self.widget_from.width
+    from_y: self.widget_from.y + self.widget_from.height / 2
+    to_x: self.widget_to.x
+    to_y: self.widget_to.y + self.widget_from.height / 2
+
+    canvas:
+        Color:
+            rgb: self.edge_color.r, self.edge_color.g, self.edge_color.b
+            a: self.edge_color.a
         Line:
-            width: 3
+            width: 2
             points: self.from_x, self.from_y, self.to_x, self.to_y
 
 <NewNodePopup@Popup>:
@@ -331,7 +344,7 @@
                     cols: 2
                     Label:
                         text: root.ids.editor.selected_node_widget.node.template.name if root.ids.editor.selected_node_widget else "nothing selected"
-                        canvas.before:
+                        canvas.after:
                             Color: 
                                 hsv: 0.0, .56, 1.0
                                 a: 1
@@ -343,7 +356,7 @@
                 Label:
                     size_hint: 1, 0.025
                     text: "Documentation"
-                    canvas.before:
+                    canvas.after:
                         Color: 
                             hsv: 0.0, .56, 1.0
                             a: 1
@@ -360,7 +373,7 @@
                 Label:
                     size_hint: 1, 0.025
                     text: "Implementation"
-                    canvas.before:
+                    canvas.after:
                         Color: 
                             hsv: 0.0, .56, 1.0
                             a: 1
@@ -403,7 +416,7 @@
                 valign: 'center'
                 text_size: self.size
 
-                canvas.before:
+                canvas.after:
                     Color:
                         hsv: .56, .53, .7
                         a: 1
