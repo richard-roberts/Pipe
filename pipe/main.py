@@ -1,10 +1,4 @@
 #!/usr/local/bin/python3
-
-import os
-import shutil
-import subprocess
-import pathlib
-
 import kivy
 from kivy.app import App
 from kivy.factory import Factory
@@ -13,63 +7,19 @@ from kivy.uix.button import Button
 from kivy.graphics import Color, Rectangle
 
 import globals
+from pipe_backend import PipeBackend
 from config import Colors
-from graph import graph_manager
 from graph import graph_widgets
-from templates import template_collection_manager
 
 kivy.require("1.10.1")
 Factory.register("GraphWidget", graph_widgets.GraphWidget)
-
-
-class DesktopManager:
-
-    def __init__(self):
-        self.graphs = graph_manager.GraphManager()
-        self.templates = template_collection_manager.TemplateCollectionManager()
-
-    def clear(self):
-        self.graphs.clear()
-        self.templates.clear()
-
-    def open_project(self, project_directory):
-        templates_directory = os.path.join(project_directory, "templates")
-        graphs_directory = os.path.join(project_directory, "graphs")
-        self.clear()
-        self.templates.import_collections(templates_directory)
-        self.graphs.import_graphs(graphs_directory)
-
-    def save_project(self, project_directory):
-        shutil.rmtree(project_directory)
-        templates_directory = os.path.join(project_directory, "templates")
-        graphs_directory = os.path.join(project_directory, "graphs")
-        if not os.path.exists(templates_directory):
-            os.makedirs(templates_directory)
-        if not os.path.exists(graphs_directory):
-            os.makedirs(graphs_directory)
-        self.templates.export_collections(templates_directory)
-        self.graphs.export_graphs(graphs_directory)
-
-    def assemble_project(self, project_directory):
-        templates_directory = os.path.join(project_directory, "templates")
-        graphs_directory = project_directory
-        if not os.path.exists(templates_directory):
-            os.makedirs(templates_directory)
-            pathlib.Path(os.path.join(templates_directory, "__init__.py")).touch()
-        if not os.path.exists(graphs_directory):
-            os.makedirs(graphs_directory)
-        self.templates.assemble_collections(templates_directory)
-        self.graphs.assemble_graphs(graphs_directory)
-
-    def list_graphs(self):
-        return self.graphs.graphs.values()
 
 
 class Desktop(FloatLayout):
 
     def __init__(self, **kwargs):
         super(Desktop, self).__init__(**kwargs)
-        self.manager = DesktopManager()
+        self.operations = PipeBackend()
         self.graph_buttons = []
         globals.PipeInterface().set_instance(self)
 
@@ -102,7 +52,6 @@ class Desktop(FloatLayout):
     def add_button_for_graph(self, graph):
         def fn(*args):
             self.setup_from_graph(graph)
-
         button = Button(text=graph.name, on_release=fn)
         self.ids.graph_selection_menu.add_widget(button)
         self.graph_buttons.append(button)
@@ -117,16 +66,16 @@ class Desktop(FloatLayout):
         #     project_directory = pop.ids.filechooser.path
         #     if not project_directory:
         #         self.show_message("Import cancelled (no directory specified)")
-        #     self.manager.open_project(project_directory)
+        #     self.operations.open_project(project_directory)
         #     self.show_message("Project opened successfully")
         # popup = Factory.OpenProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
 
         self.remove_buttons_for_graph()
-        self.manager.open_project("C:/Development/Pipe/examples/testing")
+        self.operations.open_project("C:/Development/Pipe/examples/testing")
         self.show_message("Project opened successfully")
-        for graph in self.manager.list_graphs():
+        for graph in self.operations.list_graphs():
             self.add_button_for_graph(graph)
         self.ids.editor.setup_from_graph(globals.GraphInfo().manager.get_by_name("Main"))
         self.show_message("Switched to %s" % "Bob")
@@ -138,33 +87,23 @@ class Desktop(FloatLayout):
         #     if not project_directory:
         #         self.show_message("Export cancelled (no directory specified)")
         #         return
-        #     self.manager.save_project(project_directory)
+        #     self.operations.save_project(project_directory)
         #     self.show_message("Project saved successfully")
         # popup = Factory.SaveProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
-        self.manager.save_project("C:/Development/Pipe/examples/testing")
+        self.operations.save_project("C:/Development/Pipe/examples/testing")
         self.show_message("Project saved successfully")
 
     def assemble_and_execute(self):
-        temporary = "./tmp"
-        globals.TemplateInfo().manager.create_or_update_graph_template(self.ids.editor.graph)
-        self.manager.assemble_project(temporary)
-        command = 'python ./tmp/%s.py %s' % (self.ids.editor.graph.name, self.ids.command_line_args.text)
-
-        # TODO: figure out what exception this should be
         try:
-            result = subprocess.check_output(command, shell=True)
-        except subprocess.CalledProcessError as e:
+            result = self.operations.execute(self.ids.editor.graph, self.ids.command_line_args.text)
+            if result:
+                self.show_execution(result)
+            else:
+                self.show_execution("successfully executed.")
+        except ValueError as e:
             self.show_error("%s" % str(e))
-            shutil.rmtree(temporary)
-            return
-
-        shutil.rmtree(temporary)
-        if result:
-            self.show_execution(result.decode("utf-8"))
-        else:
-            self.show_execution("no result return")
 
     def assemble_and_save(self):
         # def fn(pop):
@@ -172,14 +111,14 @@ class Desktop(FloatLayout):
         #     if not project_directory:
         #         self.show_message("Import cancelled (no directory specified)")
         #
-        #     self.manager.assemble_project(project_directory)
+        #     self.operations.assemble_project(project_directory)
         #     self.show_message("Project assembled successfully")
         #
         # popup = Factory.ExportAssembledProgram()
         # popup.bind(on_dismiss=fn)
         # popup.open()
         globals.TemplateInfo().manager.create_or_update_graph_template(self.ids.editor.graph)
-        self.manager.assemble_project("D:\\tmp")
+        self.operations.assemble_project("D:\\tmp")
 
     def start_new_graph_prompt(self):
         def fn(pop):
@@ -195,7 +134,7 @@ class Desktop(FloatLayout):
                 self.show_error("there is already has graph named `%s`." % name)
                 return
 
-            graph = self.manager.graphs.new_graph(name)
+            graph = self.operations.graphs.new_graph(name)
             self.add_button_for_graph(graph)
             self.ids.editor.setup_from_graph(graph)
             self.show_message("A new graph named %s has been created" % name)

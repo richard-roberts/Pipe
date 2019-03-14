@@ -50,7 +50,6 @@ class GraphWidget(FloatLayout):
 
         self.graph = graph
         for node in self.graph.nodes.values():
-            new_node_widget = None
             if node.is_graph_execution_node():
                 new_node_widget = node_widgets.GraphNodeWidget()
             else:

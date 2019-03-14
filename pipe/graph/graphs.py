@@ -136,6 +136,12 @@ class Graph:
                 count += 1
         return count
 
+    def number_of_nodes(self):
+        return len(self.nodes)
+
+    def number_of_edges(self):
+        return len(self.edges)
+
     def as_json(self):
         node_data = []
         for node in self.nodes.values():
