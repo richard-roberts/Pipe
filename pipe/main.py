@@ -20,8 +20,12 @@ class Desktop(FloatLayout):
     def __init__(self, **kwargs):
         super(Desktop, self).__init__(**kwargs)
         self.operations = PipeBackend()
-        self.graph_buttons = []
+        self.graph_buttons = {}
         globals.PipeInterface().set_instance(self)
+
+        graph = self.operations.graphs.new_graph("Main")
+        self.add_button_for_graph(graph)
+        self.ids.editor.setup_from_graph(graph)
 
     def _set_status(self, message, color):
         bar = self.ids.status_bar
@@ -52,14 +56,26 @@ class Desktop(FloatLayout):
     def add_button_for_graph(self, graph):
         def fn(*args):
             self.setup_from_graph(graph)
+
         button = Button(text=graph.name, on_release=fn)
         self.ids.graph_selection_menu.add_widget(button)
-        self.graph_buttons.append(button)
+        self.graph_buttons[graph.name] = button
+
+    def remove_button_for_graph_by_name(self, graph_name):
+        button = self.graph_buttons.pop(graph_name)
+        self.remove_widget(button)
 
     def remove_buttons_for_graph(self):
-        for button in self.graph_buttons:
-            self.ids.graph_selection_menu.remove_widget(button)
-        self.graph_buttons = []
+        for key in self.graph_buttons.keys():
+            self.remove_button_for_graph_by_name(key)
+        if self.graph_buttons:
+            raise ValueError("Graph buttons should be empty (still contains %s)" % self.graph_buttons.keys())
+
+    def rename_graph(self, old_name, new_name):
+        self.graph_buttons[new_name] = self.graph_buttons.pop(old_name)
+        self.graph_buttons[new_name].text = new_name
+        self.operations.rename_graph(old_name, new_name)
+        self.show_message("%s renamed to %s" % (old_name, new_name))
 
     def open_project(self):
         # def fn(pop):
@@ -91,7 +107,7 @@ class Desktop(FloatLayout):
         # popup = Factory.SaveProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
-        self.operations.save_project("C:/Development/Pipe/examples/testing")
+        self.operations.save_project("./examples/testing")
         self.show_message("Project saved successfully")
 
     def assemble_and_execute(self):
@@ -139,6 +155,32 @@ class Desktop(FloatLayout):
             self.show_message("A new graph named %s has been created" % name)
 
         popup = Factory.NewGraphPopup()
+        popup.bind(on_dismiss=fn)
+        popup.open()
+
+    def start_rename_graph_prompt(self):
+        def fn(pop):
+            if not pop.used:
+                self.show_warning("operation cancelled")
+                return
+
+            old_name = pop.ids.old_name.text
+            new_name = pop.ids.new_name.text
+
+            if old_name == "":
+                self.show_warning("operation cancelled (no old name specified)")
+                return
+            if new_name == "":
+                self.show_warning("operation cancelled (no new name specified)")
+                return
+            if not globals.GraphInfo().manager.already_exists(old_name):
+                self.show_warning("operation cancelled (no graph named %s found)" % old_name)
+                return
+
+            self.rename_graph(old_name, new_name)
+
+        popup = Factory.RenameGraphPopup()
+        popup.ids.old_name.text = self.ids.editor.graph.name
         popup.bind(on_dismiss=fn)
         popup.open()
 

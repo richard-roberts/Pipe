@@ -47,6 +47,10 @@ class TemplateCollection:
     def delete_template_by_name(self, name):
         self.delete_template(self.get_template(name))
 
+    def rename_template_by_name(self, old_name, new_name):
+        self.templates[new_name] = self.templates.pop(old_name)
+        self.templates[new_name].name = new_name
+
     def is_empty(self):
         return len(self.templates)
 

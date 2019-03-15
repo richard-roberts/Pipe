@@ -17,6 +17,8 @@ class GraphManager:
         graph = graphs.Graph()
         graph.name = name
         self.graphs[graph.name] = graph
+        if not globals.TemplateInfo().manager.graph_template_already_exists(graph.name):
+            globals.TemplateInfo().manager.create_or_update_graph_template(graph)
         return graph
 
     def import_graph(self, filepath):
@@ -44,6 +46,11 @@ class GraphManager:
     def assemble_graphs(self, directory):
         for graph in self.graphs.values():
             graph.assemble_to_directory(directory)
+
+    def rename_graph(self, old_name, new_name):
+        self.graphs[new_name] = self.graphs.pop(old_name)
+        self.graphs[new_name].name = new_name
+        globals.TemplateInfo().manager.rename_graph_execution(old_name, new_name)
 
     def get_names(self):
         return [graph.name for graph in self.graphs.values()]

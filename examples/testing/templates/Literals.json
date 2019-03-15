@@ -1,0 +1,19 @@
+{
+    "name": "Literals",
+    "templates": {
+        "Vec3": {
+            "code": "class Vec3:\n    def __init__(self, a, b, c):\n        self.o = None\n",
+            "collection_name": "Literals",
+            "documentation": "A description of the Vec3 node's behavior.",
+            "inputs": [
+                "a",
+                "b",
+                "c"
+            ],
+            "name": "Vec3",
+            "outputs": [
+                "o"
+            ]
+        }
+    }
+}

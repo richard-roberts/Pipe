@@ -191,9 +191,8 @@ class GraphWidget(FloatLayout):
 
     def create_new_edge(self, widget_from, widget_to):
         edge = self.graph.create_edge(widget_from.argument, widget_to.argument)
-        widget = edge_widgets.EdgeWidget()
+        widget = edge_widgets.EdgeWidget(edge, widget_from, widget_to)
         self.add_widget(widget)
-        widget.setup(edge, widget_from, widget_to)
         self.edge_widgets[widget] = widget
 
     def delete_node_only_by_widget(self, node_widget):

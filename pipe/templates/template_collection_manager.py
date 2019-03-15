@@ -19,6 +19,7 @@ class TemplateCollectionManager:
         self.collections = {
             GRAPH_EXE_COLLECTION_NAME: template_collection.TemplateCollection(GRAPH_EXE_COLLECTION_NAME)
         }
+        self.import_collections("./pipe/templates/standard_collections")
 
     def new_template(self, collection_name, name, inputs, outputs):
         if collection_name not in self.collections.keys():
@@ -135,3 +136,6 @@ class TemplateCollectionManager:
 
         collection = self.collections[collection_name]
         return collection.get_template(template_name)
+
+    def rename_graph_execution(self, old_name, new_name):
+        self.collections[GRAPH_EXE_COLLECTION_NAME].rename_template_by_name(old_name, new_name)

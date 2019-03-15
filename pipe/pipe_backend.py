@@ -49,6 +49,9 @@ class PipeBackend:
     def list_graphs(self):
         return self.graphs.graphs.values()
 
+    def rename_graph(self, old_name, new_name):
+        self.graphs.rename_graph(old_name, new_name)
+
     def execute(self, graph, command_line_args_str):
         temporary = "./tmp"
         self.templates.create_or_update_graph_template(graph)

@@ -219,6 +219,39 @@
                 text: 'Create'
                 on_release: root.dismiss()
 
+<RenameGraphPopup@Popup>:
+    size_hint: 0.8, 0.5
+    title: "Rename a graph"
+    on_open: self.ids.new_name.focus=True
+    used: False
+
+    BoxLayout:
+        size_hint: 0.9, 0.9
+        pos: root.pos
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Old Name"
+            TextInput:
+                id: old_name
+                multiline: False
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "New Name"
+            TextInput:
+                id: new_name
+                multiline: False
+
+        BoxLayout:
+            orientation: "horizontal"
+            Button:
+                text: 'Renamed'
+                on_release: root.used=True; root.dismiss()
+
 <OpenProjectPopup@Popup>:
     size_hint: 0.7, 0.7
     title: 'Open Project'
@@ -328,12 +361,23 @@
                     pos: root.pos
 
                 BoxLayout:
-                    size_hint: 1, 0.05
-                    id: graph_selection_menu
+                    size_hint: 1.0, 0.05
+                    orientation: "horizontal"
 
                     Button:
+                        size_hint: 0.05, 1
+                        text: 'r'
+                        on_release: root.start_rename_graph_prompt()
+
+                    Button:
+                        size_hint: 0.05, 1
                         text: '+'
                         on_release: root.start_new_graph_prompt()
+
+                    BoxLayout:
+                        size_hint: 0.9, 1
+                        orientation: "horizontal"
+                        id: graph_selection_menu
             
             BoxLayout:
                 size_hint: 0.3, 1

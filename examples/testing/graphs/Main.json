@@ -1,57 +1,22 @@
 {
-    "edges": [
-        {
-            "arg_from_name": "n",
-            "arg_to_name": "x",
-            "node_id_from": 2869037980640,
-            "node_id_to": 2869035128424
-        },
-        {
-            "arg_from_name": "x",
-            "arg_to_name": "i",
-            "node_id_from": 2869035128424,
-            "node_id_to": 2869032940432
-        },
-        {
-            "arg_from_name": "i",
-            "arg_to_name": "o",
-            "node_id_from": 2869032940432,
-            "node_id_to": 1831475605632
-        }
-    ],
+    "edges": [],
     "name": "Main",
     "nodes": [
         {
-            "node_id": 1831475605632,
+            "node_id": 4533369320,
             "position": [
-                0.4660156249999997,
-                0.6424309060322038
+                0.30250000000000005,
+                0.54
             ],
-            "template": "Utils::Log"
+            "template": "Math::DotProduct"
         },
         {
-            "node_id": 2869035128424,
+            "node_id": 4540201112,
             "position": [
-                0.19499999999999992,
-                0.635
+                0.5675,
+                0.2833333333333333
             ],
-            "template": "Math::Square"
-        },
-        {
-            "node_id": 2869037980640,
-            "position": [
-                0.10749999999999987,
-                0.8249999999999997
-            ],
-            "template": "Utils::ToNum"
-        },
-        {
-            "node_id": 2869032940432,
-            "position": [
-                0.3562499999999999,
-                0.4033333333333332
-            ],
-            "template": "Math::SquareRoot"
+            "template": "Literals::Vec3"
         }
     ]
 }
