@@ -30,7 +30,7 @@ class Assembler:
                 for input_arg in node.inputs.values():
                     edge = graph.get_edge_by_argument_to(node, input_arg)
                     if edge is None:
-                        argument_str += "%s_%s, " % (node.template.name, input_arg.name)
+                        argument_str += "%s_%s_%s, " % (node.template.name, input_arg.name, node.get_id())
                     else:
                         child_node = graph.nodes[edge.argument_from.get_node().get_id()]
                         compiled_child = assemble(child_node, edge.argument_from)
@@ -60,19 +60,16 @@ class Assembler:
         argument_string = ""
         for node in all_nodes:
             for input_arg in node.list_disconnected_inputs():
-                argument_string += ("%s_%s, " % (node.template.name, input_arg.name))
+                argument_string += ("%s_%s_%s, " % (node.template.name, input_arg.name, node.get_id()))
         assembled_str += function_header % argument_string[:-2] # [:-2] to trim last comma.
 
-        # Write function body
-        terminating_nodes = [node for node in all_nodes if node.terminates_execution()]
-
         # Write execution calls
+        terminating_nodes = [node for node in all_nodes if node.terminates_execution()]
         for node in terminating_nodes:
             if node.has_outputs():
-                var_str = ""
+                assembled_str += "    tmp = %s\n" % (assemble(node, None))
                 for output in node.list_disconnected_outputs():
-                    var_str += "%s_%s, " % (node.template.name, output.name)
-                assembled_str += "    %s = %s\n" % (var_str[:-2], assemble(node, output))  # [:-2] to trim last comma.
+                    assembled_str += "    %s_%s_%s=tmp.%s\n" % (node.template.name, output.name, node.get_id(), output.name)
             else:
                 assembled_str += "    %s # %s\n" % (assemble(node, None), node.template.name)
 
@@ -81,7 +78,7 @@ class Assembler:
         for node in terminating_nodes:
             if node.has_outputs():
                 for output in node.list_disconnected_outputs():
-                    var_name = "%s_%s" % (node.template.name, output.name)
+                    var_name = "%s_%s_%s" % (node.template.name, output.name, node.get_id())
                     assembled_str += "        \"%s\": %s,\n" % (var_name, var_name)
         assembled_str += "    }\n"
         assembled_str += "\n"
@@ -91,10 +88,10 @@ class Assembler:
         n = sum([node.count_number_of_disconnected_inputs() for node in all_nodes])
         assembled_str += "    if len(sys.argv) != %d:\n" % (n + 1)
 
+        inputs_str = ""
         for node in all_nodes:
-            inputs_str = ""
             for input_arg in node.list_disconnected_inputs():
-                inputs_str += "%s_%s, " % (node.template.name, input_arg.name)
+                inputs_str += "%s_%s_%s, " % (node.template.name, input_arg.name, node.get_id())
         assembled_str += "        print(\"Error: not enough inputs given, needed: %s\")\n" % inputs_str[:-2]
         assembled_str += "        raise ValueError(\"Failed to parse arguments\")\n"
 
@@ -102,7 +99,7 @@ class Assembler:
         ix = 1
         for node in all_nodes:
             for input_arg in node.list_disconnected_inputs():
-                argument_string += ("%s_%s=sys.argv[%d], " % (node.template.name, input_arg.name, ix))
+                argument_string += ("%s_%s_%s=sys.argv[%d], " % (node.template.name, input_arg.name, node.get_id(), ix))
                 ix += 1
         assembled_str += "    execute(%s)" % argument_string[:-2] # [:-2] to trim last comma.
         assembled_str += "\n"

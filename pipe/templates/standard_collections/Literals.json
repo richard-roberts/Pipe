@@ -1,19 +1,42 @@
 {
     "name": "Literals",
     "templates": {
-        "Vec3": {
-            "code": "class Vec3:\n    def __init__(self, a, b, c):\n        self.o = None\n",
+        "Boolean": {
+            "code": "class Boolean:\n    def __init__(self, a):\n        self.o = float(a)\n",
             "collection_name": "Literals",
-            "documentation": "A description of the Vec3 node's behavior.",
+            "documentation": "Converts the input value to a boolean literal.",
             "inputs": [
-                "a",
-                "b",
-                "c"
+                "a"
             ],
-            "name": "Vec3",
+            "name": "Boolean",
+            "outputs": [
+                "o"
+            ]
+        },
+        "Number": {
+            "code": "class Number:\n    def __init__(self, a):\n        self.o = float(a)\n",
+            "collection_name": "Literals",
+            "documentation": "Converts the input value to a number literal.",
+            "inputs": [
+                "a"
+            ],
+            "name": "Number",
+            "outputs": [
+                "o"
+            ]
+        },
+        "String": {
+            "code": "class String:\n    def __init__(self, a):\n        self.o = str(a)\n",
+            "collection_name": "Literals",
+            "documentation": "Converts the input value to a string.",
+            "inputs": [
+                "a"
+            ],
+            "name": "String",
             "outputs": [
                 "o"
             ]
         }
+        
     }
 }

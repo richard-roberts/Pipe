@@ -63,10 +63,12 @@ class Desktop(FloatLayout):
 
     def remove_button_for_graph_by_name(self, graph_name):
         button = self.graph_buttons.pop(graph_name)
-        self.remove_widget(button)
+        self.ids.graph_selection_menu.remove_widget(button)
+        print("REMOVED %s" % str(button))
 
     def remove_buttons_for_graph(self):
-        for key in self.graph_buttons.keys():
+        keys_copy = [k for k in self.graph_buttons.keys()]
+        for key in keys_copy:
             self.remove_button_for_graph_by_name(key)
         if self.graph_buttons:
             raise ValueError("Graph buttons should be empty (still contains %s)" % self.graph_buttons.keys())
@@ -133,7 +135,7 @@ class Desktop(FloatLayout):
         # popup.bind(on_dismiss=fn)
         # popup.open()
         globals.TemplateInfo().manager.create_or_update_graph_template(self.ids.editor.graph)
-        self.operations.assemble_project("D:\\tmp")
+        self.operations.assemble_project("./tmp")
 
     def start_new_graph_prompt(self):
         def fn(pop):

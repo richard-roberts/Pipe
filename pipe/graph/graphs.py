@@ -98,10 +98,10 @@ class Graph:
         for node in self.nodes.values():
             if node.template == a:
                 for arg in node.inputs.values():
-                    if arg.name not in b.inputs:
+                    if arg.name not in b.inputs and arg.get_connected() is not None:
                         self.delete_edge(arg.get_connected())
                 for arg in node.outputs.values():
-                    if arg.name not in b.outputs:
+                    if arg.name not in b.outputs and arg.get_connected() is not None:
                         self.delete_edge(arg.get_connected())
                 node.replace_template(b)
 
