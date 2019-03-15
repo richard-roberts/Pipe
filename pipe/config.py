@@ -70,21 +70,24 @@ class Defaults:
             return template % name
 
         @staticmethod
-        def graph_execution_template_code(graph_name, input_arguments, output_arguments):
+        def graph_execution_template_code(graph_name, inputs, outputs):
+            named_inputs = [i.code_name() for i in inputs]
+            named_outputs = [o.code_name() for o in outputs]
+
             header = "class %s:\n" % graph_name
 
             body = ""
             body += "    def __init__(self%s%s):\n" % (
-                ("" if len(input_arguments) == 0 else ", "),
-                ", ".join(input_arguments)
+                ("" if len(inputs) == 0 else ", "),
+                ", ".join(named_inputs)
             )
-            if len(output_arguments) == 0:
+            if len(outputs) == 0:
                 body += "        import %s as graph\n" % graph_name
-                body += "        execute(%s)\n" % ", ".join(input_arguments)
+                body += "        execute(%s)\n" % ", ".join(named_inputs)
             else:
                 body += "        import %s as graph\n" % graph_name
-                body += "        result = graph.execute(%s)\n" % ", ".join(input_arguments)
-                for output_var in output_arguments:
+                body += "        result = graph.execute(%s)\n" % ", ".join(named_inputs)
+                for output_var in named_outputs:
                     body += "        self.%s = result[\"%s\"]\n" % (output_var, output_var)
 
             return header + body

@@ -1,0 +1,51 @@
+{
+    "edges": [
+        {
+            "arg_from_name": "o",
+            "arg_to_name": "a",
+            "node_id_from": 4526902240,
+            "node_id_to": 4670060920
+        },
+        {
+            "arg_from_name": "o",
+            "arg_to_name": "b",
+            "node_id_from": 4673583928,
+            "node_id_to": 4670060920
+        }
+    ],
+    "name": "tt",
+    "nodes": [
+        {
+            "node_id": 4526902240,
+            "position": [
+                0.15625000000000008,
+                0.645
+            ],
+            "template": "Literals::Number"
+        },
+        {
+            "node_id": 4673583928,
+            "position": [
+                0.15000000000000002,
+                0.5366666666666666
+            ],
+            "template": "Literals::Number"
+        },
+        {
+            "node_id": 4669772632,
+            "position": [
+                0.40500000000000014,
+                0.4933333333333335
+            ],
+            "template": "Literals::Boolean"
+        },
+        {
+            "node_id": 4670060920,
+            "position": [
+                0.4062499999999999,
+                0.6066666666666669
+            ],
+            "template": "Math::Add"
+        }
+    ]
+}

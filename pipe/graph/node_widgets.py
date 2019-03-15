@@ -11,8 +11,8 @@ class NodeWidget(BoxLayout):
     input_widgets = ObjectProperty()
     output_widgets = ObjectProperty()
 
-    def __init__(self, **kwargs):
-        self.background_color = config.Colors.Node
+    def __init__(self, background_color=None, **kwargs):
+        self.background_color = config.Colors.Node if background_color is None else background_color
         super(NodeWidget, self).__init__(**kwargs)
         self.node = None
 
@@ -27,26 +27,11 @@ class NodeWidget(BoxLayout):
         self.setup_arguments()
         self.update_position()
 
-    def update_argument_positions(self):
-        self.input_widgets.update_connector_position(
-            (
-                self.pos[0],
-                self.pos[1]
-            )
-        )
-        self.output_widgets.update_connector_position(
-            (
-                self.pos[0] + self.width,
-                self.pos[1]
-            )
-        )
-
     def update_position(self):
         self.pos = (
             self.node.position[0] * Window.width,
             self.node.position[1] * Window.height
         )
-        self.update_argument_positions()
 
     def amend_position(self, delta_x, delta_y):
         self.node.position = (
@@ -71,5 +56,4 @@ class NodeWidget(BoxLayout):
 class GraphNodeWidget(NodeWidget):
 
     def __init__(self, **kwargs):
-        super(GraphNodeWidget, self).__init__(**kwargs)
-        self.background_color = config.Colors.GraphNode
+        super(GraphNodeWidget, self).__init__(background_color=config.Colors.GraphNode, **kwargs)

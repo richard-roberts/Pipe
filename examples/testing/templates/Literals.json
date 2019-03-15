@@ -2,7 +2,7 @@
     "name": "Literals",
     "templates": {
         "Boolean": {
-            "code": "class Boolean:\n    def __init__(self, a):\n        self.o = float(a)\n",
+            "code": "class Boolean:\n    def __init__(self, a):\n        self.o = bool(a)\n",
             "collection_name": "Literals",
             "documentation": "Converts the input value to a boolean literal.",
             "inputs": [

@@ -60,5 +60,7 @@ class Template(object):
 class GraphTemplate(Template):
 
     def setup(self, collection_name, name, inputs, outputs):
-        super(GraphTemplate, self).setup(collection_name, name, inputs, outputs)
+        inputs_names = [i.code_name() for i in inputs]
+        outputs_names = [o.code_name() for o in outputs]
+        super(GraphTemplate, self).setup(collection_name, name, inputs_names, outputs_names)
         self.code = config.Defaults.Template.graph_execution_template_code(self.function_name, inputs, outputs)

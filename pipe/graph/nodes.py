@@ -30,8 +30,23 @@ class Node(object):
         return globals.TemplateInfo().manager.template_is_graph_execution(self.template)
 
     def replace_template(self, new_template):
+        old_template = self.template
+        for name in old_template.inputs:
+            if name not in new_template.inputs:
+                del self.inputs[name]
+        for name in old_template.outputs:
+            if name not in new_template.outputs:
+                del self.outputs[name]
+
+        for name in new_template.inputs:
+            if name not in self.inputs.keys():
+                arg = arguments.Argument(self, name)
+                self.inputs[arg.name] = arg
+        for name in new_template.outputs:
+            if name not in self.outputs.keys():
+                arg = arguments.Argument(self, name)
+                self.outputs[arg.name] = arg
         self.template = new_template
-        self.update_args_from_template()
 
     def get_input_argument_by_name(self, name):
         return self.inputs[name]
@@ -101,4 +116,4 @@ class Node(object):
 class GraphNode(Node):
 
     def __init__(self, template, position):
-        super(GraphNode, self).__init__(template, position, node_id=template.name)
+        super(GraphNode, self).__init__(template, position, node_id="GraphExecution%s" % template.name)

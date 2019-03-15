@@ -22,3 +22,6 @@ class Argument:
 
     def pretty(self):
         return "%s.%s" % (self.get_node().template.name, self.name)
+
+    def code_name(self):
+        return "%s_%s_%s" % (self.get_node().template.name, self.name, self.get_node().get_id())

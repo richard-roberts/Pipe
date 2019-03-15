@@ -28,7 +28,8 @@
             "documentation": "Prints the given inputs.",
             "inputs": [
                 "a",
-                "b"
+                "b",
+                "c"
             ],
             "name": "Log3",
             "outputs": []

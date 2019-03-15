@@ -63,9 +63,9 @@
 
 <EdgeWidget>:
     from_x: self.widget_from.x + self.widget_from.width
-    from_y: self.widget_from.y + self.widget_from.height / 2
+    from_y: self.widget_from.y + self.widget_from.height / (1 + len(self.widget_from.argument.get_node().outputs))
     to_x: self.widget_to.x
-    to_y: self.widget_to.y + self.widget_from.height / 2
+    to_y: self.widget_to.y + self.widget_to.height / (1 + len(self.widget_to.argument.get_node().inputs))
 
     canvas:
         Color:
@@ -460,7 +460,7 @@
                 valign: 'center'
                 text_size: self.size
 
-                canvas.after:
+                canvas.before:
                     Color:
                         hsv: .56, .53, .7
                         a: 1

@@ -44,11 +44,13 @@ class TemplateCollectionManager:
             old_template = graph_collection.get_template(graph.name)
             graph_collection.delete_template_by_name(graph.name)
 
+        print(graph.name, "DISCONNECTED ARE ", [g.pretty() for g in graph.disconnected_inputs()])
+
         new_template = graph_collection.create_new_template(
             templates.GraphTemplate,
             graph.name,
-            [i.pretty().replace(".", "_") for i in graph.disconnected_inputs()],
-            [o.pretty().replace(".", "_") for o in graph.disconnected_outputs()]
+            graph.disconnected_inputs(),
+            graph.disconnected_outputs()
         )
 
         if old_template is not None:

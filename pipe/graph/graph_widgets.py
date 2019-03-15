@@ -42,9 +42,6 @@ class GraphWidget(FloatLayout):
             del self.edge_widgets[widget]
 
     def setup_from_graph(self, graph):
-        # update the current graph execution node if there is a graph
-        if self.graph is not None:
-            globals.TemplateInfo().manager.create_or_update_graph_template(self.graph)
 
         self.clear()
 
@@ -86,6 +83,10 @@ class GraphWidget(FloatLayout):
             new_edge_widget = edge_widgets.EdgeWidget(edge, arg_widget_from, arg_widget_to)
             self.add_widget(new_edge_widget)
             self.edge_widgets[new_edge_widget] = new_edge_widget
+
+        # update the current graph execution node if there is a graph
+        if self.graph is not None:
+            globals.TemplateInfo().manager.create_or_update_graph_template(self.graph)
 
     def rebuild(self):
         self.setup_from_graph(self.graph)
@@ -204,7 +205,7 @@ class GraphWidget(FloatLayout):
 
     def delete_edge_by_widget(self, edge_widget):
         self.graph.delete_edge(edge_widget.edge)
-        edge_widget.disconnect()
+        # edge_widget.disconnect()
         self.remove_widget(edge_widget)
         del self.edge_widgets[edge_widget]
 
@@ -339,7 +340,7 @@ class GraphWidget(FloatLayout):
                 globals.PipeInterface().instance.show_message("Edge deleted")
                 return
 
-            if self.activated_input_argument.is_connected():
+            if self.activated_input_argument.argument.is_connected():
                 globals.PipeInterface().instance.show_error("the input argument is already connected")
                 self.activated_output_argument.state = "normal"
                 self.activated_input_argument.state = "normal"
