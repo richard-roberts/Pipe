@@ -1,31 +1,86 @@
+from kivy.factory import Factory
+
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, ObjectProperty
+
+import config
+import globals
 
 
 class ArgumentWidget(ToggleButton):
 
+    # bg = ObjectProperty(None, allownone=True)
+
     def __init__(self, **kwargs):
+        self.background_color = config.Colors.Argument.as_list()
         super(ArgumentWidget, self).__init__(**kwargs)
         self.argument = None
-        self.edge_widget = None
+
+    def update_color(self):
+        if self.argument.is_connected():
+            self.background_color = config.Colors.ArgumentWithEdgeConnected.as_list()
+            print("%s.color should be " % self.pretty(), self.background_color)
+        else:
+            if self.argument.has_default_value():
+                self.background_color = config.Colors.ArgumentWithDefaultValue.as_list()
+                print("%s.color should be " % self.pretty(), self.background_color)
+            else:
+                self.background_color = config.Colors.Argument.as_list()
+                print("%s.color should be " % self.pretty(), self.background_color)
+        self.canvas.ask_update()
 
     def setup(self, argument):
         self.argument = argument
         self.text = "_".join(argument.name.split("_")[:-1]) if "_" in argument.name else argument.name
-        self.bind(state=self.parent.parent.parent.parent.handle_argument_touched)
 
-    # def disconnect(self):
-    #     self.edge_widget = None
+    def start_set_default_value_prompt(self):
+        popup = Factory.SetDefaultValuePopup(title="Set default value for %s" % self.pretty())
 
-    # def connect(self, edge_widget):
-    #     self.edge_widget = edge_widget
+        def fn(_):
+            if popup.reset_to_none:
+                self.argument.reset_default_value()
+                self.update_color()
+                globals.PipeInterface().instance.show_message("default value reset")
+                return
 
-    # def is_connected(self):
-    #     return self.edge_widget is not None
+            has_bool = popup.ids.bool_value.text != ""
+            has_num = popup.ids.num_value.text != ""
+            has_str = popup.ids.str_value.text != ""
 
-    # def get_edge_widget(self):
-    #     return self.edge_widget
+            count = 0
+            if has_bool: count += 1
+            if has_num: count += 1
+            if has_str: count += 1
+            if count != 1:
+                globals.PipeInterface().instance.show_error("more than one value was entered")
+                return
+            elif count == 0:
+                globals.PipeInterface().instance.show_error("no default value was entered")
+                return
+
+            if has_bool:
+                value = bool(popup.ids.str_value.text)
+            elif has_num:
+                value = float(popup.ids.num_value.text)
+            elif has_str:
+                value = str(popup.ids.bool_value.text)
+            else:
+                raise ValueError("This should never happen?")
+
+            self.argument.set_default_value(value)
+            self.update_color()
+
+        popup.bind(on_dismiss=fn)
+        popup.open()
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            if touch.is_double_tap:
+                self.start_set_default_value_prompt()
+            else:
+                self.state = "normal" if self.state != "normal" else "down"
+                self.parent.parent.parent.parent.handle_argument_touched(self)
 
     def pretty(self):
         return self.argument.pretty()

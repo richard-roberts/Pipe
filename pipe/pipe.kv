@@ -2,6 +2,14 @@
 #:import Factory kivy.factory.Factory
 #:import Globals globals
 
+<ArgumentWidget>:
+    canvas:
+        Color:
+            rgba: self.background_color
+        Rectangle:
+            pos: self.pos
+            size: self.size[0], self.size[1] * 0.1
+
 <InputArgumentWidget>:
     widgets: None
 
@@ -75,10 +83,51 @@
             width: 2
             points: self.from_x, self.from_y, self.to_x, self.to_y
 
+
+<SetDefaultValuePopup@Popup>:
+    size_hint: 0.8, 0.5
+    reset_to_none: False
+
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 0.9, 0.9
+
+        GridLayout:
+            size_hint: 1, 0.8
+            cols: 2
+
+            Label:
+                text: "Boolean"
+            TextInput:
+                id: bool_value
+                multiline: False
+            Label:
+                text: "Number"
+            TextInput:
+                id: num_value
+                multiline: False
+            Label:
+                text: "String"
+            TextInput:
+                id: str_value
+                multiline: False
+
+        Button:
+            size_hint: 1, 0.1
+            text: "Reset"
+            on_release: root.ids.reset_to_none = True; root.dismiss()
+
+        Button:
+            size_hint: 1, 0.1
+            text: "Set"
+            on_release: root.dismiss()
+
+
 <NewNodePopup@Popup>:
     names: []
     size_hint: 0.9, 0.9
     used: False
+    most_similar: ""
     new_template_callback: None
     title: "Create a new node"
 
@@ -86,7 +135,28 @@
         orientation: "vertical"
 
         BoxLayout:
-            size_hint: 1, 0.95
+            orientation: "vertical"
+            size_hint: 1, 0.3
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint: 1, 0.2
+
+                Label:
+                    text: "Search"
+                    size_hint: 0.3, 1
+                TextInput:
+                    size_hint: 0.7, 1
+                    id: search_bar
+                    multiline: False
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 1, 0.8
+                id: search_results
+
+        BoxLayout:
+            size_hint: 1, 0.65
             id: options_menu
 
         Button:
@@ -354,7 +424,7 @@
                 size_hint: 0.7, 1
                 orientation: 'vertical'
                 pos: self.parent.x + self.parent.width * 0.5, self.parent.y
-                
+
                 GraphWidget:
                     id: editor
                     size_hint: 1.0, 0.95
@@ -378,75 +448,80 @@
                         size_hint: 0.9, 1
                         orientation: "horizontal"
                         id: graph_selection_menu
-            
-            BoxLayout:
-                size_hint: 0.3, 1
-                orientation: 'vertical'
 
-                GridLayout:
-                    size_hint: 1, 0.05
-                    cols: 2
+
+            Splitter:
+                sizable_from: 'left'
+                size_hint: 0.3, 1
+
+                BoxLayout:
+                    size_hint: 1, 1
+                    orientation: 'vertical'
+
+                    GridLayout:
+                        size_hint: 1, 0.05
+                        cols: 2
+                        Label:
+                            text: root.ids.editor.selected_node_widget.node.template.name if root.ids.editor.selected_node_widget else "nothing selected"
+                            canvas.after:
+                                Color:
+                                    hsv: 0.0, .56, 1.0
+                                    a: 1
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+
+
                     Label:
-                        text: root.ids.editor.selected_node_widget.node.template.name if root.ids.editor.selected_node_widget else "nothing selected"
+                        size_hint: 1, 0.025
+                        text: "Documentation"
                         canvas.after:
-                            Color: 
+                            Color:
                                 hsv: 0.0, .56, 1.0
                                 a: 1
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
-                        
 
-                Label:
-                    size_hint: 1, 0.025
-                    text: "Documentation"
-                    canvas.after:
-                        Color: 
-                            hsv: 0.0, .56, 1.0
-                            a: 1
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
+                    TextInput:
+                        size_hint: 1, 0.2
+                        id: documentation_panel
+                        text: root.ids.editor.selected_node_widget.node.template.documentation if root.ids.editor.selected_node_widget else "nothing selected"
+                        on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.documentation = self.text
 
-                TextInput:
-                    size_hint: 1, 0.2
-                    id: documentation_panel
-                    text: root.ids.editor.selected_node_widget.node.template.documentation if root.ids.editor.selected_node_widget else "nothing selected"
-                    on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.documentation = self.text
+                    Label:
+                        size_hint: 1, 0.025
+                        text: "Implementation"
+                        canvas.after:
+                            Color:
+                                hsv: 0.0, .56, 1.0
+                                a: 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
 
-                Label:
-                    size_hint: 1, 0.025
-                    text: "Implementation"
-                    canvas.after:
-                        Color: 
-                            hsv: 0.0, .56, 1.0
-                            a: 1
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
+                    CodeInput:
+                        id: code_panel
+                        size_hint: 1, 0.65
+                        text: root.ids.editor.selected_node_widget.node.template.code if root.ids.editor.selected_node_widget else "nothing selected"
+                        on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.code = self.text
 
-                CodeInput:
-                    id: code_panel
-                    size_hint: 1, 0.65
-                    text: root.ids.editor.selected_node_widget.node.template.code if root.ids.editor.selected_node_widget else "nothing selected"
-                    on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.code = self.text
+                    GridLayout:
+                        cols: 2
+                        size_hint: 1, 0.1
 
-                GridLayout:
-                    cols: 2
-                    size_hint: 1, 0.1
-
-                    Button:
-                        text: 'Open'
-                        on_release: root.open_project()
-                    Button:
-                        text: 'Save'
-                        on_release: root.save_project()
-                    Button:
-                        text: 'Assemble'
-                        on_release: root.assemble_and_save()
-                    Button:
-                        text: 'Execute'
-                        on_release: root.assemble_and_execute()
+                        Button:
+                            text: 'Open'
+                            on_release: root.open_project()
+                        Button:
+                            text: 'Save'
+                            on_release: root.save_project()
+                        Button:
+                            text: 'Assemble'
+                            on_release: root.assemble_and_save()
+                        Button:
+                            text: 'Execute'
+                            on_release: root.assemble_and_execute()
 
         BoxLayout:
             orientation: "horizontal"

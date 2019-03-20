@@ -25,7 +25,9 @@ class PipeBackend:
         self.graphs.import_graphs(graphs_directory)
 
     def save_project(self, project_directory):
-        shutil.rmtree(project_directory)
+        if os.path.exists(project_directory):
+            shutil.rmtree(project_directory)
+
         templates_directory = os.path.join(project_directory, "templates")
         graphs_directory = os.path.join(project_directory, "graphs")
         if not os.path.exists(templates_directory):

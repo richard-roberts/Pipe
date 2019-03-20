@@ -1,45 +1,79 @@
 class Colors:
 
-    class Message:
+    class Color(object):
+        r = 0
+        g = 0
+        b = 0
+        a = 0
+
+        @classmethod
+        def as_list(cls):
+            return [cls.r, cls.g, cls.b, cls.a]
+
+    class Message(Color):
         r = 54.0 / 255
         g = 54.0 / 255
         b = 54.0 / 255
         a = 1.0
 
-    class Warning:
+    class Warning(Color):
         r = 232.0 / 255
         g = 179.0 / 255
         b = 69.0 / 255
         a = 1.0
 
-    class Error:
+    class Error(Color):
         r = 255.0 / 255
         g = 98.0 / 255
         b = 88.0 / 255
         a = 1.0
 
-    class Execution:
+    class Execution(Color):
         r = 141.0 / 255
         g = 69.0 / 255
         b = 232.0 / 255
         a = 1.0
 
-    class Edge:
+    class Edge(Color):
         r = 240.0 / 255
         g = 240.0 / 255
         b = 240.0 / 255
         a = 1.0
 
-    class Node:
+    class Node(Color):
         r = 212.0 / 255
         g = 117.0 / 255
         b = 209.0 / 255
         a = 1.0
 
-    class GraphNode:
+    class GraphNode(Color):
         r = 255.0 / 255
         g = 175.0 / 255
         b = 95.0 / 255
+        a = 1.0
+
+    class Argument(Color):
+        r = 0.0 / 255
+        g = 0.0 / 255
+        b = 0.0 / 255
+        a = 1.0
+
+    class ArgumentWithEdgeConnected(Color):
+        r = 255.0 / 255
+        g = 0.0 / 255
+        b = 0.0 / 255
+        a = 1.0
+
+    class ArgumentWithDefaultValue(Color):
+        r = 0.0 / 255
+        g = 255.0 / 255
+        b = 0.0 / 255
+        a = 1.0
+
+    class Highlight(Color):
+        r = 0.0 / 255
+        g = 255.0 / 255
+        b = 255.0 / 255
         a = 1.0
 
 

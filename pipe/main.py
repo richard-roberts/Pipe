@@ -90,14 +90,13 @@ class Desktop(FloatLayout):
         # popup.open()
 
         self.remove_buttons_for_graph()
-        self.operations.open_project("./examples/testing")
+        self.operations.open_project("./examples/filtering")
         self.show_message("Project opened successfully")
         for graph in self.operations.list_graphs():
             self.add_button_for_graph(graph)
 
         main_graph = globals.GraphInfo().manager.get_by_name("Main")
         self.ids.editor.setup_from_graph(main_graph)
-        self.show_message("Switched to %s" % "Bob")
 
     def save_project(self):
         # def fn(pop):
@@ -110,7 +109,7 @@ class Desktop(FloatLayout):
         # popup = Factory.SaveProjectPopup()
         # popup.bind(on_dismiss=fn)
         # popup.open()
-        self.operations.save_project("./examples/testing")
+        self.operations.save_project("./examples/filtering")
         self.show_message("Project saved successfully")
 
     def assemble_and_execute(self):

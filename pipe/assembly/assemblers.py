@@ -28,7 +28,6 @@ class Assembler:
                 # Build the argument sting (recursively compiling the execution of those arguments)
                 argument_str = ""
                 for input_arg in node.inputs.values():
-                    print(input_arg.pretty(), input_arg.get_connected())
                     if input_arg.get_connected() is None:
                         argument_str += "%s, " % input_arg.code_name()
                     else:
@@ -58,7 +57,7 @@ class Assembler:
         function_header = "def execute(%s):\n"
         argument_string = ""
         for node in all_nodes:
-            for input_arg in node.list_disconnected_inputs():
+            for input_arg in node.list_inputs_needing_value():
                 argument_string += "%s, " % input_arg.code_name()
         assembled_str += function_header % argument_string[:-2] # [:-2] to trim last comma.
 
@@ -83,12 +82,12 @@ class Assembler:
 
         # Run execution function, using sys.args when run as main
         assembled_str += "if __name__ == \"__main__\":\n"
-        n = sum([node.count_number_of_disconnected_inputs() for node in all_nodes])
+        n = sum([node.count_number_of_inputs_needing_value() for node in all_nodes])
         assembled_str += "    if len(sys.argv) != %d:\n" % (n + 1)
 
         inputs_str = ""
         for node in all_nodes:
-            for input_arg in node.list_disconnected_inputs():
+            for input_arg in node.list_inputs_needing_value():
                 inputs_str += "%s, " % input_arg.code_name()
         assembled_str += "        print(\"Error: not enough inputs given, needed: %s\")\n" % inputs_str[:-2]
         assembled_str += "        raise ValueError(\"Failed to parse arguments\")\n"
@@ -96,7 +95,7 @@ class Assembler:
         argument_string = ""
         ix = 1
         for node in all_nodes:
-            for input_arg in node.list_disconnected_inputs():
+            for input_arg in node.list_inputs_needing_value():
                 argument_string += ("sys.argv[%d], " % ix)
                 ix += 1
         assembled_str += "    execute(%s)" % argument_string[:-2] # [:-2] to trim last comma.

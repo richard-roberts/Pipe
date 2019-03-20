@@ -5,13 +5,17 @@ from . import arguments
 
 class Node(object):
 
-    def __init__(self, template, position, node_id=None):
+    def __init__(self, template, position, node_id=None, setup_args=True):
         self.node_id = id(self) if node_id is None else node_id
         self.template = template
         self.position = position
         self.inputs = {}
         self.outputs = {}
-        self.update_args_from_template()
+        if setup_args:
+            self.update_args_from_template()
+
+    def __str__(self):
+        return "%s[%s]" % (self.template.name, str(self.node_id))
 
     def update_args_from_template(self):
         self.inputs = {}
@@ -46,20 +50,22 @@ class Node(object):
             if name not in self.outputs.keys():
                 arg = arguments.Argument(self, name)
                 self.outputs[arg.name] = arg
+
         self.template = new_template
 
     def get_input_argument_by_name(self, name):
         return self.inputs[name]
 
     def get_output_argument_by_name(self, name):
+        print(self, name)
         return self.outputs[name]
 
-    def list_disconnected_inputs(self):
-        disconnected = []
+    def list_inputs_needing_value(self):
+        inputs = []
         for input_ in self.inputs.values():
-            if not input_.is_connected():
-                disconnected.append(input_)
-        return disconnected
+            if input_.needs_input():
+                inputs.append(input_)
+        return inputs
 
     def list_disconnected_outputs(self):
         disconnected = []
@@ -71,7 +77,7 @@ class Node(object):
     def has_outputs(self):
         return self.count_number_of_disconnected_outputs() > 0
 
-    def count_number_of_disconnected_inputs(self):
+    def count_number_of_inputs_needing_value(self):
         n = 0
         for input_ in self.inputs.values():
             if not input_.is_connected():
@@ -100,17 +106,31 @@ class Node(object):
             "node_id": self.node_id,
             "template": self.template.get_long_name(),
             "position": self.position,
+            "inputs": [arg.as_json() for arg in self.inputs.values()],
+            "outputs": [arg.as_json() for arg in self.outputs.values()]
         }
 
     @staticmethod
     def from_json(data):
         collection_name, template_name = data["template"].split("::")
-        template = globals.TemplateInfo().manager.get_template(collection_name, template_name)
-        return Node(
+        try:
+            template = globals.TemplateInfo().manager.get_template(collection_name, template_name)
+        except KeyError:
+            return None
+
+        node = Node(
             template,
             data["position"],
-            node_id=data["node_id"]
+            node_id=data["node_id"],
+            setup_args=False
         )
+        for arg_data in data["inputs"]:
+            arg = arguments.Argument.from_json(node, arg_data)
+            node.inputs[arg.name] = arg
+        for arg_data in data["outputs"]:
+            arg = arguments.Argument.from_json(node, arg_data)
+            node.outputs[arg.name] = arg
+        return node
 
 
 class GraphNode(Node):

@@ -16,14 +16,18 @@ class Graph:
 
     def from_json(self, data):
         self.name = data["name"]
+
         self.nodes = {}
         for datum in data["nodes"]:
             node = nodes.Node.from_json(datum)
-            self.nodes[node.get_id()] = node
+            if node is not None: # can be none if failed to find template
+                self.nodes[node.get_id()] = node
+
         self.edges = {}
         for datum in data["edges"]:
             edge = edges.Edge.from_json(self, datum)
-            self.edges[edge] = edge
+            if edge is not None: # can be none if failed to find nodes by id
+                self.edges[edge] = edge
 
     def import_from_filepath(self, filepath):
         with open(filepath) as stream:
@@ -108,10 +112,10 @@ class Graph:
                 self.delete_node(node)
         globals.TemplateInfo().manager.create_or_update_graph_template(self)
 
-    def disconnected_inputs(self):
+    def list_inputs_needing_value(self):
         ins = []
         for node in self.nodes.values():
-            ins += node.list_disconnected_inputs()
+            ins += node.list_inputs_needing_value()
         return ins
 
     def disconnected_outputs(self):

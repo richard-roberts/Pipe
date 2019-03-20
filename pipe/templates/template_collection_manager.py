@@ -1,4 +1,5 @@
 import os
+from difflib import SequenceMatcher
 
 import globals
 from . import templates
@@ -44,12 +45,10 @@ class TemplateCollectionManager:
             old_template = graph_collection.get_template(graph.name)
             graph_collection.delete_template_by_name(graph.name)
 
-        print(graph.name, "DISCONNECTED ARE ", [g.pretty() for g in graph.disconnected_inputs()])
-
         new_template = graph_collection.create_new_template(
             templates.GraphTemplate,
             graph.name,
-            graph.disconnected_inputs(),
+            graph.list_inputs_needing_value(),
             graph.disconnected_outputs()
         )
 
@@ -88,6 +87,23 @@ class TemplateCollectionManager:
 
         collection = self.collections[collection_name]
         return collection.template_exists(template_name)
+
+    def get_most_similar_and_map_of_similar_template(self, name):
+        similar_templates = {}
+        most_similar_name = ""
+        most_similar_value = 0.0
+        for collection in self.collections.values():
+            for template_name in collection.get_names():
+                similarity = SequenceMatcher(None, template_name, name).ratio()
+                if similarity > 0.3:
+                    if similarity > most_similar_value:
+                        most_similar_value = similarity
+                        most_similar_name = "%s::%s" % (collection.name, template_name)
+                    if collection.name not in similar_templates.keys():
+                        similar_templates[collection.name] = [template_name]
+                    else:
+                        similar_templates[collection.name].append(template_name)
+        return most_similar_name, similar_templates
 
     def graph_template_already_exists(self, template_name):
         return self.collections[GRAPH_EXE_COLLECTION_NAME].template_exists(template_name)
@@ -132,12 +148,7 @@ class TemplateCollectionManager:
         return collections_dict
 
     def get_template(self, collection_name, template_name):
-        has_collection = collection_name in self.collections.keys()
-        if not has_collection:
-            return None
-
-        collection = self.collections[collection_name]
-        return collection.get_template(template_name)
+        return self.collections[collection_name].get_template(template_name)
 
     def rename_graph_execution(self, old_name, new_name):
         self.collections[GRAPH_EXE_COLLECTION_NAME].rename_template_by_name(old_name, new_name)

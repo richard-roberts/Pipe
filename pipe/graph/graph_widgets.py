@@ -1,9 +1,12 @@
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
 from kivy.uix.treeview import TreeView, TreeViewLabel
 
+import config
 import globals
 from . import argument_widgets
 from . import node_widgets
@@ -83,6 +86,8 @@ class GraphWidget(FloatLayout):
             new_edge_widget = edge_widgets.EdgeWidget(edge, arg_widget_from, arg_widget_to)
             self.add_widget(new_edge_widget)
             self.edge_widgets[new_edge_widget] = new_edge_widget
+            arg_widget_from.update_color()
+            arg_widget_to.update_color()
 
         # update the current graph execution node if there is a graph
         if self.graph is not None:
@@ -192,9 +197,11 @@ class GraphWidget(FloatLayout):
 
     def create_new_edge(self, widget_from, widget_to):
         edge = self.graph.create_edge(widget_from.argument, widget_to.argument)
-        widget = edge_widgets.EdgeWidget(edge, widget_from, widget_to)
-        self.add_widget(widget)
-        self.edge_widgets[widget] = widget
+        edge_widget = edge_widgets.EdgeWidget(edge, widget_from, widget_to)
+        self.add_widget(edge_widget)
+        edge_widget.widget_from.update_color()
+        edge_widget.widget_to.update_color()
+        self.edge_widgets[edge_widget] = edge_widget
 
     def delete_node_only_by_widget(self, node_widget):
         # NOTE: THIS CALL TO DELETE_NODE WILL DELETE EDGES IN THE GRAPH
@@ -205,8 +212,9 @@ class GraphWidget(FloatLayout):
 
     def delete_edge_by_widget(self, edge_widget):
         self.graph.delete_edge(edge_widget.edge)
-        # edge_widget.disconnect()
         self.remove_widget(edge_widget)
+        edge_widget.widget_from.update_color()
+        edge_widget.widget_to.update_color()
         del self.edge_widgets[edge_widget]
 
     def delete_node_and_connected_edges_by_widget(self, node_widget):
@@ -269,6 +277,35 @@ class GraphWidget(FloatLayout):
                     raise ValueError("Got unexpected value ``" % value)
             return fn
 
+        def on_search_callback(_, value):
+            popup.ids.search_results.clear_widgets()
+            most_similar, similarity_map =\
+                globals.TemplateInfo().manager.get_most_similar_and_map_of_similar_template(value)
+            popup.most_similar = most_similar
+            box = BoxLayout(orientation='horizontal')
+            label = Label(text="Most Similar")
+            label.background_color = config.Colors.Highlight.as_list()
+            box.add_widget(label)
+            label = Label(text=most_similar)
+            label.background_color = config.Colors.Highlight.as_list()
+            box.add_widget(label)
+            popup.ids.search_results.add_widget(box)
+
+            for key in similarity_map.keys():
+                box = BoxLayout(orientation='horizontal')
+                box.add_widget(Label(text=key))
+                grid = GridLayout(cols=2)
+                for name in similarity_map[key]:
+                    label_str = '%s [ref=create][u]create[/u][/ref] [ref=delete][u]delete[/u][/ref]' % name
+                    widget = Label(
+                        text=label_str,
+                        markup=True,
+                        on_ref_press=make_change_to_fn(key, name)
+                    )
+                    grid.add_widget(widget)
+                box.add_widget(grid)
+                popup.ids.search_results.add_widget(box)
+
         # See https://kivy.org/doc/stable/api-kivy.uix.treeview.html
         view = TreeView(
             hide_root=False,
@@ -293,33 +330,52 @@ class GraphWidget(FloatLayout):
                     ),
                     node
                 )
+
+        def open_callback(_):
+            popup.ids.search_bar.focus = True
+
+        def use_most_similar(_):
+            popup.used = True
+            popup.dismiss()
+            if "::" not in popup.most_similar:
+                raise ValueError("this should not happen")
+            collection_name, template_name = popup.most_similar.split("::")
+            template = globals.TemplateInfo().manager.get_template(collection_name, template_name)
+            self.create_new_node(template, position)
+
         popup.ids.options_menu.add_widget(view)
         popup.bind(on_dismiss=cancelled)
+        popup.ids.search_bar.bind(text=on_search_callback)
+        popup.ids.search_bar.bind(on_text_validate=use_most_similar)
+        popup.bind(on_open=open_callback)
         popup.open()
 
-    def handle_argument_touched(self, argument_widget, argument_widget_state):
+    def handle_argument_double_touch(self):
+        pass
+
+    def handle_argument_touched(self, argument_widget):
 
         if type(argument_widget) == argument_widgets.InputArgumentWidget:
 
-            if argument_widget_state == "down":
+            if argument_widget.state == "down":
                 self.activated_input_argument = argument_widget
-                # globals.PipeInterface().instance.show_message("Set activate input argument to %s" % argument_widget.argument.name)
-            elif argument_widget_state == "normal":
+                globals.PipeInterface().instance.show_message("Set activate input argument to %s" % argument_widget.argument.name)
+            elif argument_widget.state == "normal":
                 self.activated_input_argument = None
-                # globals.PipeInterface().instance.show_message("Deactivated argument")
+                globals.PipeInterface().instance.show_message("Deactivated argument")
             else:
-                globals.PipeInterface().instance.show_error("The state %s is not valid" % argument_widget_state)
+                globals.PipeInterface().instance.show_error("The state %s is not valid" % argument_widget.state)
 
         elif type(argument_widget) == argument_widgets.OutputArgumentWidget:
 
-            if argument_widget_state == "down":
+            if argument_widget.state == "down":
                 self.activated_output_argument = argument_widget
-                # globals.PipeInterface().instance.show_message("Set activate output argument to %s" % argument_widget.argument.name)
-            elif argument_widget_state == "normal":
+                globals.PipeInterface().instance.show_message("Set activate output argument to %s" % argument_widget.argument.name)
+            elif argument_widget.state == "normal":
                 self.activated_output_argument = None
-                # globals.PipeInterface().instance.show_message("Deactivated argument")
+                globals.PipeInterface().instance.show_message("Deactivated argument")
             else:
-                globals.PipeInterface().instance.show_error("the state %s is not valid" % argument_widget_state)
+                globals.PipeInterface().instance.show_error("the state %s is not valid" % argument_widget.state)
                 return
 
         else:
@@ -337,6 +393,8 @@ class GraphWidget(FloatLayout):
                 )
                 self.activated_output_argument.state = "normal"
                 self.activated_input_argument.state = "normal"
+                self.activated_output_argument = None
+                self.activated_input_argument = None
                 globals.PipeInterface().instance.show_message("Edge deleted")
                 return
 
@@ -344,11 +402,15 @@ class GraphWidget(FloatLayout):
                 globals.PipeInterface().instance.show_error("the input argument is already connected")
                 self.activated_output_argument.state = "normal"
                 self.activated_input_argument.state = "normal"
+                self.activated_output_argument = None
+                self.activated_input_argument = None
                 return
 
-            # Note:
-            #   Need to have print first, since args
-            #   get reset during edge creation
+            self.create_new_edge(
+                self.activated_output_argument,
+                self.activated_input_argument
+            )
+
             globals.PipeInterface().instance.show_message(
                 "New edge created from %s to %s" % (
                     self.activated_output_argument.argument.name,
@@ -356,12 +418,10 @@ class GraphWidget(FloatLayout):
                 )
             )
 
-            self.create_new_edge(
-                self.activated_output_argument,
-                self.activated_input_argument
-            )
             self.activated_output_argument.state = "normal"
             self.activated_input_argument.state = "normal"
+            self.activated_output_argument = None
+            self.activated_input_argument = None
 
     def handle_touch_down(self, touch):
         if touch.is_double_tap:
