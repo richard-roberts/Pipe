@@ -2,8 +2,10 @@ library(ggplot2)
 library(latex2exp)
 
 args <- commandArgs(TRUE)
-points <- read.csv(args[1])
-line <- read.csv(args[2])
+points_filepath <- args[1]
+output_filepath <- args[2]
+
+points <- read.csv(points_filepath)
 
 ggplot(
   points,
@@ -13,8 +15,7 @@ ggplot(
   )
 ) + 
   
-  geom_point() +
-  geom_line(data=line, color='steelblue') +
+  geom_line() +
   xlab('X') +
   ylab('Y') +
 
@@ -24,7 +25,4 @@ ggplot(
     axis.text.y = element_text(size=15)
   )
 
-  ggsave(args[3], dpi=300, width=12, height=6)
-
-
-
+  ggsave(output_filepath, dpi=300, width=12, height=6)

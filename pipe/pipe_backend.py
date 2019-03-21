@@ -58,7 +58,9 @@ class PipeBackend:
         temporary = "./tmp"
         self.templates.create_or_update_graph_template(graph)
         self.assemble_project(temporary)
-        command = 'python ./tmp/%s.py %s' % (graph.name, command_line_args_str)
+        os.environ["PIPE_BASE"] = os.path.dirname(os.path.realpath(__file__)) + "/../"
+        os.environ["PIPE_RENDER"] = os.path.dirname(os.path.realpath(__file__)) + "/render/"
+        command = 'python3 ./tmp/%s.py %s' % (graph.name, command_line_args_str)
 
         try:
             result = subprocess.check_output(command, shell=True)

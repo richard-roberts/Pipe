@@ -1,8 +1,10 @@
+from kivy.factory import Factory
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 
 import config
+import globals
 
 
 class NodeWidget(BoxLayout):
@@ -26,6 +28,7 @@ class NodeWidget(BoxLayout):
         self.node = node
         self.setup_arguments()
         self.update_position()
+        self.ids.execution_index_button.text = "i=%s" % self.node.execution_index
 
     def update_position(self):
         self.pos = (
@@ -51,6 +54,27 @@ class NodeWidget(BoxLayout):
 
     def get_output_argument_widget_by_argument_name(self, name):
         return self.output_widgets.get_argument_by_name(name)
+
+    def start_set_execution_index_prompt(self, *args):
+        popup = Factory.SetExecutionIndexPopup(title="Set execution index for %s" % self.node.template.name)
+
+        def fn(_):
+            if not popup.used:
+                globals.PipeInterface().instance.show_warning("cancelled operation")
+                return
+
+            try:
+                new_index = int(popup.ids.new_index.text)
+            except ValueError:
+                globals.PipeInterface().instance.show_error("%s is not a valid index" % str(popup.ids.new_index.text))
+                return
+
+            self.node.set_execution_index(new_index)
+            self.ids.execution_index_button.text = "i=%d" % new_index
+            globals.PipeInterface().instance.show_message("%s's index set to %d" % (self.node.template.name, new_index))
+
+        popup.bind(on_dismiss=fn)
+        popup.open()
 
 
 class GraphNodeWidget(NodeWidget):

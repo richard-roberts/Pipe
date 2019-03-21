@@ -1,0 +1,28 @@
+{
+    "name": "IO",
+    "templates": {
+        "DeleteFile": {
+            "code": "class DeleteFile:\n    def __init__(self, filepath):\n        import os\n        os.remove(filepath)\n\n",
+            "collection_name": "IO",
+            "documentation": "A description of the DeleteFile node's behavior.",
+            "inputs": [
+                "filepath"
+            ],
+            "name": "DeleteFile",
+            "outputs": []
+        },
+        "SaveToFile": {
+            "code": "class SaveToFile:\n    def __init__(self, filepath, content):\n        import os\n        filepath = os.environ['PIPE_BASE'] + filepath\n        f = open(filepath, \"w\")\n        f.write(content)\n        f.close()\n        self.filepath = filepath\n",
+            "collection_name": "IO",
+            "documentation": "A description of the SaveToFile node's behavior.",
+            "inputs": [
+                "filepath",
+                "content"
+            ],
+            "name": "SaveToFile",
+            "outputs": [
+                "filepath"
+            ]
+        }
+    }
+}

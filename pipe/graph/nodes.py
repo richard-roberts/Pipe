@@ -1,4 +1,3 @@
-import config
 import globals
 from . import arguments
 
@@ -9,6 +8,7 @@ class Node(object):
         self.node_id = id(self) if node_id is None else node_id
         self.template = template
         self.position = position
+        self.execution_index = -1
         self.inputs = {}
         self.outputs = {}
         if setup_args:
@@ -57,7 +57,6 @@ class Node(object):
         return self.inputs[name]
 
     def get_output_argument_by_name(self, name):
-        print(self, name)
         return self.outputs[name]
 
     def list_inputs_needing_value(self):
@@ -80,7 +79,7 @@ class Node(object):
     def count_number_of_inputs_needing_value(self):
         n = 0
         for input_ in self.inputs.values():
-            if not input_.is_connected():
+            if input_.needs_input():
                 n += 1
         return n
 
@@ -101,13 +100,17 @@ class Node(object):
     def terminates_execution(self):
         return self.count_number_of_connected_outputs() == 0
 
+    def set_execution_index(self, index):
+        self.execution_index = index
+
     def as_json(self):
         return {
             "node_id": self.node_id,
             "template": self.template.get_long_name(),
             "position": self.position,
             "inputs": [arg.as_json() for arg in self.inputs.values()],
-            "outputs": [arg.as_json() for arg in self.outputs.values()]
+            "outputs": [arg.as_json() for arg in self.outputs.values()],
+            "execution_index": self.execution_index
         }
 
     @staticmethod
@@ -124,6 +127,7 @@ class Node(object):
             node_id=data["node_id"],
             setup_args=False
         )
+        node.execution_index = data["execution_index"]
         for arg_data in data["inputs"]:
             arg = arguments.Argument.from_json(node, arg_data)
             node.inputs[arg.name] = arg

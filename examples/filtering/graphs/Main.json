@@ -1,0 +1,154 @@
+{
+    "edges": [
+        {
+            "arg_from_name": "points",
+            "arg_to_name": "alist",
+            "node_id_from": 4526758544,
+            "node_id_to": 4684521880
+        },
+        {
+            "arg_from_name": "csv",
+            "arg_to_name": "content",
+            "node_id_from": 4684521880,
+            "node_id_to": 4519600480
+        },
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "points",
+            "node_id_from": 4519600480,
+            "node_id_to": 4520501376
+        },
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "filepath",
+            "node_id_from": 4519600480,
+            "node_id_to": 4526685656
+        }
+    ],
+    "name": "Main",
+    "nodes": [
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "freq"
+                },
+                {
+                    "default": null,
+                    "name": "amp"
+                },
+                {
+                    "default": null,
+                    "name": "phase"
+                },
+                {
+                    "default": 0.0,
+                    "name": "start"
+                },
+                {
+                    "default": 6.28,
+                    "name": "end"
+                },
+                {
+                    "default": 100.0,
+                    "name": "n"
+                }
+            ],
+            "node_id": 4526758544,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "points"
+                }
+            ],
+            "position": [
+                0.1207672863666015,
+                0.7888429406850456
+            ],
+            "template": "Literals::PointsFromSin3D"
+        },
+        {
+            "execution_index": 1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "points"
+                }
+            ],
+            "node_id": 4520501376,
+            "outputs": [],
+            "position": [
+                0.4713690476190475,
+                0.48687134502923957
+            ],
+            "template": "RRender::SingleCurve"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "alist"
+                },
+                {
+                    "default": "\"x, y\"",
+                    "name": "header"
+                }
+            ],
+            "node_id": 4684521880,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "csv"
+                }
+            ],
+            "position": [
+                0.2583423026744945,
+                0.4845112781954879
+            ],
+            "template": "CSV::ListToCSV"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": "\"./tmp_points.csv\"",
+                    "name": "filepath"
+                },
+                {
+                    "default": null,
+                    "name": "content"
+                }
+            ],
+            "node_id": 4519600480,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "position": [
+                0.3176687866927592,
+                0.3155304928989138
+            ],
+            "template": "IO::SaveToFile"
+        },
+        {
+            "execution_index": 2,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "node_id": 4526685656,
+            "outputs": [],
+            "position": [
+                0.6271428571428566,
+                0.33115705931495365
+            ],
+            "template": "IO::DeleteFile"
+        }
+    ]
+}

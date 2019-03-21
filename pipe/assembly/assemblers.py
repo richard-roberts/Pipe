@@ -29,7 +29,10 @@ class Assembler:
                 argument_str = ""
                 for input_arg in node.inputs.values():
                     if input_arg.get_connected() is None:
-                        argument_str += "%s, " % input_arg.code_name()
+                        if input_arg.has_default_value():
+                            argument_str += "%s, " % str(input_arg.default_value)
+                        else:
+                            argument_str += "%s, " % input_arg.code_name()
                     else:
                         compiled_child = assemble(input_arg.get_connected().argument_from.get_node(), input_arg.get_connected().argument_from)
                         argument_str += compiled_child + ", "
@@ -63,6 +66,8 @@ class Assembler:
 
         # Write execution calls
         terminating_nodes = [node for node in all_nodes if node.terminates_execution()]
+        terminating_nodes.sort(key=lambda x: x.execution_index, reverse=False)
+
         for node in terminating_nodes:
             if node.has_outputs():
                 assembled_str += "    tmp = %s\n" % (assemble(node, None))
@@ -82,14 +87,18 @@ class Assembler:
 
         # Run execution function, using sys.args when run as main
         assembled_str += "if __name__ == \"__main__\":\n"
-        n = sum([node.count_number_of_inputs_needing_value() for node in all_nodes])
+        n = 0
+        for node in all_nodes:
+            n_for_node = node.count_number_of_inputs_needing_value()
+            n += n_for_node
+
         assembled_str += "    if len(sys.argv) != %d:\n" % (n + 1)
 
         inputs_str = ""
         for node in all_nodes:
             for input_arg in node.list_inputs_needing_value():
-                inputs_str += "%s, " % input_arg.code_name()
-        assembled_str += "        print(\"Error: not enough inputs given, needed: %s\")\n" % inputs_str[:-2]
+                inputs_str += "               %s,\\n\\\n" % input_arg.code_name()
+        assembled_str += "        print(\"Error: not enough inputs given, needed:\\n\\\n%s\")\n" % inputs_str[:-2]
         assembled_str += "        raise ValueError(\"Failed to parse arguments\")\n"
 
         argument_string = ""

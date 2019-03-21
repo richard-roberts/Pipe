@@ -64,6 +64,11 @@
                     text: "e"
                     on_release: Globals.GraphWidget().instance.edit_template_via_node_widget(self.parent.parent.parent.parent)
 
+                Button:
+                    text: "i=-1"
+                    id: execution_index_button
+                    on_release: root.start_set_execution_index_prompt()
+
         OutputArgumentSetWidget:
             size_hint: 0.1, 1
             id: output_widgets
@@ -121,6 +126,33 @@
             size_hint: 1, 0.1
             text: "Set"
             on_release: root.dismiss()
+
+
+<SetExecutionIndexPopup@Popup>:
+    size_hint: 0.8, 0.5
+    used: False
+
+    on_open: root.ids.new_index.focus = True
+
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 0.9, 0.9
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, 0.9
+
+            Label:
+                text: "New Index"
+            TextInput:
+                id: new_index
+                multiline: False
+                on_text_validate: root.used = True; root.dismiss()
+
+        Button:
+            text: "Set"
+            size_hint: 1, 0.1
+            on_release: root.used = True; root.dismiss()
 
 
 <NewNodePopup@Popup>:
@@ -463,7 +495,7 @@
                         cols: 2
                         Label:
                             text: root.ids.editor.selected_node_widget.node.template.name if root.ids.editor.selected_node_widget else "nothing selected"
-                            canvas.after:
+                            canvas.before:
                                 Color:
                                     hsv: 0.0, .56, 1.0
                                     a: 1
@@ -475,7 +507,7 @@
                     Label:
                         size_hint: 1, 0.025
                         text: "Documentation"
-                        canvas.after:
+                        canvas.before:
                             Color:
                                 hsv: 0.0, .56, 1.0
                                 a: 1
@@ -492,7 +524,7 @@
                     Label:
                         size_hint: 1, 0.025
                         text: "Implementation"
-                        canvas.after:
+                        canvas.before:
                             Color:
                                 hsv: 0.0, .56, 1.0
                                 a: 1

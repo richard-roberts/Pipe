@@ -2,15 +2,13 @@ from kivy.factory import Factory
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
-from kivy.properties import ListProperty, ObjectProperty
+from kivy.properties import ListProperty
 
 import config
 import globals
 
 
 class ArgumentWidget(ToggleButton):
-
-    # bg = ObjectProperty(None, allownone=True)
 
     def __init__(self, **kwargs):
         self.background_color = config.Colors.Argument.as_list()
@@ -20,19 +18,17 @@ class ArgumentWidget(ToggleButton):
     def update_color(self):
         if self.argument.is_connected():
             self.background_color = config.Colors.ArgumentWithEdgeConnected.as_list()
-            print("%s.color should be " % self.pretty(), self.background_color)
         else:
             if self.argument.has_default_value():
                 self.background_color = config.Colors.ArgumentWithDefaultValue.as_list()
-                print("%s.color should be " % self.pretty(), self.background_color)
             else:
                 self.background_color = config.Colors.Argument.as_list()
-                print("%s.color should be " % self.pretty(), self.background_color)
         self.canvas.ask_update()
 
     def setup(self, argument):
         self.argument = argument
         self.text = "_".join(argument.name.split("_")[:-1]) if "_" in argument.name else argument.name
+        self.update_color()
 
     def start_set_default_value_prompt(self):
         popup = Factory.SetDefaultValuePopup(title="Set default value for %s" % self.pretty())
@@ -60,11 +56,11 @@ class ArgumentWidget(ToggleButton):
                 return
 
             if has_bool:
-                value = bool(popup.ids.str_value.text)
+                value = bool(popup.ids.bool_value.text)
             elif has_num:
                 value = float(popup.ids.num_value.text)
             elif has_str:
-                value = str(popup.ids.bool_value.text)
+                value = "\"%s\"" % str(popup.ids.str_value.text)
             else:
                 raise ValueError("This should never happen?")
 

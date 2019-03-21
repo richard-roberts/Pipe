@@ -6,6 +6,9 @@ class Argument:
         self.edge = None
         self.default_value = None
 
+    def __str__(self):
+        return self.pretty()
+
     def get_node(self):
         return self.node
 
