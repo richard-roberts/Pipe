@@ -11,6 +11,12 @@
             "arg_to_name": "pointsPath",
             "node_id_from": 4722786144,
             "node_id_to": 4686624976
+        },
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "filepath",
+            "node_id_from": 4722786144,
+            "node_id_to": 4575400736
         }
     ],
     "name": "RenderSingleCurve",
@@ -84,6 +90,22 @@
                 0.45404761904761914
             ],
             "template": "RRender::SingleCurve"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "node_id": 4575400736,
+            "outputs": [],
+            "position": [
+                0.4325,
+                0.28833333333333333
+            ],
+            "template": "IO::DeleteFile"
         }
     ]
 }
