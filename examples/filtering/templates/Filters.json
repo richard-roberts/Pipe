@@ -1,0 +1,19 @@
+{
+    "name": "Filters",
+    "templates": {
+        "SimpleAverage": {
+            "code": "class SimpleAverage:\n    def __init__(self, points, n, spread):\n        s = int(spread)\n\n        def average_forward(ps, i):\n            return ps[i][0], (ps[i+s][1] + ps[i][1]) * 0.5\n        \n        def average_center(ps, i):\n            return ps[i][0], (ps[i+s][1] + ps[i-s][1]) * 0.5\n        \n        def average_backward(ps, i):\n            return ps[i][0], (ps[i][1] + ps[i-s][1]) * 0.5\n\n        def apply(ps):\n            filtered = []\n            for i in range(0, s):\n                filtered.append(average_forward(ps, i))\n            for i in range(s, len(ps)-s):\n                filtered.append(average_center(ps, i))\n            for i in range(len(ps)-s, len(ps)):\n                filtered.append(average_backward(ps, i))\n            return filtered\n        \n        for i in range(int(n)):\n            points = apply(points)\n\n        self.points = points\n",
+            "collection_name": "Filters",
+            "documentation": "A description of the SimpleAverage node's behavior.",
+            "inputs": [
+                "points",
+                "n",
+                "spread"
+            ],
+            "name": "SimpleAverage",
+            "outputs": [
+                "points"
+            ]
+        }
+    }
+}

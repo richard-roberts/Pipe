@@ -1,0 +1,253 @@
+{
+    "edges": [
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "pointsPathA",
+            "node_id_from": 4492246880,
+            "node_id_to": 4494750832
+        },
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "pointsPathB",
+            "node_id_from": 4518562504,
+            "node_id_to": 4494750832
+        },
+        {
+            "arg_from_name": "csv",
+            "arg_to_name": "content",
+            "node_id_from": 4452393480,
+            "node_id_to": 4492246880
+        },
+        {
+            "arg_from_name": "csv",
+            "arg_to_name": "content",
+            "node_id_from": 4495899896,
+            "node_id_to": 4518562504
+        },
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "filepath",
+            "node_id_from": 4492246880,
+            "node_id_to": 4705310872
+        },
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "filepath",
+            "node_id_from": 4518562504,
+            "node_id_to": 4495706320
+        },
+        {
+            "arg_from_name": "x",
+            "arg_to_name": "alist",
+            "node_id_from": 4687108752,
+            "node_id_to": 4495899896
+        },
+        {
+            "arg_from_name": "x",
+            "arg_to_name": "alist",
+            "node_id_from": 4506615200,
+            "node_id_to": 4452393480
+        }
+    ],
+    "name": "RenderPairOfCurves",
+    "nodes": [
+        {
+            "execution_index": 1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "pointsPathA"
+                },
+                {
+                    "default": null,
+                    "name": "pointsPathB"
+                },
+                {
+                    "default": null,
+                    "name": "outputPath"
+                }
+            ],
+            "node_id": 4494750832,
+            "outputs": [],
+            "position": [
+                0.6056115224339519,
+                0.6223809523809526
+            ],
+            "template": "RRender::PairOfCurves"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": "\"temporary_points_a\"",
+                    "name": "filepath"
+                },
+                {
+                    "default": null,
+                    "name": "content"
+                }
+            ],
+            "node_id": 4492246880,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "position": [
+                0.32363095238095224,
+                0.6588095238095238
+            ],
+            "template": "IO::SaveToFile"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": "\"temp_points_b\"",
+                    "name": "filepath"
+                },
+                {
+                    "default": null,
+                    "name": "content"
+                }
+            ],
+            "node_id": 4518562504,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "position": [
+                0.2950595238095237,
+                0.5273809523809525
+            ],
+            "template": "IO::SaveToFile"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "alist"
+                },
+                {
+                    "default": "\"x,y\"",
+                    "name": "header"
+                }
+            ],
+            "node_id": 4452393480,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "csv"
+                }
+            ],
+            "position": [
+                0.15458333333333332,
+                0.6597619047619048
+            ],
+            "template": "CSV::ListToCSV"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "alist"
+                },
+                {
+                    "default": "\"x,y\"",
+                    "name": "header"
+                }
+            ],
+            "node_id": 4495899896,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "csv"
+                }
+            ],
+            "position": [
+                0.14446428571428568,
+                0.5102380952380952
+            ],
+            "template": "CSV::ListToCSV"
+        },
+        {
+            "execution_index": 2,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "node_id": 4705310872,
+            "outputs": [],
+            "position": [
+                0.4992261904761905,
+                0.4426190476190476
+            ],
+            "template": "IO::DeleteFile"
+        },
+        {
+            "execution_index": 3,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "node_id": 4495706320,
+            "outputs": [],
+            "position": [
+                0.4902976190476186,
+                0.3388095238095239
+            ],
+            "template": "IO::DeleteFile"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "a"
+                }
+            ],
+            "node_id": 4506615200,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "x"
+                }
+            ],
+            "position": [
+                -0.01624999999999996,
+                0.6769047619047619
+            ],
+            "template": "Alias::AToX"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "b"
+                }
+            ],
+            "node_id": 4687108752,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "x"
+                }
+            ],
+            "position": [
+                -0.014464285714285707,
+                0.5626190476190475
+            ],
+            "template": "Alias::BToX"
+        }
+    ]
+}

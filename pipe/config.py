@@ -117,7 +117,7 @@ class Defaults:
             )
             if len(outputs) == 0:
                 body += "        import %s as graph\n" % graph_name
-                body += "        execute(%s)\n" % ", ".join(named_inputs)
+                body += "        graph.execute(%s)\n" % ", ".join(named_inputs)
             else:
                 body += "        import %s as graph\n" % graph_name
                 body += "        result = graph.execute(%s)\n" % ", ".join(named_inputs)

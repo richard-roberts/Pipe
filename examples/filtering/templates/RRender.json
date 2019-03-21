@@ -1,12 +1,25 @@
 {
     "name": "RRender",
     "templates": {
+        "PairOfCurves": {
+            "code": "class PairOfCurves:\n    def __init__(self, pointsPathA, pointsPathB, outputPath):\n        import os\n        dirname = os.path.dirname(__file__)\n\n        os.system(\n            \"RScript %s %s %s %s\" %\n                ( \n                    os.environ['PIPE_RENDER'] + \"pair_of_curves.R\",\n                    pointsPathA,\n                    pointsPathB,\n                    os.environ['PIPE_BASE'] + outputPath\n                )\n        )\n\n        #os.remove(os.environ['PIPE_BASE'] + \"Rplots.pdf\")",
+            "collection_name": "RRender",
+            "documentation": "A description of the PairOfCurves node's behavior.",
+            "inputs": [
+                "pointsPathA",
+                "pointsPathB",
+                "outputPath"
+            ],
+            "name": "PairOfCurves",
+            "outputs": []
+        },
         "SingleCurve": {
-            "code": "class SingleCurve:\n    def __init__(self, points_file):\n        import os\n        dirname = os.path.dirname(__file__)\n\n        output_file = os.environ['PIPE_BASE'] + 'rrender-single_curve.pdf'\n        os.system(\n            \"RScript %s %s %s\" %\n                ( \n                    os.environ['PIPE_RENDER'] + \"single_curve.R\",\n                    points_file,\n                    output_file\n                )\n        )\n\n        os.remove(os.environ['PIPE_BASE'] + \"Rplots.pdf\")",
+            "code": "class SingleCurve:\n    def __init__(self, pointsPath, outputPath):\n        import os\n        dirname = os.path.dirname(__file__)\n\n        os.system(\n            \"RScript %s %s %s\" %\n                ( \n                    os.environ['PIPE_RENDER'] + \"single_curve.R\",\n                    pointsPath,\n                    os.environ['PIPE_BASE'] + outputPath\n                )\n        )\n\n        #os.remove(os.environ['PIPE_BASE'] + \"Rplots.pdf\")",
             "collection_name": "RRender",
             "documentation": "A description of the SingleCurve node's behavior.",
             "inputs": [
-                "points"
+                "pointsPath",
+                "outputPath"
             ],
             "name": "SingleCurve",
             "outputs": []

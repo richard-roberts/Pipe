@@ -2,31 +2,78 @@
     "edges": [
         {
             "arg_from_name": "points",
-            "arg_to_name": "alist",
-            "node_id_from": 4526758544,
-            "node_id_to": 4684521880
+            "arg_to_name": "ListToCSV_alist_4722945552",
+            "node_id_from": 4704923888,
+            "node_id_to": "GraphExecution[RenderSingleCurve,4618701400]"
         },
         {
-            "arg_from_name": "csv",
-            "arg_to_name": "content",
-            "node_id_from": 4684521880,
-            "node_id_to": 4519600480
-        },
-        {
-            "arg_from_name": "filepath",
+            "arg_from_name": "points",
             "arg_to_name": "points",
-            "node_id_from": 4519600480,
-            "node_id_to": 4520501376
+            "node_id_from": 4704923888,
+            "node_id_to": 4789635728
         },
         {
-            "arg_from_name": "filepath",
-            "arg_to_name": "filepath",
-            "node_id_from": 4519600480,
-            "node_id_to": 4526685656
+            "arg_from_name": "points",
+            "arg_to_name": "ListToCSV_alist_4722945552",
+            "node_id_from": 4789635728,
+            "node_id_to": "GraphExecution[RenderSingleCurve,4592399528]"
+        },
+        {
+            "arg_from_name": "points",
+            "arg_to_name": "BToX_b_4687108752",
+            "node_id_from": 4789635728,
+            "node_id_to": "GraphExecution[RenderPairOfCurves,4518834528]"
+        },
+        {
+            "arg_from_name": "points",
+            "arg_to_name": "AToX_a_4506615200",
+            "node_id_from": 4704923888,
+            "node_id_to": "GraphExecution[RenderPairOfCurves,4518834528]"
+        },
+        {
+            "arg_from_name": "points",
+            "arg_to_name": "points",
+            "node_id_from": 4746954960,
+            "node_id_to": 4704923888
+        },
+        {
+            "arg_from_name": "points",
+            "arg_to_name": "ListToCSV_alist_4722945552",
+            "node_id_from": 4746954960,
+            "node_id_to": "GraphExecution[RenderSingleCurve,4822777928]"
         }
     ],
     "name": "Main",
     "nodes": [
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "points"
+                },
+                {
+                    "default": 0.0,
+                    "name": "mean"
+                },
+                {
+                    "default": 0.05,
+                    "name": "variance"
+                }
+            ],
+            "node_id": 4704923888,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "points"
+                }
+            ],
+            "position": [
+                0.1418460154459762,
+                0.6496843853820587
+            ],
+            "template": "Random::AddNoiseToSignal"
+        },
         {
             "execution_index": -1,
             "inputs": [
@@ -47,7 +94,7 @@
                     "name": "start"
                 },
                 {
-                    "default": 6.28,
+                    "default": 1.0,
                     "name": "end"
                 },
                 {
@@ -55,7 +102,7 @@
                     "name": "n"
                 }
             ],
-            "node_id": 4526758544,
+            "node_id": 4746954960,
             "outputs": [
                 {
                     "default": null,
@@ -63,92 +110,123 @@
                 }
             ],
             "position": [
-                0.1207672863666015,
-                0.7888429406850456
+                0.03199570678542635,
+                0.872999403697077
             ],
             "template": "Literals::PointsFromSin3D"
         },
         {
-            "execution_index": 1,
+            "execution_index": -1,
             "inputs": [
+                {
+                    "default": null,
+                    "name": "ListToCSV_alist_4722945552"
+                },
+                {
+                    "default": "\"A.pdf\"",
+                    "name": "SingleCurve_outputPath_4686624976"
+                }
+            ],
+            "node_id": "GraphExecution[RenderSingleCurve,4822777928]",
+            "outputs": [],
+            "position": [
+                0.4153897115345713,
+                0.7803488372093023
+            ],
+            "template": "GraphExecution::RenderSingleCurve"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "ListToCSV_alist_4722945552"
+                },
+                {
+                    "default": "\"B.pdf\"",
+                    "name": "SingleCurve_outputPath_4686624976"
+                }
+            ],
+            "node_id": "GraphExecution[RenderSingleCurve,4618701400]",
+            "outputs": [],
+            "position": [
+                0.4099460897358093,
+                0.6356367663344406
+            ],
+            "template": "GraphExecution::RenderSingleCurve"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "ListToCSV_alist_4722945552"
+                },
+                {
+                    "default": "\"C.pdf\"",
+                    "name": "SingleCurve_outputPath_4686624976"
+                }
+            ],
+            "node_id": "GraphExecution[RenderSingleCurve,4592399528]",
+            "outputs": [],
+            "position": [
+                0.4117318040215237,
+                0.5023034330011071
+            ],
+            "template": "GraphExecution::RenderSingleCurve"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "points"
+                },
+                {
+                    "default": 10.0,
+                    "name": "n"
+                },
+                {
+                    "default": 3.0,
+                    "name": "spread"
+                }
+            ],
+            "node_id": 4789635728,
+            "outputs": [
                 {
                     "default": null,
                     "name": "points"
                 }
             ],
-            "node_id": 4520501376,
-            "outputs": [],
             "position": [
-                0.4713690476190475,
-                0.48687134502923957
+                0.12780323259295218,
+                0.4394462901439643
             ],
-            "template": "RRender::SingleCurve"
+            "template": "Filters::SimpleAverage"
         },
         {
             "execution_index": -1,
             "inputs": [
                 {
-                    "default": null,
-                    "name": "alist"
-                },
-                {
-                    "default": "\"x, y\"",
-                    "name": "header"
-                }
-            ],
-            "node_id": 4684521880,
-            "outputs": [
-                {
-                    "default": null,
-                    "name": "csv"
-                }
-            ],
-            "position": [
-                0.2583423026744945,
-                0.4845112781954879
-            ],
-            "template": "CSV::ListToCSV"
-        },
-        {
-            "execution_index": -1,
-            "inputs": [
-                {
-                    "default": "\"./tmp_points.csv\"",
-                    "name": "filepath"
+                    "default": "\"D.pdf\"",
+                    "name": "PairOfCurves_outputPath_4494750832"
                 },
                 {
                     "default": null,
-                    "name": "content"
-                }
-            ],
-            "node_id": 4519600480,
-            "outputs": [
+                    "name": "AToX_a_4506615200"
+                },
                 {
                     "default": null,
-                    "name": "filepath"
+                    "name": "BToX_b_4687108752"
                 }
             ],
-            "position": [
-                0.3176687866927592,
-                0.3155304928989138
-            ],
-            "template": "IO::SaveToFile"
-        },
-        {
-            "execution_index": 2,
-            "inputs": [
-                {
-                    "default": null,
-                    "name": "filepath"
-                }
-            ],
-            "node_id": 4526685656,
+            "node_id": "GraphExecution[RenderPairOfCurves,4518834528]",
             "outputs": [],
             "position": [
-                0.6271428571428566,
-                0.33115705931495365
+                0.39817665978880923,
+                0.3565891472868218
             ],
-            "template": "IO::DeleteFile"
+            "template": "GraphExecution::RenderPairOfCurves"
         }
     ]
 }

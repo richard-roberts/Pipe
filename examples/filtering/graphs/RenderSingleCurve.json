@@ -1,0 +1,89 @@
+{
+    "edges": [
+        {
+            "arg_from_name": "csv",
+            "arg_to_name": "content",
+            "node_id_from": 4722945552,
+            "node_id_to": 4722786144
+        },
+        {
+            "arg_from_name": "filepath",
+            "arg_to_name": "pointsPath",
+            "node_id_from": 4722786144,
+            "node_id_to": 4686624976
+        }
+    ],
+    "name": "RenderSingleCurve",
+    "nodes": [
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": "\"tmp_points\"",
+                    "name": "filepath"
+                },
+                {
+                    "default": null,
+                    "name": "content"
+                }
+            ],
+            "node_id": 4722786144,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "position": [
+                0.28958430458430445,
+                0.5577182894624757
+            ],
+            "template": "IO::SaveToFile"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "alist"
+                },
+                {
+                    "default": "\"x,y\"",
+                    "name": "header"
+                }
+            ],
+            "node_id": 4722945552,
+            "outputs": [
+                {
+                    "default": null,
+                    "name": "csv"
+                }
+            ],
+            "position": [
+                0.11616802200914345,
+                0.6043300110741971
+            ],
+            "template": "CSV::ListToCSV"
+        },
+        {
+            "execution_index": -1,
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "pointsPath"
+                },
+                {
+                    "default": null,
+                    "name": "outputPath"
+                }
+            ],
+            "node_id": 4686624976,
+            "outputs": [],
+            "position": [
+                0.5002976190476189,
+                0.45404761904761914
+            ],
+            "template": "RRender::SingleCurve"
+        }
+    ]
+}

@@ -140,4 +140,8 @@ class Node(object):
 class GraphNode(Node):
 
     def __init__(self, template, position):
-        super(GraphNode, self).__init__(template, position, node_id="GraphExecution%s" % template.name)
+        super(GraphNode, self).__init__(
+            template,
+            position,
+            node_id="GraphExecution[%s,%s]" % (template.name, str(id(self)))
+        )

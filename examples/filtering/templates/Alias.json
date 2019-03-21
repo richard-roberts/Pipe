@@ -1,0 +1,29 @@
+{
+    "name": "Alias",
+    "templates": {
+        "AToX": {
+            "code": "class AToX:\n    def __init__(self, a):\n        self.x = a\n",
+            "collection_name": "Alias",
+            "documentation": "A description of the AToX node's behavior.",
+            "inputs": [
+                "a"
+            ],
+            "name": "AToX",
+            "outputs": [
+                "x"
+            ]
+        },
+        "BToX": {
+            "code": "class BToX:\n    def __init__(self, b):\n        self.x = b\n",
+            "collection_name": "Alias",
+            "documentation": "A description of the BToX node's behavior.",
+            "inputs": [
+                "b"
+            ],
+            "name": "BToX",
+            "outputs": [
+                "x"
+            ]
+        }
+    }
+}

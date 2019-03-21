@@ -33,6 +33,18 @@
             ],
             "name": "Log3",
             "outputs": []
+        },
+        "PassThrough": {
+            "code": "class PassThrough:\n    def __init__(self, x):\n        self.x = x\n",
+            "collection_name": "Utilities",
+            "documentation": "A description of the PassThrough node's behavior.",
+            "inputs": [
+                "x"
+            ],
+            "name": "PassThrough",
+            "outputs": [
+                "x"
+            ]
         }
     }
 }

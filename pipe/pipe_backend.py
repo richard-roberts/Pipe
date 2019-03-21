@@ -69,4 +69,6 @@ class PipeBackend:
             raise ValueError(str(e))
 
         shutil.rmtree(temporary)
-        return result.decode("utf-8") if result else False
+        ret = result.decode("utf-8") if result else False
+        print(ret)
+        return ret

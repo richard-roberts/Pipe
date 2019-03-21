@@ -1,0 +1,48 @@
+{
+    "name": "GraphExecution",
+    "templates": {
+        "GenCurve": {
+            "code": "class GenCurve:\n    def __init__(self):\n        import GenCurve as graph\n        graph.execute()\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the GenCurve node's behavior.",
+            "inputs": [],
+            "name": "GenCurve",
+            "outputs": []
+        },
+        "Main": {
+            "code": "class Main:\n    def __init__(self, PointsFromSin3D_freq_4746954960, PointsFromSin3D_amp_4746954960, PointsFromSin3D_phase_4746954960):\n        import Main as graph\n        graph.execute(PointsFromSin3D_freq_4746954960, PointsFromSin3D_amp_4746954960, PointsFromSin3D_phase_4746954960)\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the Main node's behavior.",
+            "inputs": [
+                "PointsFromSin3D_freq_4746954960",
+                "PointsFromSin3D_amp_4746954960",
+                "PointsFromSin3D_phase_4746954960"
+            ],
+            "name": "Main",
+            "outputs": []
+        },
+        "RenderPairOfCurves": {
+            "code": "class RenderPairOfCurves:\n    def __init__(self, PairOfCurves_outputPath_4494750832, AToX_a_4506615200, BToX_b_4687108752):\n        import RenderPairOfCurves as graph\n        graph.execute(PairOfCurves_outputPath_4494750832, AToX_a_4506615200, BToX_b_4687108752)\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the RenderPairOfCurves node's behavior.",
+            "inputs": [
+                "PairOfCurves_outputPath_4494750832",
+                "AToX_a_4506615200",
+                "BToX_b_4687108752"
+            ],
+            "name": "RenderPairOfCurves",
+            "outputs": []
+        },
+        "RenderSingleCurve": {
+            "code": "class RenderSingleCurve:\n    def __init__(self, ListToCSV_alist_4722945552, SingleCurve_outputPath_4686624976):\n        import RenderSingleCurve as graph\n        graph.execute(ListToCSV_alist_4722945552, SingleCurve_outputPath_4686624976)\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the RenderSingleCurve node's behavior.",
+            "inputs": [
+                "ListToCSV_alist_4722945552",
+                "SingleCurve_outputPath_4686624976"
+            ],
+            "name": "RenderSingleCurve",
+            "outputs": []
+        }
+    }
+}

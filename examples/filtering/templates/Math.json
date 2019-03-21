@@ -13,6 +13,18 @@
             "outputs": [
                 "o"
             ]
+        },
+        "FiniteDifferencesOfPoints": {
+            "code": "class FiniteDifferencesOfPoints:\n    def __init__(self, points):\n        self.points = None\n",
+            "collection_name": "Math",
+            "documentation": "A description of the FiniteDifferencesOfPoints node's behavior.",
+            "inputs": [
+                "points"
+            ],
+            "name": "FiniteDifferencesOfPoints",
+            "outputs": [
+                "points"
+            ]
         }
     }
 }

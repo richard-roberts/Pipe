@@ -222,7 +222,6 @@ class GraphWidget(FloatLayout):
         for edge_widget in edge_widgets_copy:
             if edge_widget.edge.is_connected_to_node(node_widget.node):
                 # DON'T CALL DELETE_EDGE_BY_WIDGET, the graph handles deleting its own edges
-                edge_widget.disconnect()
                 self.remove_widget(edge_widget)
         self.delete_node_only_by_widget(node_widget)
 
@@ -425,15 +424,15 @@ class GraphWidget(FloatLayout):
 
     def handle_touch_down(self, touch):
         if touch.is_double_tap:
-            # Handle double click if on node
-            for widget in self.node_widgets.values():
-                if widget.collide_point(*touch.pos):
-                    if widget.node.is_graph_execution_node():
-                        globals.PipeInterface().instance.setup_from_graph_by_name(widget.node.template.name)
-                        return True
-                    else:
-                        # ignore touch
-                        return True
+            # # Handle double click if on node
+            # for widget in self.node_widgets.values():
+            #     if widget.collide_point(*touch.pos):
+            #         if widget.node.is_graph_execution_node():
+            #             globals.PipeInterface().instance.setup_from_graph_by_name(widget.node.template.name)
+            #             return True
+            #         else:
+            #             # ignore touch
+            #             return True
 
             # double click not on background, so want to spawn new node
             self.start_new_node_prompt(touch.spos)
