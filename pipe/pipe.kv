@@ -3,6 +3,8 @@
 #:import Globals globals
 
 <ArgumentWidget>:
+    text: "<missing>" if root.argument is None else root.argument.alias
+
     canvas:
         Color:
             rgba: self.background_color
@@ -49,12 +51,13 @@
             size_hint: 0.8, 1
 
             Label:
-                size_hint: 1, 0.8
+                size_hint: 1, 0.5
                 text: root.node.template.name if root.node is not None else "Untitled"
 
-            BoxLayout:
+            GridLayout:
                 orientation: "horizontal"
-                size_hint: 1, 0.2
+                size_hint: 1, 0.5
+                cols: 2
 
                 Button:
                     text: "x"
@@ -62,12 +65,17 @@
 
                 Button:
                     text: "e"
-                    on_release: Globals.GraphWidget().instance.edit_template_via_node_widget(self.parent.parent.parent.parent)
+                    on_release: Globals.GraphWidget().instance.edit_node(self.parent.parent.parent.parent)
 
                 Button:
                     text: "i=-1"
                     id: execution_index_button
                     on_release: root.start_set_execution_index_prompt()
+
+                Button:
+                    text: "EX"
+                    on_release: root.evaluate_upward()
+
 
         OutputArgumentSetWidget:
             size_hint: 0.1, 1
@@ -297,6 +305,66 @@
                 text: 'Create'
                 on_release: root.dismiss()
 
+<EditNodePopup@Popup>:
+    size_hint: 0.8, 0.5
+    title: "Edit node"
+
+    BoxLayout:
+        size_hint: 0.9, 0.9
+        pos: root.pos
+        orientation: "vertical"
+
+        Label:
+            text: "Input Arguments"
+            size_hint: 1, 0.05
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, 0.4
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.25, 1
+                id: input_names
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.25, 1
+                id: input_aliases
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.25, 1
+                id: input_defaults
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.25, 1
+                id: input_values
+
+        Label:
+            text: "Output Arguments"
+            size_hint: 1, 0.05
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, 0.4
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.33, 1
+                id: output_names
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.33, 1
+                id: output_aliases
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.33, 1
+                id: output_defaults
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: 0.25, 1
+                id: output_values
+
+
 <NewGraphPopup@Popup>:
     size_hint: 0.8, 0.5
     title: "Create a new graph"
@@ -351,7 +419,7 @@
         BoxLayout:
             orientation: "horizontal"
             Button:
-                text: 'Renamed'
+                text: 'Rename'
                 on_release: root.used=True; root.dismiss()
 
 <OpenProjectPopup@Popup>:
@@ -470,6 +538,11 @@
                         size_hint: 0.05, 1
                         text: 'r'
                         on_release: root.start_rename_graph_prompt()
+
+                    Button:
+                        size_hint: 0.05, 1
+                        text: '-'
+                        on_release: root.delete_current_graph()
 
                     Button:
                         size_hint: 0.05, 1

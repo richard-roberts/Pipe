@@ -43,6 +43,7 @@ class Desktop(FloatLayout):
 
     def show_error(self, message):
         self._set_status("Error: " + message, Colors.Error)
+        print("Error: " + message)
 
     def show_execution(self, message):
         self._set_status("Execution: " + message.replace("\r\n", " \\\\ ").replace("\n", " \\\\ "), Colors.Execution)
@@ -77,6 +78,22 @@ class Desktop(FloatLayout):
         self.graph_buttons[new_name].text = new_name
         self.operations.rename_graph(old_name, new_name)
         self.show_message("%s renamed to %s" % (old_name, new_name))
+
+    def delete_current_graph(self):
+        name = self.ids.editor.graph.name
+
+        if len(self.graph_buttons) <= 1:
+            self.show_error("Cannot delete last graph")
+            return
+        if name == "Main":
+            self.show_error("Cannot delete main graph")
+
+        self.operations.delete_graph(name)
+        self.remove_button_for_graph_by_name(name)
+
+        graph = globals.GraphInfo().manager.get_by_name("Main")
+        self.setup_from_graph(graph)
+        self.show_message("%s deleted" % name)
 
     def open_project(self):
         # def fn(pop):
@@ -188,22 +205,27 @@ class Desktop(FloatLayout):
     def on_touch_down(self, touch):
         if super(Desktop, self).on_touch_down(touch):
             return True
+
         touch.grab(self)
+
         if self.ids.editor.collide_point(*touch.pos):
-            self.ids.editor.handle_touch_down(touch)
-            return True
+            return self.ids.editor.handle_touch_down(touch)
+
+        return False
 
     def on_touch_move(self, touch):
         if touch.grab_current is self:
             if self.ids.editor.collide_point(*touch.pos):
-                self.ids.editor.handle_touch_move(touch)
-            return True
+                return self.ids.editor.handle_touch_move(touch)
+
         return super(Desktop, self).on_touch_move(touch)
 
     def on_touch_up(self, touch):
         if touch.grab_current is self:
             touch.ungrab(self)
-            return True
+            if self.ids.editor.collide_point(*touch.pos):
+                self.ids.editor.handle_touch_up(touch)
+                return True
         return super(Desktop, self).on_touch_up(touch)
 
 

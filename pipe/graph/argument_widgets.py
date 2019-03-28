@@ -1,5 +1,5 @@
 from kivy.factory import Factory
-
+from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.properties import ListProperty
@@ -9,6 +9,8 @@ import globals
 
 
 class ArgumentWidget(ToggleButton):
+
+    argument = ObjectProperty()
 
     def __init__(self, **kwargs):
         self.background_color = config.Colors.Argument.as_list()
@@ -25,58 +27,24 @@ class ArgumentWidget(ToggleButton):
                 self.background_color = config.Colors.Argument.as_list()
         self.canvas.ask_update()
 
-    def setup(self, argument):
-        self.argument = argument
-        self.text = "_".join(argument.name.split("_")[:-1]) if "_" in argument.name else argument.name
+    def update_alias(self, alias):
+        self.argument.alias = alias
+        self.text = self.argument.alias
+
+    def update_default_value(self, value):
+        self.argument.set_default_value(value)
         self.update_color()
 
-    def start_set_default_value_prompt(self):
-        popup = Factory.SetDefaultValuePopup(title="Set default value for %s" % self.pretty())
+    def update_evaluated_value(self, value):
+        self.argument.set_evaluated_value(value)
 
-        def fn(_):
-            if popup.reset_to_none:
-                self.argument.reset_default_value()
-                self.update_color()
-                globals.PipeInterface().instance.show_message("default value reset")
-                return
+    def setup(self, argument):
+        self.argument = argument
+        self.text = argument.alias
+        self.update_color()
 
-            has_bool = popup.ids.bool_value.text != ""
-            has_num = popup.ids.num_value.text != ""
-            has_str = popup.ids.str_value.text != ""
-
-            count = 0
-            if has_bool: count += 1
-            if has_num: count += 1
-            if has_str: count += 1
-            if count != 1:
-                globals.PipeInterface().instance.show_error("more than one value was entered")
-                return
-            elif count == 0:
-                globals.PipeInterface().instance.show_error("no default value was entered")
-                return
-
-            if has_bool:
-                value = bool(popup.ids.bool_value.text)
-            elif has_num:
-                value = float(popup.ids.num_value.text)
-            elif has_str:
-                value = "\"%s\"" % str(popup.ids.str_value.text)
-            else:
-                raise ValueError("This should never happen?")
-
-            self.argument.set_default_value(value)
-            self.update_color()
-
-        popup.bind(on_dismiss=fn)
-        popup.open()
-
-    def on_touch_down(self, touch):
-        if self.collide_point(*touch.pos):
-            if touch.is_double_tap:
-                self.start_set_default_value_prompt()
-            else:
-                self.state = "normal" if self.state != "normal" else "down"
-                self.parent.parent.parent.parent.handle_argument_touched(self)
+    def on_state(self, widget, value):
+        self.parent.parent.parent.parent.handle_argument_touched(self)
 
     def pretty(self):
         return self.argument.pretty()
@@ -122,10 +90,20 @@ class ArgumentSetWidget(BoxLayout):
             )
         )
 
+    def list_args_widgets(self):
+        return self.args.values()
+
 
 class InputArgumentSetWidget(ArgumentSetWidget):
     argument_class = InputArgumentWidget
 
+    def get_evaluated(self):
+        return [widget.argument.get_evaluated_value() for widget in self.args.values()]
+
 
 class OutputArgumentSetWidget(ArgumentSetWidget):
     argument_class = OutputArgumentWidget
+
+    def set_evaluated_values(self, values):
+        for (widget, value) in zip(self.args.values(), values):
+            widget.argument.set_evaluated_value(value)

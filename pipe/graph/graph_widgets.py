@@ -1,3 +1,5 @@
+import json
+
 from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
@@ -5,6 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.treeview import TreeView, TreeViewLabel
+from kivy.uix.textinput import TextInput
 
 import config
 import globals
@@ -24,6 +27,7 @@ class GraphWidget(FloatLayout):
         self.activated_output_argument = None
         self.node_widgets = {}
         self.edge_widgets = {}
+        self.dragging_edge = False
         globals.GraphWidget().set_instance(self)
 
     def clear(self):
@@ -149,13 +153,63 @@ class GraphWidget(FloatLayout):
         popup.bind(on_dismiss=fn)
         popup.open()
 
-    def edit_template_via_node_widget(self, node_widget):
+    def edit_node(self, node_widget):
 
-        if globals.TemplateInfo().manager.template_is_graph_execution(node_widget.node.template):
+        def create_on_alias_edit(arg_widget):
+            def fn(widget):
+                arg_widget.update_alias(widget.text)
+            return fn
+
+        def create_on_default_value_edit(arg_widget):
+            def fn(widget):
+                arg_widget.update_default_value(json.loads(widget.text))
+            return fn
+
+        def create_on_evaluated_value_edit(arg_widget):
+            def fn(widget):
+                arg_widget.update_evaluated_value(json.loads(widget.text))
+            return fn
+
+        popup = Factory.EditNodePopup()
+
+        for arg_widget in node_widget.input_widgets.list_args_widgets():
+            name_label = Label(text=arg_widget.argument.name)
+            popup.ids.input_names.add_widget(name_label)
+            #
+            alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
+            alias_edit.bind(on_text_validate=create_on_alias_edit(arg_widget))
+            popup.ids.input_aliases.add_widget(alias_edit)
+            #
+            default_value_edit = TextInput(text=json.dumps(arg_widget.argument.default_value), multiline=False)
+            default_value_edit.bind(on_text_validate=create_on_default_value_edit(arg_widget))
+            popup.ids.input_defaults.add_widget(default_value_edit)
+            #
+            evaluated_value_edit = TextInput(text=json.dumps(arg_widget.argument.evaluated_value), multiline=False)
+            evaluated_value_edit.bind(on_text_validate=create_on_evaluated_value_edit(arg_widget))
+            popup.ids.input_values.add_widget(evaluated_value_edit)
+
+        for arg_widget in node_widget.output_widgets.list_args_widgets():
+            name_label = Label(text=arg_widget.argument.name)
+            popup.ids.output_names.add_widget(name_label)
+            #
+            alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
+            alias_edit.bind(on_text_validate=create_on_alias_edit(arg_widget))
+            popup.ids.output_aliases.add_widget(alias_edit)
+            #
+            default_value_edit = TextInput(text=str(arg_widget.argument.default_value), multiline=False)
+            default_value_edit.bind(on_text_validate=create_on_default_value_edit(arg_widget))
+            popup.ids.output_defaults.add_widget(default_value_edit)
+            #
+            evaluated_value_label = Label(text=json.dumps(arg_widget.argument.evaluated_value))
+            popup.ids.output_values.add_widget(evaluated_value_label)
+
+        popup.open()
+
+    def edit_template(self, old_template):
+
+        if globals.TemplateInfo().manager.template_is_graph_execution(old_template):
             globals.PipeInterface().instance.show_error("cannot edit graph execution templates")
             return
-
-        old_template = node_widget.node.template
 
         def fn(pop):
 
@@ -264,6 +318,11 @@ class GraphWidget(FloatLayout):
                     popup.dismiss()
                     template = globals.TemplateInfo().manager.get_template(collection_name, template_name)
                     self.create_new_node(template, position)
+                elif value == "edit":
+                    popup.used = True
+                    popup.dismiss()
+                    template = globals.TemplateInfo().manager.get_template(collection_name, template_name)
+                    self.edit_template(template)
                 elif value == "delete":
                     popup.used = True
                     popup.dismiss()
@@ -295,7 +354,7 @@ class GraphWidget(FloatLayout):
                 box.add_widget(Label(text=key))
                 grid = GridLayout(cols=2)
                 for name in similarity_map[key]:
-                    label_str = '%s [ref=create][u]create[/u][/ref] [ref=delete][u]delete[/u][/ref]' % name
+                    label_str = '%s [ref=create][u]create[/u][/ref] [ref=edit][u]edit[/u][/ref] [ref=delete][u]delete[/u][/ref]' % name
                     widget = Label(
                         text=label_str,
                         markup=True,
@@ -317,9 +376,9 @@ class GraphWidget(FloatLayout):
                 template = globals.TemplateInfo().manager.get_template(key, name)
                 n_uses = globals.GraphInfo().manager.count_uses_of_template(template)
                 if n_uses == 0:
-                    label_str = '%s [ref=create][u]create[/u][/ref] [ref=delete][u]delete[/u][/ref]' % name
+                    label_str = '%s [ref=create][u]create[/u][/ref] [ref=edit][u]edit[/u][/ref] [ref=delete][u]delete[/u][/ref]' % name
                 else:
-                    label_str = '%s [ref=create][u]create[/u][/ref]' % name
+                    label_str = '%s [ref=create][u]create[/u][/ref] [ref=edit][u]edit[/u][/ref]' % name
 
                 view.add_node(
                     TreeViewLabel(
@@ -348,9 +407,6 @@ class GraphWidget(FloatLayout):
         popup.ids.search_bar.bind(on_text_validate=use_most_similar)
         popup.bind(on_open=open_callback)
         popup.open()
-
-    def handle_argument_double_touch(self):
-        pass
 
     def handle_argument_touched(self, argument_widget):
 
@@ -392,6 +448,8 @@ class GraphWidget(FloatLayout):
                 )
                 self.activated_output_argument.state = "normal"
                 self.activated_input_argument.state = "normal"
+                self.activated_output_argument.update_color()
+                self.activated_input_argument.update_color()
                 self.activated_output_argument = None
                 self.activated_input_argument = None
                 globals.PipeInterface().instance.show_message("Edge deleted")
@@ -423,26 +481,14 @@ class GraphWidget(FloatLayout):
             self.activated_input_argument = None
 
     def handle_touch_down(self, touch):
-        if touch.is_double_tap:
-            # # Handle double click if on node
-            # for widget in self.node_widgets.values():
-            #     if widget.collide_point(*touch.pos):
-            #         if widget.node.is_graph_execution_node():
-            #             globals.PipeInterface().instance.setup_from_graph_by_name(widget.node.template.name)
-            #             return True
-            #         else:
-            #             # ignore touch
-            #             return True
-
-            # double click not on background, so want to spawn new node
-            self.start_new_node_prompt(touch.spos)
-            return True
-
-        # Handle single click, selects node
         for widget in self.node_widgets.values():
             if widget.collide_point(*touch.pos):
                 self.selected_node_widget = widget
                 return True
+
+        if touch.is_double_tap:
+            self.start_new_node_prompt(touch.spos)
+            return True
 
         self.selected_node_widget = None
         return False
@@ -459,3 +505,8 @@ class GraphWidget(FloatLayout):
                 touch.sx - touch.psx,
                 touch.sy - touch.psy
             )
+
+        return True
+
+    def handle_touch_up(self, touch):
+        return False

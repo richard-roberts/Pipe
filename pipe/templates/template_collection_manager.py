@@ -151,5 +151,8 @@ class TemplateCollectionManager:
         return self.collections[collection_name].get_template(template_name)
 
     def rename_graph_execution(self, old_name, new_name):
-        print(self.collections.keys())
         self.collections[GRAPH_EXE_COLLECTION_NAME].rename_template_by_name(old_name, new_name)
+
+    def remove_graph_execution(self, name):
+        self.collections[GRAPH_EXE_COLLECTION_NAME].delete_template_by_name(name)
+

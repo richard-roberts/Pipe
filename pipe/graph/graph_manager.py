@@ -50,6 +50,10 @@ class GraphManager:
         self.graphs[new_name].name = new_name
         globals.TemplateInfo().manager.rename_graph_execution(old_name, new_name)
 
+    def delete_graph(self, name):
+        del self.graphs[name]
+        globals.TemplateInfo().manager.remove_graph_execution(name)
+
     def get_names(self):
         return [graph.name for graph in self.graphs.values()]
 

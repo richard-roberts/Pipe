@@ -1,3 +1,6 @@
+import json
+import subprocess
+
 from kivy.factory import Factory
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
@@ -75,6 +78,37 @@ class NodeWidget(BoxLayout):
 
         popup.bind(on_dismiss=fn)
         popup.open()
+
+    def evaluate_upward(self):
+        arg_str = ""
+        input_values = self.input_widgets.get_evaluated()
+        for value in input_values:
+            arg_str += "%s, " % str(value)
+        arg_str = arg_str[:-2]
+        print_lines = ""
+        for widget in self.output_widgets.list_args_widgets():
+            print_lines += "print(tmp.%s)" % widget.argument.name
+        tmp_exe_file = self.node.template.code + "tmp = %s(%s)\n" % (self.node.template.name, arg_str) + print_lines
+
+        f = open("tmp.py", "w")
+        f.write(tmp_exe_file)
+        f.close()
+
+        p = subprocess.Popen(['python3', 'tmp.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, error = p.communicate()
+        if p.returncode != 0:
+            globals.PipeInterface().instance.show_error("Execution failed: %s, %s" % (output, error))
+            return
+
+        values = []
+        output_str = output.decode()
+        for value_str in output_str.split("\n"):
+            if value_str.strip() == "":
+                continue
+            value = json.loads(value_str)
+            values.append(value)
+
+        self.output_widgets.set_evaluated_values(values)
 
 
 class GraphNodeWidget(NodeWidget):
