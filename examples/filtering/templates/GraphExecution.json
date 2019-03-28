@@ -1,14 +1,6 @@
 {
     "name": "GraphExecution",
     "templates": {
-        "GenCurve": {
-            "code": "class GenCurve:\n    def __init__(self):\n        import GenCurve as graph\n        graph.execute()\n",
-            "collection_name": "GraphExecution",
-            "documentation": "A description of the GenCurve node's behavior.",
-            "inputs": [],
-            "name": "GenCurve",
-            "outputs": []
-        },
         "Main": {
             "code": "class Main:\n    def __init__(self, PointsFromSin3D_freq_4746954960, PointsFromSin3D_amp_4746954960, PointsFromSin3D_phase_4746954960):\n        import Main as graph\n        graph.execute(PointsFromSin3D_freq_4746954960, PointsFromSin3D_amp_4746954960, PointsFromSin3D_phase_4746954960)\n",
             "collection_name": "GraphExecution",
@@ -43,19 +35,6 @@
             ],
             "name": "RenderSingleCurve",
             "outputs": []
-        },
-        "Testing": {
-            "code": "class Testing:\n    def __init__(self, Add_a_4603166792, Add_b_4603166792):\n        import Testing as graph\n        result = graph.execute(Add_a_4603166792, Add_b_4603166792)\n        self.Add_o_4603166792 = result[\"Add_o_4603166792\"]\n",
-            "collection_name": "GraphExecution",
-            "documentation": "A description of the Testing node's behavior.",
-            "inputs": [
-                "Add_a_4603166792",
-                "Add_b_4603166792"
-            ],
-            "name": "Testing",
-            "outputs": [
-                "Add_o_4603166792"
-            ]
         }
     }
 }

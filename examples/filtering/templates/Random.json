@@ -2,7 +2,7 @@
     "name": "Random",
     "templates": {
         "AddNoiseToSignal": {
-            "code": "class AddNoiseToSignal:\n    def __init__(self, points, mean, variance):\n        import random\n        random.seed(0)\n        with_noise = []\n        for p in points:\n            x, y = p\n            y += random.gauss(mean, variance)\n            new_p = (x, y)\n            with_noise.append(new_p)\n        self.points = with_noise\n",
+            "code": "class AddNoiseToSignal:\n    def __init__(self, points, mean, variance):\n        import random\n        random.seed(0)\n        with_noise = []\n        for p in points:\n            x, y = p\n            y += random.gauss(mean, variance)\n            new_p = [x, y]\n            with_noise.append(new_p)\n        self.points = with_noise\n",
             "collection_name": "Random",
             "documentation": "A description of the AddNoiseToSignal node's behavior.",
             "inputs": [
