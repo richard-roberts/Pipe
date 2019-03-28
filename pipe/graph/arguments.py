@@ -53,6 +53,12 @@ class Argument:
     def get_connected(self):
         return self.edges.values()
 
+    def get_first_connected(self):
+        if len(self.edges) != 1:
+            raise ValueError("This is not allowed, must have only one input")
+        first_key = list(self.edges.keys())[0]
+        return self.edges[first_key]
+
     def pretty(self):
         return "%s.%s" % (self.get_node().template.name, self.name)
 

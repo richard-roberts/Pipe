@@ -1,3 +1,4 @@
+import os
 import json
 import subprocess
 
@@ -90,11 +91,15 @@ class NodeWidget(BoxLayout):
             print_lines += "print(tmp.%s)" % widget.argument.name
         tmp_exe_file = self.node.template.code + "tmp = %s(%s)\n" % (self.node.template.name, arg_str) + print_lines
 
-        f = open("tmp.py", "w")
+        if not os.path.isdir("tmp"):
+            globals.PipeInterface().instance.operations.assemble_project("./tmp")
+
+        f = open("tmp/tmp.py", "w")
         f.write(tmp_exe_file)
         f.close()
 
-        p = subprocess.Popen(['python3', 'tmp.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        my_env = os.environ.copy()
+        p = subprocess.Popen(['python3', 'tmp/tmp.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=my_env)
         output, error = p.communicate()
         if p.returncode != 0:
             globals.PipeInterface().instance.show_error("Execution failed: %s, %s" % (output, error))
@@ -105,7 +110,14 @@ class NodeWidget(BoxLayout):
         for value_str in output_str.split("\n"):
             if value_str.strip() == "":
                 continue
-            value = json.loads(value_str)
+            try:
+                value = json.loads(value_str)
+            except json.JSONDecodeError as e:
+                globals.PipeInterface().instance.show_error(
+                    "Execution failed, could not decode %s. Error: %s" % (value_str, str(e))
+                )
+                return
+
             values.append(value)
 
         self.output_widgets.set_evaluated_values(values)

@@ -43,7 +43,9 @@ class Desktop(FloatLayout):
 
     def show_error(self, message):
         self._set_status("Error: " + message, Colors.Error)
-        print("Error: " + message)
+        print("ERROR:")
+        for m in message.split("\\n"):
+            print("  ", m)
 
     def show_execution(self, message):
         self._set_status("Execution: " + message.replace("\r\n", " \\\\ ").replace("\n", " \\\\ "), Colors.Execution)

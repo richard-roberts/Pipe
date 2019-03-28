@@ -28,14 +28,16 @@ class Assembler:
                 # Build the argument sting (recursively compiling the execution of those arguments)
                 argument_str = ""
                 for input_arg in node.inputs.values():
-                    if input_arg.get_connected() is None:
+                    if input_arg.is_connected():
+                        from_arg = input_arg.get_first_connected().argument_from
+                        compiled_child = assemble(from_arg.get_node(), from_arg)
+                        argument_str += compiled_child + ", "
+                    else:
                         if input_arg.has_default_value():
                             argument_str += "%s, " % str(input_arg.default_value)
                         else:
                             argument_str += "%s, " % input_arg.code_name()
-                    else:
-                        compiled_child = assemble(input_arg.get_connected().argument_from.get_node(), input_arg.get_connected().argument_from)
-                        argument_str += compiled_child + ", "
+
                 argument_str = argument_str[:-2]
 
                 # Compile the invocation

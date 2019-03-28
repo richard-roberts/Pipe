@@ -13,6 +13,9 @@ class PipeBackend:
         self.graphs = graph_manager.GraphManager()
         self.templates = template_collection_manager.TemplateCollectionManager()
 
+        os.environ["PIPE_BASE"] = os.path.dirname(os.path.realpath(__file__)) + "/../"
+        os.environ["PIPE_RENDER"] = os.path.dirname(os.path.realpath(__file__)) + "/render/"
+
     def clear(self):
         self.graphs.clear()
         self.templates.clear()
@@ -61,8 +64,6 @@ class PipeBackend:
         temporary = "./tmp"
         self.templates.create_or_update_graph_template(graph)
         self.assemble_project(temporary)
-        os.environ["PIPE_BASE"] = os.path.dirname(os.path.realpath(__file__)) + "/../"
-        os.environ["PIPE_RENDER"] = os.path.dirname(os.path.realpath(__file__)) + "/render/"
         command = 'python3 ./tmp/%s.py %s' % (graph.name, command_line_args_str)
 
         try:
