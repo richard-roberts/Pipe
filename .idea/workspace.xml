@@ -3,21 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="0a0051f0-dae2-4878-a8c1-8a246e4a62ec" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/filtering/graphs/GenCurve.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/filtering/graphs/Main.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/graphs/Main.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/filtering/graphs/RenderPairOfCurves.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/graphs/RenderPairOfCurves.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/filtering/graphs/RenderSingleCurve.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/graphs/RenderSingleCurve.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/filtering/graphs/Testing.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/filtering/templates/Filters.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/templates/Filters.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/filtering/templates/GraphExecution.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/templates/GraphExecution.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/filtering/templates/Literals.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/templates/Literals.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/filtering/templates/Math.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/templates/Math.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/argument_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/argument_widgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/arguments.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/arguments.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/graph_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/graph_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/graph/graph_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/graph_widgets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/filtering/templates/Random.json" beforeDir="false" afterPath="$PROJECT_DIR$/examples/filtering/templates/Random.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pipe/graph/node_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/graph/node_widgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/pipe.kv" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/pipe.kv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/pipe_backend.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/pipe_backend.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pipe/templates/template_collection_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/pipe/templates/template_collection_manager.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,8 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipe/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="23" column="36" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
+            <state relative-caret-position="319">
+              <caret line="155" column="49" lean-forward="true" selection-start-line="155" selection-start-column="13" selection-end-line="155" selection-end-column="49" />
               <folding>
                 <element signature="e#25#36#0" expanded="true" />
               </folding>
@@ -44,43 +36,34 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pipe/graph/node_widgets.py">
+        <entry file="file://$PROJECT_DIR$/pipe/pipe_backend.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1485">
-              <caret line="99" column="47" selection-start-line="99" selection-start-column="47" selection-end-line="99" selection-end-column="47" />
+            <state relative-caret-position="335">
+              <caret line="76" column="14" selection-start-line="76" selection-end-line="77" />
               <folding>
-                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#0#9#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pipe/graph/graph_widgets.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="186" column="96" selection-start-line="186" selection-start-column="81" selection-end-line="186" selection-end-column="96" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pipe/pipe.kv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="76" selection-start-line="76" selection-end-line="76" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pipe/graph/arguments.py">
+        <entry file="file://$PROJECT_DIR$/pipe/graph/node_widgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="61" column="24" lean-forward="true" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
+            <state relative-caret-position="213">
+              <caret line="90" column="51" selection-start-line="90" selection-start-column="45" selection-end-line="90" selection-end-column="51" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pipe/assembly/assemblers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="83">
+              <caret line="28" column="33" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -95,9 +78,18 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pipe/graph/arguments.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="186">
+              <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pipe/graph/argument_widgets.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1620">
+            <state relative-caret-position="551">
               <caret line="108" column="38" selection-start-line="108" selection-start-column="38" selection-end-line="108" selection-end-column="38" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
@@ -117,8 +109,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>newNode</find>
-      <find>set</find>
       <find>se</find>
       <find>popup</find>
       <find>nodewidget</find>
@@ -147,6 +137,8 @@
       <find>[</find>
       <find>set_defau</find>
       <find>edit_node</find>
+      <find>os.</find>
+      <find>assemb</find>
     </findStrings>
     <replaceStrings>
       <replace>node</replace>
@@ -204,21 +196,21 @@
         <option value="$PROJECT_DIR$/pipe/graph/edge_widgets.py" />
         <option value="$PROJECT_DIR$/pipe/templates/template_collection.py" />
         <option value="$PROJECT_DIR$/pipe/graph/graphs.py" />
-        <option value="$PROJECT_DIR$/pipe/assembly/assemblers.py" />
         <option value="$PROJECT_DIR$/pipe/config.py" />
         <option value="$PROJECT_DIR$/pipe/graph/nodes.py" />
         <option value="$PROJECT_DIR$/pipe/templates/templates.py" />
         <option value="$PROJECT_DIR$/pipe/graph/graph_manager.py" />
         <option value="$PROJECT_DIR$/pipe/templates/template_collection_manager.py" />
-        <option value="$PROJECT_DIR$/pipe/pipe_backend.py" />
         <option value="$PROJECT_DIR$/pipe/pipe.kv" />
         <option value="$PROJECT_DIR$/pipe/graph/graph_widgets.py" />
         <option value="$PROJECT_DIR$/pipe/graph/argument_widgets.py" />
         <option value="$PROJECT_DIR$/pipe/graph/edges.py" />
-        <option value="$PROJECT_DIR$/pipe/graph/node_widgets.py" />
-        <option value="$PROJECT_DIR$/pipe/main.py" />
         <option value="$PROJECT_DIR$/tmp.py" />
+        <option value="$PROJECT_DIR$/pipe/assembly/assemblers.py" />
         <option value="$PROJECT_DIR$/pipe/graph/arguments.py" />
+        <option value="$PROJECT_DIR$/pipe/main.py" />
+        <option value="$PROJECT_DIR$/pipe/pipe_backend.py" />
+        <option value="$PROJECT_DIR$/pipe/graph/node_widgets.py" />
       </list>
     </option>
   </component>
@@ -228,7 +220,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1" />
     <option name="y" value="23" />
     <option name="width" value="1680" />
@@ -239,7 +231,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -285,6 +276,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -407,7 +399,7 @@
     <frame x="1" y="23" width="1680" height="1027" extended-state="6" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49293563" visible="true" weight="0.23076923" />
+      <window_info content_ui="combo" id="Project" order="1" sideWeight="0.49293563" visible="true" weight="0.23321123" />
       <window_info id="Structure" order="2" sideWeight="0.50706434" side_tool="true" weight="0.23076923" />
       <window_info anchor="bottom" id="Terminal" order="0" />
       <window_info anchor="bottom" id="Event Log" order="1" side_tool="true" />
@@ -415,7 +407,7 @@
       <window_info anchor="bottom" id="Message" order="3" />
       <window_info anchor="bottom" id="Find" order="4" weight="0.32834226" />
       <window_info anchor="bottom" id="Version Control" order="5" />
-      <window_info anchor="bottom" id="Run" order="6" weight="0.3187166" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.4631016" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.3989305" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
@@ -584,13 +576,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/assembly/assemblers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pipe/templates/template_collection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="151">
@@ -635,16 +620,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/pipe_backend.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="57" column="38" selection-start-line="57" selection-start-column="38" selection-end-line="57" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pipe/graph/graph_manager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="196">
@@ -662,20 +637,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/pipe.kv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="76" selection-start-line="76" selection-end-line="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/graph/edges.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tmp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -683,13 +644,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/main.py">
+    <entry file="file://$PROJECT_DIR$/pipe/pipe.kv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="23" column="36" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
-          <folding>
-            <element signature="e#25#36#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="179">
+          <caret line="76" selection-start-line="76" selection-end-line="76" />
         </state>
       </provider>
     </entry>
@@ -703,19 +661,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pipe/graph/node_widgets.py">
+    <entry file="file://$PROJECT_DIR$/pipe/graph/edges.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1485">
-          <caret line="99" column="47" selection-start-line="99" selection-start-column="47" selection-end-line="99" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/assembly/assemblers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="28" column="33" selection-start-line="28" selection-start-column="33" selection-end-line="28" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pipe/graph/argument_widgets.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1620">
+        <state relative-caret-position="551">
           <caret line="108" column="38" selection-start-line="108" selection-start-column="38" selection-end-line="108" selection-end-column="38" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
@@ -725,8 +687,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pipe/graph/arguments.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="61" column="24" lean-forward="true" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
+        <state relative-caret-position="186">
+          <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="155" column="49" lean-forward="true" selection-start-line="155" selection-start-column="13" selection-end-line="155" selection-end-column="49" />
+          <folding>
+            <element signature="e#25#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/pipe_backend.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="335">
+          <caret line="76" column="14" selection-start-line="76" selection-end-line="77" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pipe/graph/node_widgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="90" column="51" selection-start-line="90" selection-start-column="45" selection-end-line="90" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
