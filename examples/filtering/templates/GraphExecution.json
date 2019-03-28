@@ -43,6 +43,19 @@
             ],
             "name": "RenderSingleCurve",
             "outputs": []
+        },
+        "Testing": {
+            "code": "class Testing:\n    def __init__(self, Add_a_4603166792, Add_b_4603166792):\n        import Testing as graph\n        result = graph.execute(Add_a_4603166792, Add_b_4603166792)\n        self.Add_o_4603166792 = result[\"Add_o_4603166792\"]\n",
+            "collection_name": "GraphExecution",
+            "documentation": "A description of the Testing node's behavior.",
+            "inputs": [
+                "Add_a_4603166792",
+                "Add_b_4603166792"
+            ],
+            "name": "Testing",
+            "outputs": [
+                "Add_o_4603166792"
+            ]
         }
     }
 }

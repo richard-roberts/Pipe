@@ -2,7 +2,7 @@
     "name": "Literals",
     "templates": {
         "PointsFromSin3D": {
-            "code": "class PointsFromSin3D:\n    def __init__(self, freq, amp, phase, start, end, n):\n        import numpy as np\n        freq = float(freq) * np.pi * 2\n        amp = float(amp)\n        phase = float(phase) * 6.28\n        start = float(start) * 6.28\n        end = float(end) * 6.28\n        n = int(n)\n        points = []\n        for i in range(n):\n            u = start + i / (float(n)-1)\n            v = amp * np.sin(freq * u + phase)\n            p = u, v\n            points.append(p)\n        self.points = points\n",
+            "code": "class PointsFromSin3D:\n    def __init__(self, freq, amp, phase, start, end, n):\n        import numpy as np\n        freq = float(freq) * np.pi * 2\n        amp = float(amp)\n        phase = float(phase) * 6.28\n        start = float(start) * 6.28\n        end = float(end) * 6.28\n        n = int(n)\n        points = []\n        for i in range(n):\n            u = start + i / (float(n)-1)\n            v = amp * np.sin(freq * u + phase)\n            p = [u, v]\n            points.append(p)\n        self.points = points\n",
             "collection_name": "Literals",
             "documentation": "A description of the PointsFromSin3D node's behavior.",
             "inputs": [

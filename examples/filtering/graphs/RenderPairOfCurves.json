@@ -55,23 +55,29 @@
             "execution_index": 1,
             "inputs": [
                 {
+                    "alias": "pointsPathA",
                     "default": null,
+                    "eval_value": "null",
                     "name": "pointsPathA"
                 },
                 {
+                    "alias": "pointsPathB",
                     "default": null,
+                    "eval_value": "null",
                     "name": "pointsPathB"
                 },
                 {
+                    "alias": "output",
                     "default": null,
+                    "eval_value": "null",
                     "name": "outputPath"
                 }
             ],
             "node_id": 4494750832,
             "outputs": [],
             "position": [
-                0.6056115224339519,
-                0.6223809523809526
+                0.6693615224339522,
+                0.6390476190476194
             ],
             "template": "RRender::PairOfCurves"
         },
@@ -79,24 +85,30 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "filepath",
                     "default": "\"temporary_points_a\"",
+                    "eval_value": "\"temporary_points_a\"",
                     "name": "filepath"
                 },
                 {
+                    "alias": "content",
                     "default": null,
+                    "eval_value": "null",
                     "name": "content"
                 }
             ],
             "node_id": 4492246880,
             "outputs": [
                 {
+                    "alias": "filepath",
                     "default": null,
+                    "eval_value": "null",
                     "name": "filepath"
                 }
             ],
             "position": [
-                0.32363095238095224,
-                0.6588095238095238
+                0.3873809523809523,
+                0.6754761904761907
             ],
             "template": "IO::SaveToFile"
         },
@@ -104,24 +116,30 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "filepath",
                     "default": "\"temp_points_b\"",
+                    "eval_value": "\"temp_points_b\"",
                     "name": "filepath"
                 },
                 {
+                    "alias": "content",
                     "default": null,
+                    "eval_value": "null",
                     "name": "content"
                 }
             ],
             "node_id": 4518562504,
             "outputs": [
                 {
+                    "alias": "filepath",
                     "default": null,
+                    "eval_value": "null",
                     "name": "filepath"
                 }
             ],
             "position": [
-                0.2950595238095237,
-                0.5273809523809525
+                0.35880952380952374,
+                0.5440476190476193
             ],
             "template": "IO::SaveToFile"
         },
@@ -129,24 +147,30 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "alist",
                     "default": null,
+                    "eval_value": "null",
                     "name": "alist"
                 },
                 {
+                    "alias": "header",
                     "default": "\"x,y\"",
+                    "eval_value": "\"x,y\"",
                     "name": "header"
                 }
             ],
             "node_id": 4452393480,
             "outputs": [
                 {
+                    "alias": "csv",
                     "default": null,
+                    "eval_value": "null",
                     "name": "csv"
                 }
             ],
             "position": [
-                0.15458333333333332,
-                0.6597619047619048
+                0.2183333333333333,
+                0.6764285714285716
             ],
             "template": "CSV::ListToCSV"
         },
@@ -154,24 +178,30 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "alist",
                     "default": null,
+                    "eval_value": "null",
                     "name": "alist"
                 },
                 {
+                    "alias": "header",
                     "default": "\"x,y\"",
+                    "eval_value": "\"x,y\"",
                     "name": "header"
                 }
             ],
             "node_id": 4495899896,
             "outputs": [
                 {
+                    "alias": "csv",
                     "default": null,
+                    "eval_value": "null",
                     "name": "csv"
                 }
             ],
             "position": [
-                0.14446428571428568,
-                0.5102380952380952
+                0.2082142857142856,
+                0.526904761904762
             ],
             "template": "CSV::ListToCSV"
         },
@@ -179,15 +209,17 @@
             "execution_index": 2,
             "inputs": [
                 {
+                    "alias": "filepath",
                     "default": null,
+                    "eval_value": "null",
                     "name": "filepath"
                 }
             ],
             "node_id": 4705310872,
             "outputs": [],
             "position": [
-                0.4992261904761905,
-                0.4426190476190476
+                0.5629761904761905,
+                0.4592857142857144
             ],
             "template": "IO::DeleteFile"
         },
@@ -195,15 +227,17 @@
             "execution_index": 3,
             "inputs": [
                 {
+                    "alias": "filepath",
                     "default": null,
+                    "eval_value": "null",
                     "name": "filepath"
                 }
             ],
             "node_id": 4495706320,
             "outputs": [],
             "position": [
-                0.4902976190476186,
-                0.3388095238095239
+                0.5540476190476187,
+                0.3554761904761907
             ],
             "template": "IO::DeleteFile"
         },
@@ -211,20 +245,24 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "points_a",
                     "default": null,
+                    "eval_value": "null",
                     "name": "a"
                 }
             ],
             "node_id": 4506615200,
             "outputs": [
                 {
+                    "alias": "x",
                     "default": null,
+                    "eval_value": "null",
                     "name": "x"
                 }
             ],
             "position": [
-                -0.01624999999999996,
-                0.6769047619047619
+                0.047500000000000056,
+                0.6935714285714287
             ],
             "template": "Alias::AToX"
         },
@@ -232,20 +270,24 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "points_b",
                     "default": null,
+                    "eval_value": "null",
                     "name": "b"
                 }
             ],
             "node_id": 4687108752,
             "outputs": [
                 {
+                    "alias": "x",
                     "default": null,
+                    "eval_value": "null",
                     "name": "x"
                 }
             ],
             "position": [
-                -0.014464285714285707,
-                0.5626190476190475
+                0.04928571428571431,
+                0.5326190476190477
             ],
             "template": "Alias::BToX"
         }

@@ -49,28 +49,36 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "points",
                     "default": null,
+                    "eval_value": "null",
                     "name": "points"
                 },
                 {
+                    "alias": "mean",
                     "default": 0.0,
+                    "eval_value": 0.0,
                     "name": "mean"
                 },
                 {
+                    "alias": "variance",
                     "default": 0.05,
+                    "eval_value": 0.04,
                     "name": "variance"
                 }
             ],
             "node_id": 4704923888,
             "outputs": [
                 {
+                    "alias": "points",
                     "default": null,
+                    "eval_value": "null",
                     "name": "points"
                 }
             ],
             "position": [
-                0.1418460154459762,
-                0.6496843853820587
+                0.15077458687454764,
+                0.6173034330011065
             ],
             "template": "Random::AddNoiseToSignal"
         },
@@ -78,40 +86,54 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "freq",
                     "default": null,
+                    "eval_value": 1.0,
                     "name": "freq"
                 },
                 {
+                    "alias": "amp",
                     "default": null,
+                    "eval_value": 1.0,
                     "name": "amp"
                 },
                 {
+                    "alias": "phase",
                     "default": null,
+                    "eval_value": 0.0,
                     "name": "phase"
                 },
                 {
+                    "alias": "start",
                     "default": 0.0,
+                    "eval_value": 0.0,
                     "name": "start"
                 },
                 {
+                    "alias": "end",
                     "default": 1.0,
+                    "eval_value": 1.0,
                     "name": "end"
                 },
                 {
+                    "alias": "n",
                     "default": 100.0,
+                    "eval_value": 100.0,
                     "name": "n"
                 }
             ],
             "node_id": 4746954960,
             "outputs": [
                 {
+                    "alias": "points",
                     "default": null,
+                    "eval_value": "null",
                     "name": "points"
                 }
             ],
             "position": [
-                0.03199570678542635,
-                0.872999403697077
+                0.06562665916637873,
+                0.8625232132208867
             ],
             "template": "Literals::PointsFromSin3D"
         },
@@ -119,19 +141,23 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "ps",
                     "default": null,
+                    "eval_value": "null",
                     "name": "ListToCSV_alist_4722945552"
                 },
                 {
+                    "alias": "output",
                     "default": "\"A.pdf\"",
+                    "eval_value": "\"A.pdf\"",
                     "name": "SingleCurve_outputPath_4686624976"
                 }
             ],
             "node_id": "GraphExecution[RenderSingleCurve,4822777928]",
             "outputs": [],
             "position": [
-                0.4153897115345713,
-                0.7803488372093023
+                0.4243182829631428,
+                0.74796788482835
             ],
             "template": "GraphExecution::RenderSingleCurve"
         },
@@ -139,19 +165,23 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "ps",
                     "default": null,
+                    "eval_value": "null",
                     "name": "ListToCSV_alist_4722945552"
                 },
                 {
+                    "alias": "output",
                     "default": "\"B.pdf\"",
+                    "eval_value": "\"B.pdf\"",
                     "name": "SingleCurve_outputPath_4686624976"
                 }
             ],
             "node_id": "GraphExecution[RenderSingleCurve,4618701400]",
             "outputs": [],
             "position": [
-                0.4099460897358093,
-                0.6356367663344406
+                0.41887466116438077,
+                0.6032558139534883
             ],
             "template": "GraphExecution::RenderSingleCurve"
         },
@@ -159,19 +189,23 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "ps",
                     "default": null,
+                    "eval_value": "null",
                     "name": "ListToCSV_alist_4722945552"
                 },
                 {
+                    "alias": "output",
                     "default": "\"C.pdf\"",
+                    "eval_value": "\"C.pdf\"",
                     "name": "SingleCurve_outputPath_4686624976"
                 }
             ],
             "node_id": "GraphExecution[RenderSingleCurve,4592399528]",
             "outputs": [],
             "position": [
-                0.4117318040215237,
-                0.5023034330011071
+                0.42006513735485707,
+                0.31754152823920245
             ],
             "template": "GraphExecution::RenderSingleCurve"
         },
@@ -179,28 +213,36 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "points",
                     "default": null,
+                    "eval_value": "null",
                     "name": "points"
                 },
                 {
+                    "alias": "n",
                     "default": 10.0,
+                    "eval_value": 10.0,
                     "name": "n"
                 },
                 {
+                    "alias": "spread",
                     "default": 3.0,
+                    "eval_value": 3.0,
                     "name": "spread"
                 }
             ],
             "node_id": 4789635728,
             "outputs": [
                 {
+                    "alias": "points",
                     "default": null,
+                    "eval_value": "null",
                     "name": "points"
                 }
             ],
             "position": [
-                0.12780323259295218,
-                0.4394462901439643
+                0.16298180402152362,
+                0.33539867109634536
             ],
             "template": "Filters::SimpleAverage"
         },
@@ -208,23 +250,29 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "output",
                     "default": "\"D.pdf\"",
+                    "eval_value": "\"D.pdf\"",
                     "name": "PairOfCurves_outputPath_4494750832"
                 },
                 {
+                    "alias": "as",
                     "default": null,
+                    "eval_value": "null",
                     "name": "AToX_a_4506615200"
                 },
                 {
+                    "alias": "bs",
                     "default": null,
+                    "eval_value": "null",
                     "name": "BToX_b_4687108752"
                 }
             ],
             "node_id": "GraphExecution[RenderPairOfCurves,4518834528]",
             "outputs": [],
             "position": [
-                0.39817665978880923,
-                0.3565891472868218
+                0.4160338026459521,
+                0.4899224806201551
             ],
             "template": "GraphExecution::RenderPairOfCurves"
         }

@@ -25,24 +25,30 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "filepath",
                     "default": "\"tmp_points\"",
+                    "eval_value": "\"tmp_points\"",
                     "name": "filepath"
                 },
                 {
+                    "alias": "content",
                     "default": null,
+                    "eval_value": "null",
                     "name": "content"
                 }
             ],
             "node_id": 4722786144,
             "outputs": [
                 {
+                    "alias": "filepath",
                     "default": null,
+                    "eval_value": "null",
                     "name": "filepath"
                 }
             ],
             "position": [
-                0.28958430458430445,
-                0.5577182894624757
+                0.32958430458430443,
+                0.6093849561291423
             ],
             "template": "IO::SaveToFile"
         },
@@ -50,24 +56,30 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "points",
                     "default": null,
+                    "eval_value": "null",
                     "name": "alist"
                 },
                 {
+                    "alias": "header",
                     "default": "\"x,y\"",
+                    "eval_value": "\"x,y\"",
                     "name": "header"
                 }
             ],
             "node_id": 4722945552,
             "outputs": [
                 {
+                    "alias": "csv",
                     "default": null,
+                    "eval_value": "null",
                     "name": "csv"
                 }
             ],
             "position": [
-                0.11616802200914345,
-                0.6043300110741971
+                0.15616802200914343,
+                0.6559966777408638
             ],
             "template": "CSV::ListToCSV"
         },
@@ -75,19 +87,23 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "pointsPath",
                     "default": null,
+                    "eval_value": "null",
                     "name": "pointsPath"
                 },
                 {
+                    "alias": "output",
                     "default": null,
+                    "eval_value": "null",
                     "name": "outputPath"
                 }
             ],
             "node_id": 4686624976,
             "outputs": [],
             "position": [
-                0.5002976190476189,
-                0.45404761904761914
+                0.5402976190476187,
+                0.5057142857142858
             ],
             "template": "RRender::SingleCurve"
         },
@@ -95,15 +111,17 @@
             "execution_index": -1,
             "inputs": [
                 {
+                    "alias": "filepath",
                     "default": null,
+                    "eval_value": "null",
                     "name": "filepath"
                 }
             ],
             "node_id": 4575400736,
             "outputs": [],
             "position": [
-                0.4325,
-                0.28833333333333333
+                0.4725,
+                0.33999999999999997
             ],
             "template": "IO::DeleteFile"
         }
