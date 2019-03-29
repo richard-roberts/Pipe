@@ -23,8 +23,8 @@ class Edge:
         }
 
     def disconnect(self):
-        self.argument_from.disconnect()
-        self.argument_to.disconnect()
+        self.argument_from.disconnect(self)
+        self.argument_to.disconnect(self)
 
     def is_connected_to_node(self, node):
         matches_from = node == self.argument_from.get_node()

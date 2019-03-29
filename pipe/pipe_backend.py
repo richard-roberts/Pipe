@@ -45,9 +45,10 @@ class PipeBackend:
         graphs_directory = project_directory
         if not os.path.exists(templates_directory):
             os.makedirs(templates_directory)
-            pathlib.Path(os.path.join(templates_directory, "__init__.py")).touch()
         if not os.path.exists(graphs_directory):
             os.makedirs(graphs_directory)
+        pathlib.Path(os.path.join(templates_directory, "__init__.py")).touch()
+        pathlib.Path(os.path.join(graphs_directory, "__init__.py")).touch()
         self.templates.assemble_collections(templates_directory)
         self.graphs.assemble_graphs(graphs_directory)
 

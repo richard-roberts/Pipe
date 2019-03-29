@@ -98,38 +98,32 @@ class Desktop(FloatLayout):
         self.show_message("%s deleted" % name)
 
     def open_project(self):
-        # def fn(pop):
-        #     project_directory = pop.ids.filechooser.path
-        #     if not project_directory:
-        #         self.show_message("Import cancelled (no directory specified)")
-        #     self.operations.open_project(project_directory)
-        #     self.show_message("Project opened successfully")
-        # popup = Factory.OpenProjectPopup()
-        # popup.bind(on_dismiss=fn)
-        # popup.open()
+        def fn(pop):
+            project_directory = pop.ids.filechooser.path
+            if not project_directory:
+                self.show_message("Import cancelled (no directory specified)")
+            self.remove_buttons_for_graph()
+            self.operations.open_project(project_directory)
+            for graph in self.operations.list_graphs(): self.add_button_for_graph(graph)
+            main_graph = globals.GraphInfo().manager.get_by_name("Main")
+            self.ids.editor.setup_from_graph(main_graph)
+            self.show_message("Project opened successfully")
 
-        self.remove_buttons_for_graph()
-        self.operations.open_project("./examples/filtering")
-        self.show_message("Project opened successfully")
-        for graph in self.operations.list_graphs():
-            self.add_button_for_graph(graph)
-
-        main_graph = globals.GraphInfo().manager.get_by_name("Main")
-        self.ids.editor.setup_from_graph(main_graph)
+        popup = Factory.OpenProjectPopup()
+        popup.bind(on_dismiss=fn)
+        popup.open()
 
     def save_project(self):
-        # def fn(pop):
-        #     project_directory = pop.ids.filechooser.path
-        #     if not project_directory:
-        #         self.show_message("Export cancelled (no directory specified)")
-        #         return
-        #     self.operations.save_project(project_directory)
-        #     self.show_message("Project saved successfully")
-        # popup = Factory.SaveProjectPopup()
-        # popup.bind(on_dismiss=fn)
-        # popup.open()
-        self.operations.save_project("./examples/filtering")
-        self.show_message("Project saved successfully")
+        def fn(pop):
+            project_directory = pop.ids.filechooser.path
+            if not project_directory:
+                self.show_message("Export cancelled (no directory specified)")
+                return
+            self.operations.save_project(project_directory)
+            self.show_message("Project saved successfully")
+        popup = Factory.SaveProjectPopup()
+        popup.bind(on_dismiss=fn)
+        popup.open()
 
     def assemble_and_execute(self):
         try:
@@ -142,18 +136,17 @@ class Desktop(FloatLayout):
             self.show_error("%s" % str(e))
 
     def assemble_and_save(self):
-        # def fn(pop):
-        #     project_directory = pop.ids.filechooser.path
-        #     if not project_directory:
-        #         self.show_message("Import cancelled (no directory specified)")
-        #
-        #     self.operations.assemble_project(project_directory)
-        #     self.show_message("Project assembled successfully")
-        #
-        # popup = Factory.ExportAssembledProgram()
-        # popup.bind(on_dismiss=fn)
-        # popup.open()
-        self.operations.assemble_project("./tmp")
+        def fn(pop):
+            project_directory = pop.ids.filechooser.path
+            if not project_directory:
+                self.show_message("Import cancelled (no directory specified)")
+
+            self.operations.assemble_project(project_directory)
+            self.show_message("Project assembled successfully")
+
+        popup = Factory.ExportAssembledProgram()
+        popup.bind(on_dismiss=fn)
+        popup.open()
 
     def start_new_graph_prompt(self):
         def fn(pop):
