@@ -42,13 +42,18 @@ class Node(object):
             if name not in new_template.outputs:
                 del self.outputs[name]
 
-        for name in new_template.inputs:
-            if name not in self.inputs.keys():
-                arg = arguments.Argument(self, name)
+        for template_arg in new_template.inputs.values():
+            if template_arg.get_name() in self.inputs.keys():
+                self.inputs[template_arg.get_name()].template_arg = template_arg
+            else:
+                arg = arguments.Argument(self, template_arg)
                 self.inputs[arg.template_arg.name] = arg
-        for name in new_template.outputs:
-            if name not in self.outputs.keys():
-                arg = arguments.Argument(self, name)
+
+        for template_arg in new_template.outputs.values():
+            if template_arg.get_name() in self.outputs.keys():
+                self.outputs[template_arg.get_name()].template_arg = template_arg
+            else:
+                arg = arguments.Argument(self, template_arg)
                 self.outputs[arg.template_arg.name] = arg
 
         self.template = new_template

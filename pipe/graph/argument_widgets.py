@@ -22,6 +22,9 @@ class ArgumentWidget(ToggleButton):
         self.argument = None
         self._instances.append(self)
 
+    def get_name(self):
+        return self.argument.get_name()
+
     def update_color(self):
         if self.argument.is_connected():
             self.background_color = config.Colors.ArgumentWithEdgeConnected.as_list()
@@ -46,6 +49,9 @@ class ArgumentWidget(ToggleButton):
 
     def update_evaluated_value(self, value):
         self.argument.set_evaluated_value(value)
+
+    def get_evaluated_value(self):
+        return self.argument.get_evaluate_value()
 
     def setup(self, argument):
         self.argument = argument
@@ -90,12 +96,12 @@ class ArgumentSetWidget(BoxLayout):
 
     def get_argument_by_name(self, name):
         for arg in self.args.values():
-            if arg.argument.template_arg.name == name:
+            if arg.get_name() == name:
                 return arg
         raise IndexError(
             "%s was not found in %s" % (
                 name,
-                str([arg.argument.template_arg.name for arg in self.args.values()])
+                str([arg.get_name() for arg in self.args.values()])
             )
         )
 
@@ -106,13 +112,10 @@ class ArgumentSetWidget(BoxLayout):
 class InputArgumentSetWidget(ArgumentSetWidget):
     argument_class = InputArgumentWidget
 
-    def get_evaluated(self):
-        return [widget.argument.get_evaluated_value() for widget in self.args.values()]
+    def get_evaluated_as_name_value_pairs(self):
+        return [(widget.get_name(), widget.get_evaluated_value()) for widget in self.args.values()]
 
 
 class OutputArgumentSetWidget(ArgumentSetWidget):
     argument_class = OutputArgumentWidget
 
-    def set_evaluated_values(self, values):
-        for (widget, value) in zip(self.args.values(), values):
-            widget.argument.set_evaluated_value(value)

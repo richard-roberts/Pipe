@@ -31,8 +31,14 @@ class TemplateCollection:
     def get_template(self, name):
         return self.templates[name]
 
-    def create_new_template(self, clazz, name, inputs, outputs):
-        template = clazz()
+    def create_new_plain_template(self, name, inputs, outputs):
+        template = templates.Template()
+        template.setup(self.name, name, inputs, outputs)
+        self.templates[template.name] = template
+        return template
+
+    def create_new_graph_template(self, name, inputs, outputs):
+        template = templates.GraphTemplate()
         template.setup(self.name, name, inputs, outputs)
         self.templates[template.name] = template
         return template

@@ -1,9 +1,7 @@
 #!/usr/local/bin/python3
 import os
 import sys
-import tempfile
-import subprocess
-from threading import Timer
+
 
 import kivy
 from kivy.app import App
@@ -13,62 +11,13 @@ from kivy.uix.button import Button
 from kivy.graphics import Color, Rectangle
 
 import globals
+from editors import external
 from pipe_backend import PipeBackend
 from config import Colors
 from graph import graph_widgets
 
 kivy.require("1.10.1")
 Factory.register("GraphWidget", graph_widgets.GraphWidget)
-
-
-class TemporaryEditor:
-
-    update_time_in_seconds = 0.01
-
-    def __init__(self, node):
-        self.node = node
-        self.editor = os.environ.get('EDITOR', 'vim')
-        self.original = node.template.code
-        self.file = None
-
-        self.timer = None
-        self.is_running = False
-
-        self.write_to_new()
-        self.open()
-        self.start_auto()
-
-    def write_to_new(self):
-        self.file = tempfile.NamedTemporaryFile(prefix="%s_____" % str(self.node), suffix=".py")
-        self.file.write(bytes(self.original, encoding='utf8'))
-        self.file.flush()
-
-    def open(self):
-        subprocess.call([self.editor, self.file.name])
-
-    def apply_to_node(self):
-        self.file.seek(0)
-        self.node.template.code = self.file.read()
-        globals.PipeInterface().instance.update_code_input()
-
-    def run_auto(self):
-        self.is_running = False
-        self.start_auto()
-        self.apply_to_node()
-
-    def start_auto(self):
-        if not self.is_running:
-            self.timer = Timer(self.update_time_in_seconds, self.run_auto)
-            self.timer.start()
-            self.is_running = True
-
-    def stop_auto(self):
-        self.timer.cancel()
-        self.is_running = False
-
-    def finish(self):
-        self.stop_auto()
-        self.file.close()
 
 
 class Desktop(FloatLayout):
@@ -253,7 +202,10 @@ class Desktop(FloatLayout):
         if self.ids.editor.selected_node_widget is None:
             self.show_error("No node selected")
             return
-        self.temporary_editor = TemporaryEditor(self.ids.editor.selected_node_widget.node)
+        if self.temporary_editor is not None:
+            self.temporary_editor.finish()
+        self.temporary_editor = external.ExternalTemplateCodeEditor(self.ids.editor.selected_node_widget.node.template)
+        self.temporary_editor.start_auto()
 
     def update_code_input(self):
         self.ids.code_panel.text = self.ids.editor.selected_node_widget.node.template.code if \

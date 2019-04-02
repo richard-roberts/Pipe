@@ -16,6 +16,15 @@ class Argument:
     def __str__(self):
         return self.pretty()
 
+    def get_name(self):
+        return self.template_arg.name
+
+    def get_name_with_id(self):
+        return "%s[%s]" % (self.get_name(), str(self.node))
+
+    def get_name_with_default(self):
+        return self.template_arg.get_name_with_default()
+
     def get_node(self):
         return self.node
 
@@ -56,7 +65,7 @@ class Argument:
         return self.template_arg.get_default()
 
     def get_connected(self):
-        return self.edges.values()
+        return list(self.edges.values())
 
     def get_first_connected(self):
         if len(self.edges) != 1:

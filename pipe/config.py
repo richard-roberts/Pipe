@@ -85,16 +85,16 @@ class Defaults:
         def new_template_code(function_name, input_arguments, output_arguments):
             header = "class %s:\n" % function_name
 
+            input_arguments_str = "self"
+            for arg in input_arguments:
+                input_arguments_str += ",%s=%s" % (arg.get_name(), arg.get_default())
             body = ""
-            body += "    def __init__(self%s%s):\n" % (
-                ("" if len(input_arguments) == 0 else ", "),
-                ", ".join(input_arguments)
-            )
+            body += "    def __init__(%s):\n" % input_arguments_str
             if len(output_arguments) == 0:
                 body += "        pass\n"
             else:
                 for output_var in output_arguments:
-                    body += "        self.%s = None\n" % output_var
+                    body += "        self.%s = None\n" % output_var.get_name()
 
             return header + body
 
@@ -104,25 +104,22 @@ class Defaults:
             return template % name
 
         @staticmethod
-        def graph_execution_template_code(graph_name, inputs, outputs):
-            named_inputs = [i.code_name() for i in inputs]
-            named_outputs = [o.code_name() for o in outputs]
-
+        def graph_execution_template_code(graph_name, input_arguments, output_arguments):
             header = "class %s:\n" % graph_name
 
+            input_arguments_str = "self"
+            for arg in input_arguments:
+                input_arguments_str += ",%s=%s" % (arg.get_name(), arg.get_default())
             body = ""
-            body += "    def __init__(self%s%s):\n" % (
-                ("" if len(inputs) == 0 else ", "),
-                ", ".join(named_inputs)
-            )
-            if len(outputs) == 0:
+            body += "    def __init__(%s):\n" % input_arguments_str
+            if len(output_arguments) == 0:
                 body += "        import %s as graph\n" % graph_name
-                body += "        graph.execute(%s)\n" % ", ".join(named_inputs)
+                body += "        graph.execute(%s)\n" % ", ".join(input_arguments_str)
             else:
                 body += "        import %s as graph\n" % graph_name
-                body += "        result = graph.execute(%s)\n" % ", ".join(named_inputs)
-                for output_var in named_outputs:
-                    body += "        self.%s = result[\"%s\"]\n" % (output_var, output_var)
+                body += "        result = graph.execute(%s)\n" % ", ".join(input_arguments_str)
+                for output_var in output_arguments:
+                    body += "        self.%s = result[\"%s\"]\n" % (output_var.get_name(), output_var.get_name())
 
             return header + body
 

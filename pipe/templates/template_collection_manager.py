@@ -27,8 +27,7 @@ class TemplateCollectionManager:
             collection = template_collection.TemplateCollection(collection_name)
             self.collections[collection.name] = collection
         collection = self.collections[collection_name]
-        return collection.create_new_template(
-            templates.Template,
+        return collection.create_new_plain_template(
             name,
             inputs,
             outputs
@@ -45,11 +44,10 @@ class TemplateCollectionManager:
             old_template = graph_collection.get_template(graph.name)
             graph_collection.delete_template_by_name(graph.name)
 
-        new_template = graph_collection.create_new_template(
-            templates.GraphTemplate,
+        new_template = graph_collection.create_new_graph_template(
             graph.name,
-            graph.list_inputs_needing_value(),
-            graph.disconnected_outputs()
+            [a.get_name_with_id() for a in graph.list_inputs_needing_value()],
+            [a.get_name_with_id() for a in graph.disconnected_outputs()]
         )
 
         if old_template is not None:

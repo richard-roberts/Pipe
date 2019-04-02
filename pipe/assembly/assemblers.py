@@ -63,7 +63,7 @@ class Assembler:
         argument_string = ""
         for node in all_nodes:
             for input_arg in node.list_inputs_needing_value():
-                argument_string += "%s, " % input_arg.code_name()
+                argument_string += "%s=%s, " % (input_arg.code_name(), input_arg.get_default_value())
         assembled_str += function_header % argument_string[:-2] # [:-2] to trim last comma.
 
         # Write execution calls

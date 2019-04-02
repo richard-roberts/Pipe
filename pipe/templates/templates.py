@@ -8,6 +8,9 @@ class TemplateArg(object):
     def __init__(self, name):
         self.name = name
 
+    def get_name(self):
+        return self.name
+
 
 class InputTemplateArg(TemplateArg):
 
@@ -20,6 +23,15 @@ class InputTemplateArg(TemplateArg):
 
     def get_default(self):
         return self._default
+
+    def get_name_with_default(self):
+        return "%s=%s" % (self.get_name(), self.get_default_str())
+
+    def get_default_str(self):
+        return json.dumps(self._default)
+
+    def set_default_str(self, default_str):
+        return self.set_default(json.loads(default_str))
 
     def as_json(self):
         return {
@@ -72,14 +84,25 @@ class Template(object):
         self.function_name = name.replace(" ", "_")
         self.inputs = {}
         for i in inputs:
-            a = InputTemplateArg(i)
+            if "=" in i:
+                name = i.split("=")[0]
+                a = InputTemplateArg(name)
+                value = json.loads(i.split("=")[1])
+                a.set_default(value)
+            else:
+                name = i
+                a = InputTemplateArg(name)
             self.inputs[a.name] = a
         self.outputs = {}
         for o in outputs:
             a = OutputTemplateArg(o)
             self.outputs[a.name] = a
         self.documentation = config.Defaults.Template.new_template_documentation(name)
-        self.code = config.Defaults.Template.new_template_code(self.function_name, inputs, outputs)
+        self.code = config.Defaults.Template.new_template_code(
+            self.function_name,
+            self.inputs.values(),
+            self.outputs.values()
+        )
 
     def __str__(self):
         return "Template[%s::%s]" % (self.collection_name, self.name)
@@ -114,18 +137,28 @@ class Template(object):
         return len(self.outputs) == 0
 
     def input_string(self):
-        input_str = "("
-        for i in self.inputs.values():
-            input_str += "%s=%s," % (i.name, i.name)
-        input_str = input_str[:-1] + "}\n"
-        return input_str
+        if len(self.inputs) > 0:
+            input_str = "{"
+            for i in self.inputs.values():
+                input_str += "%s=%s," % (i.name, i.get_default_str())
+            return input_str[:-1] + "}\n"
+        else:
+            return "{}"
 
     def output_string(self):
-        output_str = "{"
-        for o in self.outputs.values():
-            output_str += "\"%s\" = %s," % (o.name, o.name)
-        output_str = output_str[:-1] + "}\n"
-        return output_str
+        if len(self.outputs) > 0:
+            output_str = "{"
+            for o in self.outputs.values():
+                output_str += "\"%s\" = %s," % (o.name, o.name)
+            return output_str[:-1] + "}\n"
+        else:
+            return "{}"
+
+    def input_names(self):
+        return list(self.inputs.keys())
+
+    def output_names(self):
+        return list(self.outputs.keys())
 
     def get_long_name(self):
         return "%s::%s" % (self.collection_name, self.name)
@@ -142,7 +175,7 @@ class Template(object):
 class GraphTemplate(Template):
 
     def setup(self, collection_name, name, inputs, outputs):
-        inputs_names = [i.code_name() for i in inputs]
-        outputs_names = [o.code_name() for o in outputs]
-        super(GraphTemplate, self).setup(collection_name, name, inputs_names, outputs_names)
-        self.code = config.Defaults.Template.graph_execution_template_code(self.function_name, inputs, outputs)
+        super(GraphTemplate, self).setup(collection_name, name, inputs, outputs)
+        self.code = config.Defaults.Template.graph_execution_template_code(
+            self.function_name, self.inputs.values(), self.outputs.values()
+        )

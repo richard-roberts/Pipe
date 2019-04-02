@@ -1,4 +1,5 @@
 import os
+import tempfile
 import json
 import subprocess
 
@@ -84,23 +85,29 @@ class NodeWidget(BoxLayout):
         popup.open()
 
     def evaluate_upward(self):
-        arg_str = ""
-        input_values = self.input_widgets.get_evaluated()
-        for value in input_values:
-            arg_str += "%s, " % str(value)
-        arg_str = arg_str[:-2]
-        print_lines = ""
-        for widget in self.output_widgets.list_args_widgets():
-            print_lines += "print(tmp.%s)" % widget.argument.template_arg.name
-        tmp_exe_file = self.node.template.code + "tmp = %s(%s)\n" % (self.node.template.name, arg_str) + print_lines
+        tmp_results_file = tempfile.NamedTemporaryFile(prefix="%s_____" % self.pretty(), suffix=".csv")
 
+        arg_str = ""
+        for (name, value) in self.input_widgets.get_evaluated_as_name_value_pairs():
+            arg_str += "%s=%s," % (name, value)
+        arg_str = arg_str[:-1]
+        content = ""
+        content += "\n"
+        content += "import json\n"
+        content += "\n"
+        content += self.node.template.code
+        content += "\n"
+        content += "tmp = %s(%s)\n" % (self.node.template.name, arg_str)
+        content += "f = open(\"%s\", \"w\")\n" % tmp_results_file.name
+        for widget in self.output_widgets.list_args_widgets():
+            content += "f.write(\"%s,\" + json.dumps(tmp.%s))\n" % (widget.get_name(), widget.get_name())
+        content += "f.close()\n"
+        content += "\n"
         if not os.path.isdir("tmp"):
             globals.PipeInterface().instance.operations.assemble_project("./tmp")
-
         f = open("tmp/tmp.py", "w")
-        f.write(tmp_exe_file)
+        f.write(content)
         f.close()
-
         my_env = os.environ.copy()
         p = subprocess.Popen(['python3', 'tmp/tmp.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=my_env)
         output, error = p.communicate()
@@ -108,23 +115,29 @@ class NodeWidget(BoxLayout):
             globals.PipeInterface().instance.show_error("Execution failed: %s, %s" % (output, error))
             return
 
-        values = []
-        output_str = output.decode()
-        for value_str in output_str.split("\n"):
-            if value_str.strip() == "":
-                continue
+        # Read results for results file
+        f = open(tmp_results_file.name, "r")
+        lines = f.readlines()
+        f.close()
+        for line in lines:
+            if line.strip() == "": continue
+            name, json_value_str = line.split(",", 1)
             try:
-                value = json.loads(value_str)
+                value = json.loads(json_value_str)
             except json.JSONDecodeError as e:
                 globals.PipeInterface().instance.show_error(
-                    "Execution failed, could not decode %s. Error: %s" % (value_str, str(e))
+                    "Value for %s failed to decode; value string was `%s`. Error: %s" % (
+                        name, json_value_str, str(e)
+                    )
                 )
                 return
+            widget = self.output_widgets.get_argument_by_name(name)
+            widget.update_evaluated_value(value)
 
-            values.append(value)
-
-        globals.PipeInterface().instance.show_execution("%s > %s" % (self.pretty(), output))
-        self.output_widgets.set_evaluated_values(values)
+        # Set output
+        output_str = output.decode()
+        log_str = " // ".join(output_str.split("\n"))
+        globals.PipeInterface().instance.show_execution("%s > %s" % (self.pretty(), log_str))
 
 
 class GraphNodeWidget(NodeWidget):

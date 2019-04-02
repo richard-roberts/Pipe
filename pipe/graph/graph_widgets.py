@@ -14,6 +14,7 @@ import globals
 from . import argument_widgets
 from . import node_widgets
 from . import edge_widgets
+from editors import external
 
 
 class GraphWidget(FloatLayout):
@@ -106,6 +107,7 @@ class GraphWidget(FloatLayout):
 
     def create_new_node(self, template, position):
         node = self.graph.create_node(template, position)
+
         if node.is_graph_execution_node():
             widget = node_widgets.GraphNodeWidget()
         else:
@@ -174,29 +176,29 @@ class GraphWidget(FloatLayout):
 
         def create_on_evaluated_value_edit(arg_widget):
             def fn(widget):
-                arg_widget.update_evaluated_value(json.loads(widget.text))
+                arg_widget.update_evaluated_value(widget.text)
             return fn
 
         popup = Factory.EditNodePopup()
 
         for arg_widget in node_widget.input_widgets.list_args_widgets():
-            name_label = Label(text=arg_widget.argument.template_arg.name)
+            name_label = Label(text=arg_widget.get_name())
             popup.ids.input_names.add_widget(name_label)
             #
             alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
             alias_edit.bind(on_text_validate=create_on_alias_edit(arg_widget))
             popup.ids.input_aliases.add_widget(alias_edit)
             #
-            default_value_edit = TextInput(text=json.dumps(arg_widget.argument.template_arg.get_default()), multiline=False)
+            default_value_edit = TextInput(text=str(arg_widget.argument.template_arg.get_default()), multiline=False)
             default_value_edit.bind(on_text_validate=create_on_default_value_edit(arg_widget))
             popup.ids.input_defaults.add_widget(default_value_edit)
             #
-            evaluated_value_edit = TextInput(text=json.dumps(arg_widget.argument.evaluated_value), multiline=False)
+            evaluated_value_edit = TextInput(text=str(arg_widget.argument.evaluated_value), multiline=False)
             evaluated_value_edit.bind(on_text_validate=create_on_evaluated_value_edit(arg_widget))
             popup.ids.input_values.add_widget(evaluated_value_edit)
 
         for arg_widget in node_widget.output_widgets.list_args_widgets():
-            name_label = Label(text=arg_widget.argument.template_arg.name)
+            name_label = Label(text=arg_widget.get_name())
             popup.ids.output_names.add_widget(name_label)
             #
             alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
@@ -242,13 +244,28 @@ class GraphWidget(FloatLayout):
             new_template = globals.TemplateInfo().manager.new_template(new_collection, new_name, inputs, outputs)
             new_template.documentation = old_template.documentation
             globals.GraphInfo().manager.replace_template_a_with_b(old_template, new_template)
+            external.ExternalTemplateCodeEditor(old_template)
             self.rebuild()
 
         popup = Factory.EditTemplatePopup()
         popup.ids.collection.text = old_template.collection_name
         popup.ids.name.text = old_template.name
-        popup.ids.inputs.text = old_template.input_string()
-        popup.ids.outputs.text = old_template.output_string()
+        if len(old_template.inputs) > 0:
+            arg_str = ""
+            for arg in old_template.inputs.values():
+                arg_str += "%s," % arg.get_name_with_default()
+            arg_str = arg_str[:-1]
+            popup.ids.inputs.text = arg_str
+        else:
+            popup.ids.inputs.text = ""
+        if len(old_template.outputs) > 0:
+            arg_str = ""
+            for arg in old_template.outputs.values():
+                arg_str += "%s," % arg.get_name()
+            arg_str = arg_str[:-1]
+            popup.ids.outputs.text = arg_str
+        else:
+            popup.ids.outputs.text = ""
         popup.bind(on_dismiss=fn)
         popup.open()
 
@@ -421,7 +438,7 @@ class GraphWidget(FloatLayout):
                 self.activated_input_argument = argument_widget
                 globals.PipeInterface().instance.show_message(
                     "Set activate input argument to %s" %
-                    argument_widget.argument.template_arg.name
+                    argument_widget.get_name()
                 )
             elif argument_widget.state == "normal":
                 self.activated_input_argument = None
@@ -435,7 +452,7 @@ class GraphWidget(FloatLayout):
                 self.activated_output_argument = argument_widget
                 globals.PipeInterface().instance.show_message(
                     "Set activate output argument to %s" %
-                    argument_widget.argument.template_arg.name
+                    argument_widget.get_name()
                 )
             elif argument_widget.state == "normal":
                 self.activated_output_argument = None
@@ -459,8 +476,6 @@ class GraphWidget(FloatLayout):
                 )
                 self.activated_output_argument.state = "normal"
                 self.activated_input_argument.state = "normal"
-                self.activated_output_argument.update_color()
-                self.activated_input_argument.update_color()
                 self.activated_output_argument = None
                 self.activated_input_argument = None
                 globals.PipeInterface().instance.show_message("Edge deleted")
@@ -481,8 +496,8 @@ class GraphWidget(FloatLayout):
 
             globals.PipeInterface().instance.show_message(
                 "New edge created from %s to %s" % (
-                    self.activated_output_argument.argument.template_arg.name,
-                    self.activated_input_argument.argument.template_arg.name
+                    self.activated_output_argument.get_name(),
+                    self.activated_input_argument.get_name()
                 )
             )
 
