@@ -1,0 +1,22 @@
+{
+    "name": "FileInput",
+    "templates": {
+        "ReadCSV": {
+            "code": "class ReadCSV:\n    def __init__(self, filepath):\n        data = []\n        f = open(filepath, \"r\")\n        lines = f.readlines()\n        for line in lines[1:]: # skip header\n            if line.strip() == \"\": continue\n            datum = [float(v) for v in line.split(\",\")]\n            data.append(datum)\n        self.data = data\n\n",
+            "collection_name": "FileInput",
+            "documentation": "A description of the ReadCSV node's behavior.",
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "name": "ReadCSV",
+            "outputs": [
+                {
+                    "name": "data"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "name": "FileOutput",
+    "templates": {
+        "WriteNDListToCSV": {
+            "code": "class WriteNDListToCSV:\n    def __init__(self, filepath, data):\n        f = open(filepath, \"w\")\n        content = \"\"\n        for item in data:\n            line = \"\"\n            for value in item:\n                line += \"%s,\" % value \n            line = \"%s\\n\" % line[:-1]\n            content += line\n        f.write(content)\n        f.close()\n",
+            "collection_name": "FileOutput",
+            "documentation": "A description of the WriteNDListToCSV node's behavior.",
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "filepath"
+                },
+                {
+                    "default": null,
+                    "name": "data"
+                }
+            ],
+            "name": "WriteNDListToCSV",
+            "outputs": []
+        }
+    }
+}

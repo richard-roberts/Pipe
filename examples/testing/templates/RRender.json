@@ -1,0 +1,22 @@
+{
+    "name": "RRender",
+    "templates": {
+        "Points2D": {
+            "code": "class Points2D:\n    def __init__(self,points=None,filepath=None):\n        import os\n\n        # Write points to temp file\n        tmp_points_path = os.path.join(os.environ['PIPE_BASE'], \"tmp_points.csv\")\n        content = \"x,y\\n\"\n        for p in points:\n            line = \"\"\n            for item in p:\n                line += \"%s,\" % str(item)\n            line = line[:-1] + \"\\n\"\n            content += line\n        f = open(tmp_points_path, \"w\")\n        f.write(content)\n        f.close()\n\n        # Do the render\n        command = \"RScript %s %s %s\" % (\n            os.environ['PIPE_RENDER'] + \"single_curve.R\",\n            tmp_points_path,\n            filepath\n        )\n        os.system(command)\n\n        # Clean up\n        # os.remove(tmp_points_path)\n        # plotter_excess_file = os.path.join(os.environ['PIPE_BASE'], \"Rplots.pdf\")\n        # if os.path.isfile(plotter_excess_file): os.remove(plotter_excess_file)\n\n",
+            "collection_name": "RRender",
+            "documentation": "A description of the filepath node's behavior.",
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "points"
+                },
+                {
+                    "default": null,
+                    "name": "filepath"
+                }
+            ],
+            "name": "Points2D",
+            "outputs": []
+        }
+    }
+}

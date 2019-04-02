@@ -1,0 +1,26 @@
+{
+    "name": "Sampling",
+    "templates": {
+        "AddSamplingParameter": {
+            "code": "class AddSamplingParameter:\n    def __init__(self, signal, increment):\n        self.data = [[ix * increment] + item for (ix, item) in enumerate(signal)]\n",
+            "collection_name": "Sampling",
+            "documentation": "A description of the AddSamplingParameter node's behavior.",
+            "inputs": [
+                {
+                    "default": null,
+                    "name": "signal"
+                },
+                {
+                    "default": 1.0,
+                    "name": "increment"
+                }
+            ],
+            "name": "AddSamplingParameter",
+            "outputs": [
+                {
+                    "name": "data"
+                }
+            ]
+        }
+    }
+}

@@ -2,7 +2,7 @@
     "name": "Math",
     "templates": {
         "DotProduct": {
-            "code": "class DotProduct:\n    def __init__(self, a, b):\n        self.o = sum([va * vb for (va, vb) in zip(a, b)])\n",
+            "code": "class DotProduct:\n    def __init__(self, a, b):\n        self.o = a + b\n",
             "collection_name": "Math",
             "documentation": "Takes the dot product of two iterables.",
             "inputs": [

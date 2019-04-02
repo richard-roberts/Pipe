@@ -1,0 +1,30 @@
+{
+    "name": "Noise",
+    "templates": {
+        "Signal": {
+            "code": "class Signal:\n    def __init__(self, n, mean, deviation):\n        import random\n        self.output = [[random.gauss(mean, deviation)] for i in range(n)]\n",
+            "collection_name": "Noise",
+            "documentation": "A description of the Signal node's behavior.",
+            "inputs": [
+                {
+                    "default": 100,
+                    "name": "n"
+                },
+                {
+                    "default": 0,
+                    "name": "mean"
+                },
+                {
+                    "default": 0.5,
+                    "name": "deviation"
+                }
+            ],
+            "name": "Signal",
+            "outputs": [
+                {
+                    "name": "output"
+                }
+            ]
+        }
+    }
+}
