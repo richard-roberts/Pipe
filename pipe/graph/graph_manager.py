@@ -82,6 +82,5 @@ class GraphManager:
         count = 0
         for graph in self.graphs.values():
             n = graph.count_uses_of_template(template)
-            print("Graph %s used %s %d times" % (graph.name, template.name, n))
             count += n
         return count

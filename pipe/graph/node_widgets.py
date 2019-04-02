@@ -22,6 +22,9 @@ class NodeWidget(BoxLayout):
         super(NodeWidget, self).__init__(**kwargs)
         self.node = None
 
+    def pretty(self):
+        return "NodeWidget[%s]" % self.node.template.name
+
     def setup_arguments(self):
         self.input_widgets.pos = self.node.position
         self.input_widgets.setup(self.node.inputs.values())
@@ -88,7 +91,7 @@ class NodeWidget(BoxLayout):
         arg_str = arg_str[:-2]
         print_lines = ""
         for widget in self.output_widgets.list_args_widgets():
-            print_lines += "print(tmp.%s)" % widget.argument.name
+            print_lines += "print(tmp.%s)" % widget.argument.template_arg.name
         tmp_exe_file = self.node.template.code + "tmp = %s(%s)\n" % (self.node.template.name, arg_str) + print_lines
 
         if not os.path.isdir("tmp"):
@@ -120,6 +123,7 @@ class NodeWidget(BoxLayout):
 
             values.append(value)
 
+        globals.PipeInterface().instance.show_execution("%s > %s" % (self.pretty(), output))
         self.output_widgets.set_evaluated_values(values)
 
 

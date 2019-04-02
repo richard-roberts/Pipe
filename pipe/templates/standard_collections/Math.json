@@ -4,14 +4,14 @@
         "DotProduct": {
             "code": "class DotProduct:\n    def __init__(self, a, b):\n        self.o = None\n",
             "collection_name": "Math",
-            "documentation": "A description of the DotProduct node's behavior.",
+            "documentation": "Takes the dot product of two iterables.",
             "inputs": [
-                "a",
-                "b"
+                { "name": "a", "default": null },
+                { "name": "b", "default": null }
             ],
             "name": "DotProduct",
             "outputs": [
-                "o"
+                { "name": "o" }
             ]
         }
     }

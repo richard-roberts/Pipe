@@ -20,12 +20,12 @@ class Node(object):
     def update_args_from_template(self):
         self.inputs = {}
         self.outputs = {}
-        for name in self.template.inputs:
-            arg = arguments.Argument(self, name)
-            self.inputs[arg.name] = arg
-        for name in self.template.outputs:
-            arg = arguments.Argument(self, name)
-            self.outputs[arg.name] = arg
+        for template_arg in self.template.inputs.values():
+            arg = arguments.Argument(self, template_arg)
+            self.inputs[arg.template_arg.name] = arg
+        for template_arg in self.template.outputs.values():
+            arg = arguments.Argument(self, template_arg)
+            self.outputs[arg.template_arg.name] = arg
 
     def get_id(self):
         return self.node_id
@@ -45,11 +45,11 @@ class Node(object):
         for name in new_template.inputs:
             if name not in self.inputs.keys():
                 arg = arguments.Argument(self, name)
-                self.inputs[arg.name] = arg
+                self.inputs[arg.template_arg.name] = arg
         for name in new_template.outputs:
             if name not in self.outputs.keys():
                 arg = arguments.Argument(self, name)
-                self.outputs[arg.name] = arg
+                self.outputs[arg.template_arg.name] = arg
 
         self.template = new_template
 
@@ -130,10 +130,10 @@ class Node(object):
         node.execution_index = data["execution_index"]
         for arg_data in data["inputs"]:
             arg = arguments.Argument.from_json(node, arg_data)
-            node.inputs[arg.name] = arg
+            node.inputs[arg.template_arg.name] = arg
         for arg_data in data["outputs"]:
             arg = arguments.Argument.from_json(node, arg_data)
-            node.outputs[arg.name] = arg
+            node.outputs[arg.template_arg.name] = arg
         return node
 
 

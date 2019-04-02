@@ -19,7 +19,7 @@ class Assembler:
         all_nodes = graph.nodes.values()
 
         def assemble(node, argument):
-            suffix = ("" if argument is None else ".%s" % argument.name)
+            suffix = ("" if argument is None else ".%s" % argument.template_arg.name)
 
             if node.template.is_root():
                 return "%s()%s" % (node.template.function_name, suffix)
@@ -34,7 +34,7 @@ class Assembler:
                         argument_str += compiled_child + ", "
                     else:
                         if input_arg.has_default_value():
-                            argument_str += "%s, " % str(input_arg.default_value)
+                            argument_str += "%s, " % str(input_arg.get_default_value())
                         else:
                             argument_str += "%s, " % input_arg.code_name()
 
@@ -74,7 +74,7 @@ class Assembler:
             if node.has_outputs():
                 assembled_str += "    tmp = %s\n" % (assemble(node, None))
                 for output in node.list_disconnected_outputs():
-                    assembled_str += "    %s=tmp.%s\n" % (output.code_name(), output.name)
+                    assembled_str += "    %s=tmp.%s\n" % (output.code_name(), output.template_arg.name)
             else:
                 assembled_str += "    %s # %s\n" % (assemble(node, None), node.template.name)
 

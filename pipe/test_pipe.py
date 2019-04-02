@@ -76,7 +76,7 @@ class TestPipe(unittest.TestCase):
     def test_open_project(self):
 
         pipe = PipeBackend()
-        pipe.open_project("../examples/testing")
+        pipe.reset_project("../examples/testing")
 
         # Make sure all expected graphs and collections are available after loading
         self.assertListEqual(

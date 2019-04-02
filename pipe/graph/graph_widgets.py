@@ -71,7 +71,9 @@ class GraphWidget(FloatLayout):
             if node_widget_from is None:
                 raise ValueError("Could not find from-node widget (edge `%s`)" % edge)
 
-            arg_widget_from = node_widget_from.get_output_argument_widget_by_argument_name(edge.argument_from.name)
+            arg_widget_from = node_widget_from.get_output_argument_widget_by_argument_name(
+                edge.argument_from.template_arg.name
+            )
             if arg_widget_from is None:
                 raise ValueError("Could not find from-argument widget (edge `%s`)" % edge)
 
@@ -83,7 +85,9 @@ class GraphWidget(FloatLayout):
             if node_widget_to is None:
                 raise ValueError("Could not find to-node widget (edge `%s`)" % edge)
 
-            arg_widget_to = node_widget_to.get_input_argument_widget_by_argument_name(edge.argument_to.name)
+            arg_widget_to = node_widget_to.get_input_argument_widget_by_argument_name(
+                edge.argument_to.template_arg.name
+            )
             if arg_widget_to is None:
                 raise ValueError("Could not find to-argument widget (edge `%s`)" % edge)
 
@@ -162,7 +166,10 @@ class GraphWidget(FloatLayout):
 
         def create_on_default_value_edit(arg_widget):
             def fn(widget):
-                arg_widget.update_default_value(json.loads(widget.text))
+                if not widget.text.strip():
+                    arg_widget.reset_default_value()
+                else:
+                    arg_widget.update_default_value(json.loads(widget.text))
             return fn
 
         def create_on_evaluated_value_edit(arg_widget):
@@ -173,14 +180,14 @@ class GraphWidget(FloatLayout):
         popup = Factory.EditNodePopup()
 
         for arg_widget in node_widget.input_widgets.list_args_widgets():
-            name_label = Label(text=arg_widget.argument.name)
+            name_label = Label(text=arg_widget.argument.template_arg.name)
             popup.ids.input_names.add_widget(name_label)
             #
             alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
             alias_edit.bind(on_text_validate=create_on_alias_edit(arg_widget))
             popup.ids.input_aliases.add_widget(alias_edit)
             #
-            default_value_edit = TextInput(text=json.dumps(arg_widget.argument.default_value), multiline=False)
+            default_value_edit = TextInput(text=json.dumps(arg_widget.argument.template_arg.get_default()), multiline=False)
             default_value_edit.bind(on_text_validate=create_on_default_value_edit(arg_widget))
             popup.ids.input_defaults.add_widget(default_value_edit)
             #
@@ -189,16 +196,12 @@ class GraphWidget(FloatLayout):
             popup.ids.input_values.add_widget(evaluated_value_edit)
 
         for arg_widget in node_widget.output_widgets.list_args_widgets():
-            name_label = Label(text=arg_widget.argument.name)
+            name_label = Label(text=arg_widget.argument.template_arg.name)
             popup.ids.output_names.add_widget(name_label)
             #
             alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
             alias_edit.bind(on_text_validate=create_on_alias_edit(arg_widget))
             popup.ids.output_aliases.add_widget(alias_edit)
-            #
-            default_value_edit = TextInput(text=str(arg_widget.argument.default_value), multiline=False)
-            default_value_edit.bind(on_text_validate=create_on_default_value_edit(arg_widget))
-            popup.ids.output_defaults.add_widget(default_value_edit)
             #
             evaluated_value_label = Label(text=json.dumps(arg_widget.argument.evaluated_value))
             popup.ids.output_values.add_widget(evaluated_value_label)
@@ -267,8 +270,7 @@ class GraphWidget(FloatLayout):
     def delete_edge_by_widget(self, edge_widget):
         self.graph.delete_edge(edge_widget.edge)
         self.remove_widget(edge_widget)
-        edge_widget.widget_from.update_color()
-        edge_widget.widget_to.update_color()
+        argument_widgets.ArgumentWidget.all_update_color()
         del self.edge_widgets[edge_widget]
 
     def delete_node_and_connected_edges_by_widget(self, node_widget):
@@ -395,7 +397,10 @@ class GraphWidget(FloatLayout):
         def use_most_similar(_):
             popup.used = True
             popup.dismiss()
-            if "::" not in popup.most_similar:
+            if not popup.most_similar:
+                globals.PipeInterface().instance.show_warning("cancelled – no value entered")
+                return
+            elif "::" not in popup.most_similar:
                 raise ValueError("this should not happen")
             collection_name, template_name = popup.most_similar.split("::")
             template = globals.TemplateInfo().manager.get_template(collection_name, template_name)
@@ -414,7 +419,10 @@ class GraphWidget(FloatLayout):
 
             if argument_widget.state == "down":
                 self.activated_input_argument = argument_widget
-                globals.PipeInterface().instance.show_message("Set activate input argument to %s" % argument_widget.argument.name)
+                globals.PipeInterface().instance.show_message(
+                    "Set activate input argument to %s" %
+                    argument_widget.argument.template_arg.name
+                )
             elif argument_widget.state == "normal":
                 self.activated_input_argument = None
                 globals.PipeInterface().instance.show_message("Deactivated argument")
@@ -425,7 +433,10 @@ class GraphWidget(FloatLayout):
 
             if argument_widget.state == "down":
                 self.activated_output_argument = argument_widget
-                globals.PipeInterface().instance.show_message("Set activate output argument to %s" % argument_widget.argument.name)
+                globals.PipeInterface().instance.show_message(
+                    "Set activate output argument to %s" %
+                    argument_widget.argument.template_arg.name
+                )
             elif argument_widget.state == "normal":
                 self.activated_output_argument = None
                 globals.PipeInterface().instance.show_message("Deactivated argument")
@@ -470,8 +481,8 @@ class GraphWidget(FloatLayout):
 
             globals.PipeInterface().instance.show_message(
                 "New edge created from %s to %s" % (
-                    self.activated_output_argument.argument.name,
-                    self.activated_input_argument.argument.name
+                    self.activated_output_argument.argument.template_arg.name,
+                    self.activated_input_argument.argument.template_arg.name
                 )
             )
 

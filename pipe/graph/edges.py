@@ -9,17 +9,17 @@ class Edge:
     def __str__(self):
         return "%s.%s-%s.%s" % (
             self.argument_from.get_node().template.name,
-            self.argument_from.name,
+            self.argument_from.template_arg.name,
             self.argument_to.get_node().template.name,
-            self.argument_to.name
+            self.argument_to.template_arg.name
         )
 
     def as_json(self):
         return {
             "node_id_from": self.argument_from.get_node().get_id(),
-            "arg_from_name": self.argument_from.name,
+            "arg_from_name": self.argument_from.template_arg.name,
             "node_id_to": self.argument_to.get_node().get_id(),
-            "arg_to_name": self.argument_to.name,
+            "arg_to_name": self.argument_to.template_arg.name,
         }
 
     def disconnect(self):

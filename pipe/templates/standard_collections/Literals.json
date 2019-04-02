@@ -6,11 +6,11 @@
             "collection_name": "Literals",
             "documentation": "Converts the input value to a boolean literal.",
             "inputs": [
-                "a"
+                {"name": "a", "default": null}
             ],
             "name": "Boolean",
             "outputs": [
-                "o"
+                {"name": "o"}
             ]
         },
         "Number": {
@@ -18,11 +18,11 @@
             "collection_name": "Literals",
             "documentation": "Converts the input value to a number literal.",
             "inputs": [
-                "a"
+                {"name": "a", "default": 0}
             ],
             "name": "Number",
             "outputs": [
-                "o"
+                {"name": "o"}
             ]
         },
         "String": {
@@ -30,11 +30,11 @@
             "collection_name": "Literals",
             "documentation": "Converts the input value to a string.",
             "inputs": [
-                "a"
+                {"name": "a", "default": null}
             ],
             "name": "String",
             "outputs": [
-                "o"
+                {"name": "o"}
             ]
         }
         

@@ -1,4 +1,10 @@
 #!/usr/local/bin/python3
+import os
+import sys
+import tempfile
+import subprocess
+from threading import Timer
+
 import kivy
 from kivy.app import App
 from kivy.factory import Factory
@@ -15,17 +21,67 @@ kivy.require("1.10.1")
 Factory.register("GraphWidget", graph_widgets.GraphWidget)
 
 
+class TemporaryEditor:
+
+    update_time_in_seconds = 0.01
+
+    def __init__(self, node):
+        self.node = node
+        self.editor = os.environ.get('EDITOR', 'vim')
+        self.original = node.template.code
+        self.file = None
+
+        self.timer = None
+        self.is_running = False
+
+        self.write_to_new()
+        self.open()
+        self.start_auto()
+
+    def write_to_new(self):
+        self.file = tempfile.NamedTemporaryFile(prefix="%s_____" % str(self.node), suffix=".py")
+        self.file.write(bytes(self.original, encoding='utf8'))
+        self.file.flush()
+
+    def open(self):
+        subprocess.call([self.editor, self.file.name])
+
+    def apply_to_node(self):
+        self.file.seek(0)
+        self.node.template.code = self.file.read()
+        globals.PipeInterface().instance.update_code_input()
+
+    def run_auto(self):
+        self.is_running = False
+        self.start_auto()
+        self.apply_to_node()
+
+    def start_auto(self):
+        if not self.is_running:
+            self.timer = Timer(self.update_time_in_seconds, self.run_auto)
+            self.timer.start()
+            self.is_running = True
+
+    def stop_auto(self):
+        self.timer.cancel()
+        self.is_running = False
+
+    def finish(self):
+        self.stop_auto()
+        self.file.close()
+
+
 class Desktop(FloatLayout):
 
     def __init__(self, **kwargs):
         super(Desktop, self).__init__(**kwargs)
         self.operations = PipeBackend()
         self.graph_buttons = {}
-        globals.PipeInterface().set_instance(self)
+        self.temporary_editor = None
 
-        graph = self.operations.graphs.new_graph("Main")
-        self.add_button_for_graph(graph)
-        self.ids.editor.setup_from_graph(graph)
+        globals.PipeInterface().set_instance(self)
+        self.reset_project()
+        self.show_message("Project opened successfully")
 
     def _set_status(self, message, color):
         bar = self.ids.status_bar
@@ -48,7 +104,7 @@ class Desktop(FloatLayout):
             print("  ", m)
 
     def show_execution(self, message):
-        self._set_status("Execution: " + message.replace("\r\n", " \\\\ ").replace("\n", " \\\\ "), Colors.Execution)
+        self._set_status(message.replace("\r\n", " \\\\ ").replace("\n", " \\\\ "), Colors.Execution)
 
     def setup_from_graph(self, graph):
         self.ids.editor.setup_from_graph(graph)
@@ -97,33 +153,28 @@ class Desktop(FloatLayout):
         self.setup_from_graph(graph)
         self.show_message("%s deleted" % name)
 
-    def open_project(self):
-        def fn(pop):
-            project_directory = pop.ids.filechooser.path
-            if not project_directory:
-                self.show_message("Import cancelled (no directory specified)")
-            self.remove_buttons_for_graph()
-            self.operations.open_project(project_directory)
-            for graph in self.operations.list_graphs(): self.add_button_for_graph(graph)
-            main_graph = globals.GraphInfo().manager.get_by_name("Main")
-            self.ids.editor.setup_from_graph(main_graph)
-            self.show_message("Project opened successfully")
+    def reset_project(self):
+        project_directory = globals.Info().recall("project_directory")
 
-        popup = Factory.OpenProjectPopup()
-        popup.bind(on_dismiss=fn)
-        popup.open()
+        # Create project if not exist yet
+        if not os.path.isdir(project_directory):
+            graph = self.operations.graphs.new_graph("Main")
+            self.add_button_for_graph(graph)
+            self.ids.editor.setup_from_graph(graph)
+            self.save_project()
+
+        self.remove_buttons_for_graph()
+        self.operations.reset_project(project_directory)
+        for graph in self.operations.list_graphs():
+            self.add_button_for_graph(graph)
+        main_graph = globals.GraphInfo().manager.get_by_name("Main")
+        self.ids.editor.setup_from_graph(main_graph)
+        self.show_message("Project reset successfully")
 
     def save_project(self):
-        def fn(pop):
-            project_directory = pop.ids.filechooser.path
-            if not project_directory:
-                self.show_message("Export cancelled (no directory specified)")
-                return
-            self.operations.save_project(project_directory)
-            self.show_message("Project saved successfully")
-        popup = Factory.SaveProjectPopup()
-        popup.bind(on_dismiss=fn)
-        popup.open()
+        project_directory = globals.Info().recall("project_directory")
+        self.operations.save_project(project_directory)
+        self.show_message("Project saved successfully")
 
     def assemble_and_execute(self):
         try:
@@ -197,6 +248,17 @@ class Desktop(FloatLayout):
         popup.bind(on_dismiss=fn)
         popup.open()
 
+    # From https://stackoverflow.com/questions/6309587/call-up-an-editor-vim-from-a-python-script
+    def open_node_code_externally(self):
+        if self.ids.editor.selected_node_widget is None:
+            self.show_error("No node selected")
+            return
+        self.temporary_editor = TemporaryEditor(self.ids.editor.selected_node_widget.node)
+
+    def update_code_input(self):
+        self.ids.code_panel.text = self.ids.editor.selected_node_widget.node.template.code if \
+            self.ids.editor.selected_node_widget else "nothing selected"
+
     def on_touch_down(self, touch):
         if super(Desktop, self).on_touch_down(touch):
             return True
@@ -230,4 +292,5 @@ class PipeApp(App):
 
 
 if __name__ == '__main__':
+    globals.Info().record("project_directory", sys.argv[1])
     PipeApp().run()

@@ -1,21 +1,26 @@
-from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.properties import ListProperty
 
 import config
-import globals
 
 
 class ArgumentWidget(ToggleButton):
 
     argument = ObjectProperty()
+    _instances = []
+
+    @classmethod
+    def all_update_color(cls):
+        for i in cls._instances:
+            i.update_color()
 
     def __init__(self, **kwargs):
         self.background_color = config.Colors.Argument.as_list()
         super(ArgumentWidget, self).__init__(**kwargs)
         self.argument = None
+        self._instances.append(self)
 
     def update_color(self):
         if self.argument.is_connected():
@@ -31,9 +36,13 @@ class ArgumentWidget(ToggleButton):
         self.argument.alias = alias
         self.text = self.argument.alias
 
+    def reset_default_value(self):
+        self.argument.reset_default_value()
+        self.all_update_color()
+
     def update_default_value(self, value):
         self.argument.set_default_value(value)
-        self.update_color()
+        self.all_update_color()
 
     def update_evaluated_value(self, value):
         self.argument.set_evaluated_value(value)
@@ -81,12 +90,12 @@ class ArgumentSetWidget(BoxLayout):
 
     def get_argument_by_name(self, name):
         for arg in self.args.values():
-            if arg.argument.name == name:
+            if arg.argument.template_arg.name == name:
                 return arg
         raise IndexError(
             "%s was not found in %s" % (
                 name,
-                str([arg.argument.name for arg in self.args.values()])
+                str([arg.argument.template_arg.name for arg in self.args.values()])
             )
         )
 

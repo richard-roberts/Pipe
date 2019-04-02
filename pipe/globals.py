@@ -1,3 +1,17 @@
+class Info:
+    __shared_state = {
+    }
+
+    def __init__(self):
+        self.__dict__ = self.__shared_state
+
+    def record(self, name, value):
+        self.__shared_state[name] = value
+
+    def recall(self, name):
+        return self.__shared_state[name]
+
+
 class GraphWidget:
     __shared_state = {
         "instance": None

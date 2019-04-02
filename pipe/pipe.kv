@@ -76,7 +76,6 @@
                     text: "EX"
                     on_release: root.evaluate_upward()
 
-
         OutputArgumentSetWidget:
             size_hint: 0.1, 1
             id: output_widgets
@@ -326,18 +325,26 @@
                 orientation: "vertical"
                 size_hint: 0.25, 1
                 id: input_names
+                Label:
+                    text: "Name"
             BoxLayout:
                 orientation: "vertical"
                 size_hint: 0.25, 1
                 id: input_aliases
+                Label:
+                    text: "Alias"
             BoxLayout:
                 orientation: "vertical"
                 size_hint: 0.25, 1
                 id: input_defaults
+                Label:
+                    text: "Default"
             BoxLayout:
                 orientation: "vertical"
                 size_hint: 0.25, 1
                 id: input_values
+                Label:
+                    text: "Eval"
 
         Label:
             text: "Output Arguments"
@@ -351,18 +358,20 @@
                 orientation: "vertical"
                 size_hint: 0.33, 1
                 id: output_names
+                Label:
+                    text: "Name"
             BoxLayout:
                 orientation: "vertical"
                 size_hint: 0.33, 1
                 id: output_aliases
-            BoxLayout:
-                orientation: "vertical"
-                size_hint: 0.33, 1
-                id: output_defaults
+                Label:
+                    text: "Alias"
             BoxLayout:
                 orientation: "vertical"
                 size_hint: 0.25, 1
                 id: output_values
+                Label:
+                    text: "Eval"
 
 
 <NewGraphPopup@Popup>:
@@ -425,6 +434,7 @@
 <OpenProjectPopup@Popup>:
     size_hint: 0.7, 0.7
     title: 'Open Project'
+    used: False
 
     BoxLayout:
         size: root.size
@@ -439,10 +449,12 @@
 
         BoxLayout:
             size_hint: 1, 0.1
+            orientation: "horizontal"
 
             Button:
                 text: "Open Project"
-                on_release: root.dismiss()
+                on_release: root.used = True; root.dismiss()
+
 
 <SaveProjectPopup@Popup>:
     size_hint: 0.7, 0.7
@@ -605,19 +617,28 @@
                                 pos: self.pos
                                 size: self.size
 
-                    CodeInput:
-                        id: code_panel
+                    BoxLayout:
                         size_hint: 1, 0.65
-                        text: root.ids.editor.selected_node_widget.node.template.code if root.ids.editor.selected_node_widget else "nothing selected"
-                        on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.code = self.text
+                        orientation: "vertical"
+
+                        CodeInput:
+                            id: code_panel
+                            size_hint: 1, 0.95
+                            text: root.ids.editor.selected_node_widget.node.template.code if root.ids.editor.selected_node_widget else "nothing selected"
+                            on_text: if root.ids.editor.selected_node_widget: root.ids.editor.selected_node_widget.node.template.code = self.text
+
+                        Button:
+                            size_hint: 1, 0.05
+                            text: "Open in Editor"
+                            on_release: root.open_node_code_externally()
 
                     GridLayout:
                         cols: 2
                         size_hint: 1, 0.1
 
                         Button:
-                            text: 'Open'
-                            on_release: root.open_project()
+                            text: 'Reset'
+                            on_release: root.reset_project()
                         Button:
                             text: 'Save'
                             on_release: root.save_project()

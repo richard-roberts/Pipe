@@ -3,13 +3,15 @@ import json
 
 class Argument:
 
-    def __init__(self, node, name):
+    def __init__(self, node, template_arg):
         self.node = node
-        self.name = name
-        self.alias = name
+        self.template_arg = template_arg
+        self.alias = self.template_arg.name
         self.edges = {}
-        self.default_value = json.dumps(None)
-        self.evaluated_value = json.dumps(None)
+        if template_arg.has_default():
+            self.evaluated_value = self.template_arg.get_default()
+        else:
+            self.evaluated_value = None
 
     def __str__(self):
         return self.pretty()
@@ -27,12 +29,12 @@ class Argument:
         return len(self.edges) > 0
 
     def set_default_value(self, value):
-        self.default_value = value
+        self.template_arg.set_default(value)
         if self.evaluated_value is None or self.evaluated_value == json.dumps(None):
-            self.set_evaluated_value(self.default_value)
+            self.set_evaluated_value(self.template_arg.get_default())
 
     def reset_default_value(self):
-        self.default_value = None
+        self.template_arg.set_default(None)
 
     def get_evaluated_value(self):
         return self.evaluated_value
@@ -48,7 +50,10 @@ class Argument:
             edge.argument_to.set_input_value(value)
 
     def has_default_value(self):
-        return self.default_value is not None
+        return self.template_arg.has_default()
+
+    def get_default_value(self):
+        return self.template_arg.get_default()
 
     def get_connected(self):
         return self.edges.values()
@@ -60,29 +65,28 @@ class Argument:
         return self.edges[first_key]
 
     def pretty(self):
-        return "%s.%s" % (self.get_node().template.name, self.name)
+        return "%s.%s" % (self.get_node().template.name, self.alias)
 
     def needs_input(self):
-        return self.default_value is None and len(self.edges) == 0
+        return self.template_arg.get_default() is None and len(self.edges) == 0
 
     def code_name(self):
-        return "%s_%s_%s" % (self.get_node().template.name, self.name, self.get_node().get_id())
+        return "%s_%s_%s" % (self.get_node().template.name, self.template_arg.name, self.get_node().get_id())
 
     def as_json(self):
         return {
-            "name": self.name,
+            "template_arg": self.template_arg.name,
             "alias": self.alias,
-            "default": self.default_value,
             "eval_value": self.evaluated_value
         }
 
     @staticmethod
     def from_json(node, data):
+        template_arg = node.template.get_arg_by_name(data["template_arg"])
         arg = Argument(
             node,
-            data["name"]
+            template_arg
         )
         arg.alias = data["alias"]
-        arg.set_default_value(data["default"])
         arg.set_evaluated_value(data["eval_value"])
         return arg

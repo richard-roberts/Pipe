@@ -20,7 +20,7 @@ class PipeBackend:
         self.graphs.clear()
         self.templates.clear()
 
-    def open_project(self, project_directory):
+    def reset_project(self, project_directory):
         templates_directory = os.path.join(project_directory, "templates")
         graphs_directory = os.path.join(project_directory, "graphs")
         self.clear()
