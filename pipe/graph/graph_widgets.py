@@ -161,6 +161,9 @@ class GraphWidget(FloatLayout):
 
     def edit_node(self, node_widget):
 
+        def update_node_alias(widget):
+            node_widget.set_alias(widget.text)
+
         def create_on_alias_edit(arg_widget):
             def fn(widget):
                 arg_widget.update_alias(widget.text)
@@ -180,12 +183,14 @@ class GraphWidget(FloatLayout):
             return fn
 
         popup = Factory.EditNodePopup()
+        popup.ids.alias_edit.text = node_widget.get_alias()
+        popup.ids.alias_edit.bind(on_text_validate=update_node_alias)
 
         for arg_widget in node_widget.input_widgets.list_args_widgets():
             name_label = Label(text=arg_widget.get_name())
             popup.ids.input_names.add_widget(name_label)
             #
-            alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
+            alias_edit = TextInput(text=arg_widget.argument.get_alias(), multiline=False)
             alias_edit.bind(on_text_validate=create_on_alias_edit(arg_widget))
             popup.ids.input_aliases.add_widget(alias_edit)
             #
@@ -201,7 +206,7 @@ class GraphWidget(FloatLayout):
             name_label = Label(text=arg_widget.get_name())
             popup.ids.output_names.add_widget(name_label)
             #
-            alias_edit = TextInput(text=arg_widget.argument.alias, multiline=False)
+            alias_edit = TextInput(text=arg_widget.argument.get_alias(), multiline=False)
             alias_edit.bind(on_text_validate=create_on_alias_edit(arg_widget))
             popup.ids.output_aliases.add_widget(alias_edit)
             #

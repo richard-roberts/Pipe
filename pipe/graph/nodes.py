@@ -7,6 +7,7 @@ class Node(object):
     def __init__(self, template, position, node_id=None, setup_args=True):
         self.node_id = id(self) if node_id is None else node_id
         self.template = template
+        self.alias = self.template.name
         self.position = position
         self.execution_index = -1
         self.inputs = {}
@@ -15,7 +16,13 @@ class Node(object):
             self.update_args_from_template()
 
     def __str__(self):
-        return "%s[%s]" % (self.template.name, str(self.node_id))
+        return "%s_%s" % (self.template.name, str(self.node_id))
+
+    def get_alias(self):
+        return self.alias
+
+    def set_alias(self, alias):
+        self.alias = alias
 
     def update_args_from_template(self):
         self.inputs = {}
@@ -111,6 +118,7 @@ class Node(object):
     def as_json(self):
         return {
             "node_id": self.node_id,
+            "alias": self.alias,
             "template": self.template.get_long_name(),
             "position": self.position,
             "inputs": [arg.as_json() for arg in self.inputs.values()],
@@ -132,6 +140,7 @@ class Node(object):
             node_id=data["node_id"],
             setup_args=False
         )
+        node.alias = data["alias"]
         node.execution_index = data["execution_index"]
         for arg_data in data["inputs"]:
             arg = arguments.Argument.from_json(node, arg_data)

@@ -1,4 +1,4 @@
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.togglebutton import ToggleButton
 from kivy.properties import ListProperty
@@ -35,9 +35,12 @@ class ArgumentWidget(ToggleButton):
                 self.background_color = config.Colors.Argument.as_list()
         self.canvas.ask_update()
 
+    def get_alias(self):
+        return self.argument.get_alias()
+
     def update_alias(self, alias):
-        self.argument.alias = alias
-        self.text = self.argument.alias
+        self.text = alias
+        self.argument.set_alias(alias)
 
     def reset_default_value(self):
         self.argument.reset_default_value()
@@ -51,11 +54,11 @@ class ArgumentWidget(ToggleButton):
         self.argument.set_evaluated_value(value)
 
     def get_evaluated_value(self):
-        return self.argument.get_evaluate_value()
+        return self.argument.get_evaluated_value()
 
     def setup(self, argument):
         self.argument = argument
-        self.text = argument.alias
+        self.text = argument.get_alias()
         self.update_color()
 
     def on_state(self, widget, value):

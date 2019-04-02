@@ -23,6 +23,12 @@ class NodeWidget(BoxLayout):
         super(NodeWidget, self).__init__(**kwargs)
         self.node = None
 
+    def get_alias(self):
+        return self.node.get_alias()
+
+    def set_alias(self, alias):
+        self.node.set_alias(alias)
+
     def pretty(self):
         return "NodeWidget[%s]" % self.node.template.name
 

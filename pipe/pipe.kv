@@ -3,7 +3,6 @@
 #:import Globals globals
 
 <ArgumentWidget>:
-    text: "<missing>" if root.argument is None else root.argument.alias
 
     canvas:
         Color:
@@ -52,7 +51,7 @@
 
             Label:
                 size_hint: 1, 0.5
-                text: root.node.template.name if root.node is not None else "Untitled"
+                text: root.node.alias if root.node is not None else "Untitled"
 
             GridLayout:
                 orientation: "horizontal"
@@ -312,6 +311,11 @@
         size_hint: 0.9, 0.9
         pos: root.pos
         orientation: "vertical"
+
+        TextInput:
+            size_hint: 1, 0.1
+            id: alias_edit
+            multiline: False
 
         Label:
             text: "Input Arguments"

@@ -114,10 +114,13 @@ class Defaults:
             body += "    def __init__(%s):\n" % input_arguments_str
             if len(output_arguments) == 0:
                 body += "        import %s as graph\n" % graph_name
-                body += "        graph.execute(%s)\n" % ", ".join(input_arguments_str)
+                arg_strs = ""
+                for arg in input_arguments:
+                    arg_strs += "%s=%s," % (arg.get_name(), arg.get_name())
+                body += "        graph.execute(%s)\n" % arg_strs[:-1]
             else:
                 body += "        import %s as graph\n" % graph_name
-                body += "        result = graph.execute(%s)\n" % ", ".join(input_arguments_str)
+                body += "        result = graph.execute(%s)\n" % input_arguments_str
                 for output_var in output_arguments:
                     body += "        self.%s = result[\"%s\"]\n" % (output_var.get_name(), output_var.get_name())
 

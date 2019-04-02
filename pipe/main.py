@@ -41,18 +41,22 @@ class Desktop(FloatLayout):
         bar.text = "    %s" % message
 
     def show_message(self, message):
+        print("Status: " + message)
         self._set_status("Status: " + message, Colors.Message)
 
     def show_warning(self, message):
+        print("Warning: " + message)
         self._set_status("Warning: " + message, Colors.Warning)
 
     def show_error(self, message):
+        print("Error: " + message)
         self._set_status("Error: " + message, Colors.Error)
         print("ERROR:")
         for m in message.split("\\n"):
             print("  ", m)
 
     def show_execution(self, message):
+        print("Execution: " + message)
         self._set_status(message.replace("\r\n", " \\\\ ").replace("\n", " \\\\ "), Colors.Execution)
 
     def setup_from_graph(self, graph):

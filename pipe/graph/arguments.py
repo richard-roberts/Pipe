@@ -16,11 +16,17 @@ class Argument:
     def __str__(self):
         return self.pretty()
 
+    def get_alias(self):
+        return self.alias
+
+    def set_alias(self, alias):
+        self.alias = alias
+
     def get_name(self):
         return self.template_arg.name
 
     def get_name_with_id(self):
-        return "%s[%s]" % (self.get_name(), str(self.node))
+        return "%s_%s" % (self.get_name(), str(self.node))
 
     def get_name_with_default(self):
         return self.template_arg.get_name_with_default()

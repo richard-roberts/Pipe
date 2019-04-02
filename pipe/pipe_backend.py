@@ -70,7 +70,7 @@ class PipeBackend:
         try:
             result = subprocess.check_output(command, shell=True)
         except subprocess.CalledProcessError as e:
-            shutil.rmtree(temporary)
+            # shutil.rmtree(temporary)
             raise ValueError(str(e))
 
         shutil.rmtree(temporary)

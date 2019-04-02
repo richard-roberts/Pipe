@@ -97,18 +97,22 @@ class Assembler:
         assembled_str += "    if len(sys.argv) != %d:\n" % (n + 1)
 
         inputs_str = ""
+
+        inputs_required = []
         for node in all_nodes:
             for input_arg in node.list_inputs_needing_value():
-                inputs_str += "               %s,\\n\\\n" % input_arg.code_name()
+                inputs_required.append(input_arg)
+
+        for input_arg in inputs_required:
+            inputs_str += "               %s,\\n\\\n" % input_arg.code_name()
         assembled_str += "        print(\"Error: not enough inputs given, needed:\\n\\\n%s\")\n" % inputs_str[:-2]
         assembled_str += "        raise ValueError(\"Failed to parse arguments\")\n"
 
         argument_string = ""
         ix = 1
-        for node in all_nodes:
-            for input_arg in node.list_inputs_needing_value():
-                argument_string += ("sys.argv[%d], " % ix)
-                ix += 1
+        for input_arg in inputs_required:
+            argument_string += ("%s=sys.argv[%d], " % (input_arg.code_name(), ix))
+            ix += 1
         assembled_str += "    execute(%s)" % argument_string[:-2] # [:-2] to trim last comma.
         assembled_str += "\n"
 
