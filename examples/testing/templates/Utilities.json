@@ -6,7 +6,10 @@
             "collection_name": "Utilities",
             "documentation": "Prints the given input.",
             "inputs": [
-                "a"
+                {
+                    "default": null,
+                    "name": "a"
+                }
             ],
             "name": "Log",
             "outputs": []
@@ -16,8 +19,14 @@
             "collection_name": "Utilities",
             "documentation": "Prints the given inputs.",
             "inputs": [
-                "a",
-                "b"
+                {
+                    "default": null,
+                    "name": "a"
+                },
+                {
+                    "default": null,
+                    "name": "b"
+                }
             ],
             "name": "Log2",
             "outputs": []
@@ -27,9 +36,18 @@
             "collection_name": "Utilities",
             "documentation": "Prints the given inputs.",
             "inputs": [
-                "a",
-                "b",
-                "c"
+                {
+                    "default": null,
+                    "name": "a"
+                },
+                {
+                    "default": null,
+                    "name": "b"
+                },
+                {
+                    "default": null,
+                    "name": "c"
+                }
             ],
             "name": "Log3",
             "outputs": []

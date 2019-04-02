@@ -1,30 +1,25 @@
 {
     "name": "Math",
     "templates": {
-        "Add": {
-            "code": "class Add:\n    def __init__(self, a, b):\n        self.o = a+ b\n",
-            "collection_name": "Math",
-            "documentation": "A description of the Add node's behavior.",
-            "inputs": [
-                "a",
-                "b"
-            ],
-            "name": "Add",
-            "outputs": [
-                "o"
-            ]
-        },
         "DotProduct": {
-            "code": "class DotProduct:\n    def __init__(self, a, b):\n        self.o = None\n",
+            "code": "class DotProduct:\n    def __init__(self, a, b):\n        self.o = sum([va * vb for (va, vb) in zip(a, b)])\n",
             "collection_name": "Math",
-            "documentation": "A description of the DotProduct node's behavior.",
+            "documentation": "Takes the dot product of two iterables.",
             "inputs": [
-                "a",
-                "b"
+                {
+                    "default": null,
+                    "name": "a"
+                },
+                {
+                    "default": null,
+                    "name": "b"
+                }
             ],
             "name": "DotProduct",
             "outputs": [
-                "o"
+                {
+                    "name": "o"
+                }
             ]
         }
     }

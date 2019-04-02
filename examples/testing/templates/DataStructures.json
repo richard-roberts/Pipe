@@ -2,16 +2,24 @@
     "name": "DataStructures",
     "templates": {
         "Vector2": {
-            "code": "class Vec3:\n    def __init__(self, a, b):\n        self.o = (a, b, c)\n",
+            "code": "class Vector2:\n    def __init__(self, a, b):\n        self.o = [a, b]\n",
             "collection_name": "DataStructures",
             "documentation": "Makes a vector with two components.",
             "inputs": [
-                "a",
-                "b"
+                {
+                    "default": 0,
+                    "name": "a"
+                },
+                {
+                    "default": 0,
+                    "name": "b"
+                }
             ],
             "name": "Vector2",
             "outputs": [
-                "o"
+                {
+                    "name": "o"
+                }
             ]
         },
         "Vector3": {
@@ -19,13 +27,24 @@
             "collection_name": "DataStructures",
             "documentation": "Makes a vector with three components.",
             "inputs": [
-                "a",
-                "b",
-                "c"
+                {
+                    "default": 0,
+                    "name": "a"
+                },
+                {
+                    "default": 0,
+                    "name": "b"
+                },
+                {
+                    "default": 0,
+                    "name": "c"
+                }
             ],
             "name": "Vector3",
             "outputs": [
-                "o"
+                {
+                    "name": "o"
+                }
             ]
         }
     }
