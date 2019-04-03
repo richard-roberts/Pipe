@@ -1,0 +1,28 @@
+[
+  {
+    "name" :  "Export JSON",
+    "args" : [ { "name" : "filepath" } ],
+    "outs" : [ { "name" : "output" } ],
+    "code" : [
+      "import json",
+      "f = open(filepath, 'r')",
+      "output = json.loads(f.read())",
+      "f.close()"
+    ]
+  },
+  {
+    "name" :  "Export CSV",
+    "args" : [ { "name" : "filepath" } ],
+    "outs" : [ { "name" : "output" } ],
+    "code" : [
+      "f = open(filepath, 'r')",
+      "lines = f.readlines()",
+      "f.close()",
+      "",
+      "output = []",
+      "for line in lines:",
+      "    parts = line.split(',')",
+      ""
+    ]
+  }
+]

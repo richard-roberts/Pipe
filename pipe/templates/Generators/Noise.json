@@ -1,0 +1,22 @@
+[
+  {
+    "name" :  "Random",
+    "args" : [ { "name": "seed" },{ "name" : "n" } ],
+    "outs" : [ { "name" : "samples" } ],
+    "code" : [
+      "import random",
+      "random.seed(seed)",
+      "samples = [random.random() for _ in range(n)]"
+    ]
+  },
+  {
+    "name" :  "Gaussian Random",
+    "args" : [ { "name": "seed" },{ "name": "mean" }, { "name": "deviation" }, { "name" : "n" } ],
+    "outs" : [ { "name" : "samples" } ],
+    "code" : [
+      "import random",
+      "random.seed(seed)",
+      "samples = [random.gauss(mean, deviation) for _ in range(n)]"
+    ]
+  }
+]

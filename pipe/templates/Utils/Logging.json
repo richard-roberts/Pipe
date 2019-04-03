@@ -1,0 +1,10 @@
+[
+  {
+    "name" :  "Log",
+    "args" : [ { "name" : "x" } ],
+    "outs" : [ ],
+    "code" : [
+      "print(x)"
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "name" :  "Export JSON",
+    "args" : [ { "name" : "filepath" }, { "name" : "data" } ],
+    "outs" : [ ],
+    "code" : [
+      "import json",
+      "f = open(filepath, 'w')",
+      "f.write(json.dumps(data, indent=4, separators=(',', ': ')))",
+      "f.close()"
+    ]
+  },
+  {
+    "name" :  "Export CSV",
+    "args" : [ { "name" : "filepath" }, { "name" : "data" } ],
+    "outs" : [ ],
+    "code" : [
+      "# Header",
+      "header = ','.join(data.keys())",
+      "",
+      "# Body",
+      "body = ''",
+      "first_key = list(data.keys())[0]",
+      "n = len(data[first_key])",
+      "for i in range(n):",
+      "    line = ''",
+      "    for key in data.keys():",
+      "        value = '%s,' % data[key][i]",
+      "        line += value",
+      "    body += '%s\\n' % line[:-1]",
+      "",
+      "f = open(filepath, 'w')",
+      "f.write('%s\\n%s\\n' % (header, body))",
+      "f.close()"
+    ]
+  }
+]

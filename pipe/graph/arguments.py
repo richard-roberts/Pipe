@@ -24,3 +24,7 @@ class DefaultArgument:
 
     def get_value(self):
         return self.default_value
+
+
+def from_json(data):
+    return BasicArgument(data["name"])

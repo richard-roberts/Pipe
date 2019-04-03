@@ -9,3 +9,7 @@ class BasicOutput:
 
     def get_name(self):
         return self.name
+
+
+def from_json(data):
+    return BasicOutput(data["name"])

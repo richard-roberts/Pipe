@@ -75,3 +75,7 @@ class BasicRoutine:
         self.results_file.seek(0)
         content = self.results_file.read().decode()
         return json.loads(content)
+
+
+def from_json(data):
+    return BasicRoutine(*data)
