@@ -10,9 +10,7 @@ class BasicRoutine:
         self.expressions = expressions
         self.results_file = tempfile.NamedTemporaryFile()
 
-    def execute_and_get_standard_output_and_error(self, arguments, results, argument_data=None):
-        execution_file = None
-
+    def generate_code(self, arguments, results, argument_data=None):
         def set_header():
             content = "# Header\n"
             content += "import json\n"
@@ -46,13 +44,18 @@ class BasicRoutine:
             content += "}\n"
             content += "\n"
             content += "f = open('%s', 'w')\n" % self.results_file.name
-            content += "f.write(json.dumps(result))\n"
+            content += "f.write(json.dumps(result, indent=4, separators=(',', ': ')))\n"
             content += "f.close()\n"
             content += "\n"
             return content
 
+        return set_header() + set_arguments() + routine_part() + results_part()
+
+    def execute_and_get_standard_output_and_error(self, arguments, results, argument_data=None):
+        execution_file = None
+
         def write_execution_file():
-            content = set_header() + set_arguments() + routine_part() + results_part()
+            content = self.generate_code(arguments, results, argument_data=argument_data)
             file = tempfile.NamedTemporaryFile()
             file.write(bytes(content, encoding="utf-8"))
             file.seek(0)
@@ -62,7 +65,7 @@ class BasicRoutine:
             process_result = subprocess.Popen(
                 ['python3', execution_file.name],
                 stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
+                stderr=subprocess.PIPE,
                 env=os.environ.copy()
             )
             output, error = process_result.communicate()
@@ -73,7 +76,7 @@ class BasicRoutine:
 
     def read_results_file(self):
         self.results_file.seek(0)
-        content = self.results_file.read().decode()
+        content = self.results_file.read().decode(encoding="utf-8")
         return json.loads(content)
 
 

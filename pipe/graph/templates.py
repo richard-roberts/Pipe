@@ -24,13 +24,24 @@ class BasicTemplate:
     def list_arguments(self):
         return [arg.get_name() for arg in self.args]
 
-    def execute(self, argument_data=None):
-        self.routine.execute_and_get_standard_output_and_error(
+    def execute_to_get_log_and_results(self, argument_data=None):
+        log, error = self.routine.execute_and_get_standard_output_and_error(
             self.args,
             self.outs,
             argument_data=argument_data
         )
-        return self.routine.read_results_file()
+
+        if error:
+            error_message = "\n  %s's execution failed:\n" % str(self)
+            for line in error.decode().split("\n"):
+                error_message += "    %s\n" % line
+            code = self.routine.generate_code(self.args, self.outs, argument_data=argument_data)
+            for item in enumerate(code.split("\n")):
+                ix, line = item
+                error_message += "        %02d. %s\n" % (ix + 1, line)
+            raise ValueError(error_message)
+
+        return log.decode(), self.routine.read_results_file()
 
 
 def from_json(data):

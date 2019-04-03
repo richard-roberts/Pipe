@@ -1,4 +1,6 @@
 from unittest import TestCase
+import json
+import tempfile
 
 from pipe.graph import arguments
 from pipe.graph import outputs
@@ -6,6 +8,7 @@ from pipe.graph import routines
 from pipe.graph import templates
 from pipe.graph import nodes
 from pipe.graph import graphs
+from pipe.graph import library
 
 
 class TestArguments(TestCase):
@@ -88,7 +91,7 @@ class TestTemplates(TestCase):
             self.assertListEqual(names, ["x", "y"])
 
         def test_execution():
-            result = template.execute()
+            _, result = template.execute_to_get_log_and_results()
             self.assertEqual(result["ratio"], 10)
 
         test_template_name()
@@ -132,3 +135,104 @@ class TestGraph(TestCase):
         graph.execute_to_root(square_node)
         self.assertEqual(sum_node.read_output("z"), 3)
         self.assertEqual(square_node.read_output("xx"), 9)
+
+
+class TestLibrary(TestCase):
+
+    def test_export_and_import_to_json(self):
+        lib = library.Library()
+        graph = graphs.BasicGraph()
+
+        expected = {
+            "name": "Dumbledore",
+            "age": 400
+        }
+
+        file = tempfile.NamedTemporaryFile()
+
+        exporter = nodes.BasicNode(lib.get("FileSystem", "Exports", "Export JSON"))
+        exporter.set_argument("filepath", "'%s'" % file.name)
+        exporter.set_argument("data", expected)
+        graph.execute_to_root(exporter)
+
+        exporter = nodes.BasicNode(lib.get("FileSystem", "Imports", "Import JSON"))
+        exporter.set_argument("filepath", "'%s'" % file.name)
+        exporter.set_argument("data", expected)
+
+        logger = nodes.BasicNode(lib.get("Utils", "Logging", "Log"))
+        graph.connect(exporter, "output", logger, "x")
+        graph.execute_to_root(logger)
+
+        output = json.loads(logger.log.replace("'", "\""))
+        self.assertEqual(output["name"], expected["name"])
+        self.assertEqual(output["age"], expected["age"])
+
+    def test_export_and_import_to_csv(self):
+        lib = library.Library()
+        graph = graphs.BasicGraph()
+
+        expected = {
+            "x": [1.0, 2.0, 3.0, 4.0, 5.0],
+            "y": [0.5, 0.4, 0.3, 0.4, 0.5]
+        }
+
+        file = tempfile.NamedTemporaryFile()
+
+        exporter = nodes.BasicNode(lib.get("FileSystem", "Exports", "Export CSV"))
+        exporter.set_argument("filepath", "'%s'" % file.name)
+        exporter.set_argument("data", expected)
+        graph.execute_to_root(exporter)
+
+        exporter = nodes.BasicNode(lib.get("FileSystem", "Imports", "Import CSV"))
+        exporter.set_argument("filepath", "'%s'" % file.name)
+        exporter.set_argument("data", expected)
+
+        logger = nodes.BasicNode(lib.get("Utils", "Logging", "Log"))
+        graph.connect(exporter, "output", logger, "x")
+        graph.execute_to_root(logger)
+
+        output = json.loads(logger.log.replace("'", "\""))
+        self.assertListEqual(output["x"], expected["x"])
+        self.assertListEqual(output["y"], expected["y"])
+
+    def test_noise_sampling_and_formatting(self):
+        lib = library.Library()
+        graph = graphs.BasicGraph()
+
+        generate = nodes.BasicNode(lib.get("Generators", "Noise", "Gaussian Random"))
+        generate.set_argument("seed", 42)
+        generate.set_argument("mean", 0.0)
+        generate.set_argument("deviation", 10.0)
+        generate.set_argument("n", 5)
+
+        add_time = nodes.BasicNode(lib.get("Generators", "Sampling", "Insert Time Axis"))
+        add_time.set_argument("start", 1.0)
+        add_time.set_argument("inc", 1.0)
+        graph.connect(generate, "samples", add_time, "data")
+
+        formatter = nodes.BasicNode(lib.get("Formatting", "DataToMap", "N Dimensional"))
+        formatter.set_argument("dimensions", "['t', 'x']")
+        graph.connect(add_time, "samples", formatter, "data")
+
+        logger = nodes.BasicNode(lib.get("Utils", "Logging", "Log"))
+        graph.connect(formatter, "output", logger, "x")
+        graph.execute_to_root(logger)
+
+        expected = {
+            "t": [1.0, 2.0, 3.0, 4.0, 5.0],
+            "x": [-1.4409032957792836, -1.729036003315193, -1.1131586156766247, 7.019837250988631, -1.275882837828871]
+        }
+
+        output = json.loads(logger.log.replace("'", "\""))
+
+        # Check names are the same
+        self.assertListEqual(list(output.keys()), list(expected.keys()))
+
+        # Check lengths of each entry are the same
+        for key in expected.keys():
+            self.assertEqual(len(output[key]), len(expected[key]))
+
+        # Check all data is nearly the same (allow for some rounding error)
+        for key in expected.keys():
+            for i in range(len(expected[key])):
+                self.assertAlmostEqual(output[key][i], expected[key][i])

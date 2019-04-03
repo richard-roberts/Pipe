@@ -1,6 +1,6 @@
 [
   {
-    "name" :  "Export JSON",
+    "name" :  "Import JSON",
     "args" : [ { "name" : "filepath" } ],
     "outs" : [ { "name" : "output" } ],
     "code" : [
@@ -11,7 +11,7 @@
     ]
   },
   {
-    "name" :  "Export CSV",
+    "name" :  "Import CSV",
     "args" : [ { "name" : "filepath" } ],
     "outs" : [ { "name" : "output" } ],
     "code" : [
@@ -19,9 +19,19 @@
       "lines = f.readlines()",
       "f.close()",
       "",
-      "output = []",
-      "for line in lines:",
-      "    parts = line.split(',')",
+      "# Setup map",
+      "output = {}",
+      "keys = [p.strip() for p in lines[0].split(',')]",
+      "for key in keys:",
+      "    output[key] = []",
+      "",
+      "# Add data",
+      "for line in lines[1:]:",
+      "    if not line.strip(): continue",
+      "    parts = line.strip().split(',')",
+      "    for (ix, p) in enumerate(parts):",
+      "        value = float(p)",
+      "        output[keys[ix]].append(value)",
       ""
     ]
   }
