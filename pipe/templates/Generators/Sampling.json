@@ -1,0 +1,10 @@
+[
+  {
+    "name" :  "Insert Time Axis",
+    "args" : [ { "name": "data" }, { "name": "start" }, { "name": "inc" } ],
+    "outs" : [ { "name" : "samples" } ],
+    "code" : [
+      "samples = [[start + ix * inc, datum] for (ix, datum) in enumerate(data)]"
+    ]
+  }
+]
