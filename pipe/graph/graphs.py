@@ -15,8 +15,8 @@ class BasicGraph:
         self.nodes[node.node_id] = node
         return node
 
-    def new_node(self, path):
-        node = nodes.BasicNode(self.lib, path)
+    def new_node(self, path, x=0, y=0):
+        node = nodes.BasicNode(self.lib, path, x=x, y=y)
         self.nodes[id(node)] = node
         return node
 
