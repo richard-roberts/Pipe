@@ -1,13 +1,5 @@
-class Edge:
 
-    def __init__(self, node_from, arg_from_name, node_to, arg_to_name):
-        self.node_from = node_from
-        self.arg_from = arg_from_name
-        self.node_to = node_to
-        self.arg_to = arg_to_name
-
-    def output_connected_to(self, node, argument_name):
-        return self.node_to == node and self.arg_to == argument_name
+from pipe.graph import edges
 
 
 class BasicGraph:
@@ -16,7 +8,7 @@ class BasicGraph:
         self.edges = []
 
     def connect(self, node_from, arg_from, node_to, arg_to):
-        edge = Edge(
+        edge = edges.BasicDirectedEdge(
             node_from, arg_from,
             node_to, arg_to
         )
