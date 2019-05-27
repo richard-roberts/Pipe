@@ -1,84 +1,108 @@
 import os
+import stat
 import subprocess
 import tempfile
 import json
 
 
-class BasicRoutine:
+class Execution:
 
-    def __init__(self, *expressions):
-        self.expressions = expressions
-        self.results_file = tempfile.NamedTemporaryFile()
+    def __init__(self, command, args):
+        call = [command] + args
+        stdout = subprocess.PIPE
+        stderr = subprocess.PIPE
+        env = os.environ.copy()
+        process_result = subprocess.Popen(call, stdout=stdout, stderr=stderr, env=env)
+        self.output, self.error = process_result.communicate()
 
-    def generate_code(self, arguments, results, argument_data=None):
-        def set_header():
-            content = "# Header\n"
-            content += "import json\n"
-            content += "\n"
-            return content
+    def get_error(self):
+        return self.error.decode("utf-8")
+    
+    def raise_if_errored(self):
+        if self.error:
+            raise ValueError(self.get_error())
 
-        def set_arguments():
-            content = "# Arguments\n"
-            for argument in arguments:
-                if argument_data is not None and argument.get_name() in argument_data.keys():
-                    value = argument_data[argument.get_name()]
-                else:
-                    value = argument.get_value()
-                content += "%s=%s\n" % (argument.get_name(), value)
-            content += "\n"
-            return content
-
-        def routine_part():
-            content = "# Routine\n"
-            for expression in self.expressions:
-                content += "%s\n" % expression
-            content += "\n"
-            return content
-
-        def results_part():
-            content = "# Results\n"
-            content += "result = {\n"
-            for result in results:
-                key = result.get_name()
-                content += "    \"%s\": %s,\n" % (key, key)
-            content += "}\n"
-            content += "\n"
-            content += "f = open('%s', 'w')\n" % self.results_file.name
-            content += "f.write(json.dumps(result, indent=4, separators=(',', ': ')))\n"
-            content += "f.close()\n"
-            content += "\n"
-            return content
-
-        return set_header() + set_arguments() + routine_part() + results_part()
-
-    def execute_and_get_standard_output_and_error(self, arguments, results, argument_data=None):
-        execution_file = None
-
-        def write_execution_file():
-            content = self.generate_code(arguments, results, argument_data=argument_data)
-            file = tempfile.NamedTemporaryFile()
-            file.write(bytes(content, encoding="utf-8"))
-            file.seek(0)
-            return file
-
-        def execute_and_read_standard():
-            process_result = subprocess.Popen(
-                ['python3', execution_file.name],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env=os.environ.copy()
-            )
-            output, error = process_result.communicate()
-            return output, error
-
-        execution_file = write_execution_file()
-        return execute_and_read_standard()
-
-    def read_results_file(self):
-        self.results_file.seek(0)
-        content = self.results_file.read().decode(encoding="utf-8")
-        return json.loads(content)
+    def get_output(self):
+        return self.output.decode("utf-8")
 
 
-def from_json(data):
-    return BasicRoutine(*data)
+class AbstractRoutine(object):
+
+    def __init__(self, code, extension):
+        self.code = code
+        self.extension = extension
+        self.code_path = "./pipe_%s_code.%s" % (self.extension, self.extension) # TODO: make temporary file
+        self.last_execution = None
+
+    def write_code(self):
+        f = open(self.code_path, "w")
+        f.write(self.code)
+        f.close()
+
+    def prepare_executable(self):
+        pass
+
+    def compile(self):
+        self.prepare_executable()
+
+    def run_executable(self, arguments):
+        raise NotImplementedError("routines must implement `%s`" % self.run_executable.__name__)
+        
+    def run(self, arguments):
+        self.run_executable(arguments)
+        self.last_execution.raise_if_errored()
+        return self.last_execution.get_output()
+
+    def execute(self, arguments):
+        self.write_code()
+        self.compile()
+        return self.run(arguments)
+
+
+class CRoutine(AbstractRoutine):
+
+    def __init__(self, code):
+        super(CRoutine, self).__init__(code, "c")
+        self.exe_path = "./pipe_%s_exe" % (self.extension)
+
+    def prepare_executable(self):
+        e = Execution("gcc", [self.code_path, "-o", self.exe_path])
+        e.raise_if_errored()
+
+    def run_executable(self, arguments):
+        self.last_execution = Execution(self.exe_path, arguments)
+
+
+class PythonRoutine(AbstractRoutine):
+
+    def __init__(self, code):
+        super(PythonRoutine, self).__init__(code, "py")
+
+    def prepare_executable(self):
+        pass
+
+    def run_executable(self, arguments):
+        self.last_execution = Execution("python3", [self.code_path] + arguments)
+
+
+class RubyRoutine(AbstractRoutine):
+
+    def __init__(self, code):
+        super(RubyRoutine, self).__init__(code, "rb")
+
+    def prepare_executable(self):
+        pass
+
+    def run_executable(self, arguments):
+        self.last_execution = Execution("ruby", [self.code_path] + arguments)
+
+
+def from_extension_and_code(extension, code):
+    types = {
+        "c": CRoutine,
+        "py": PythonRoutine,
+        "rb": RubyRoutine
+    }
+    if extension not in types.keys():
+        raise ValueError("Cannot initialize routine with `%s` extension " % extension)
+    return types[extension](code)
