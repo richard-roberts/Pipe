@@ -2,6 +2,7 @@ class BasicNode:
 
     def __init__(self, library, path, node_id=None):
         self.path = path
+        self.node_id = node_id if node_id is not None else id(self)
         self.template = library.get(self.path)
         self.arguments = {}
         self.outputs = {}
