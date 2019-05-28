@@ -60,6 +60,12 @@ class AbstractRoutine(object):
         self.compile()
         return self.run(arguments)
 
+    def as_json(self):
+        return {
+            "extension": self.extension,
+            "code": self.code
+        }
+
 
 class CRoutine(AbstractRoutine):
 
@@ -108,3 +114,7 @@ def from_extension_and_code(extension, code):
     if extension not in types.keys():
         raise ValueError("Cannot initialize routine with `%s` extension " % extension)
     return types[extension](code)
+
+    
+def from_json(data):
+    return from_extension_and_code(data["extension"], data["code"])

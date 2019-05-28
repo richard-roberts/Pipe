@@ -16,6 +16,12 @@ class BasicTemplate:
             ",".join([o.get_name() for o in self.outs])
         )
 
+    def as_json(self):
+        return {
+            "args": [a.as_json() for a in self.args],
+            "outs": [o.as_json() for o in self.outs],
+            "routine": self.routine.as_json()
+        }
 
     def get_code(self):
         return self.routine.code
@@ -52,7 +58,7 @@ def from_json(data):
     return BasicTemplate(
         [arguments.from_json(datum) for datum in data["args"]],
         [outputs.from_json(datum) for datum in data["outs"]],
-        routines.from_json(data["code"])
+        routines.from_json(data["routine"])
     )
 
 def from_data(args, outs, extension, code):

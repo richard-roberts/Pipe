@@ -29,3 +29,25 @@ class BasicNode:
 
     def has_output(self, key):
         return key in self.outputs.keys()
+
+    def as_json(self):
+        return {
+            "path": self.path,
+            "id": self.node_id,
+            "args": self.arguments,
+            "outs": self.outputs,
+            "x": self.x,
+            "y": self.y,
+        }
+
+def from_json(library, data):
+    node = BasicNode(
+        library,
+        data["path"],
+        node_id=data["id"],
+        x=data["x"],
+        y=data["y"]
+    )
+    node.arguments = data["args"]
+    node.outputs = data["outs"]
+    return node
