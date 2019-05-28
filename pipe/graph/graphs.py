@@ -1,11 +1,20 @@
 
+from pipe.graph import nodes
 from pipe.graph import edges
+from pipe.graph import library
 
 
 class BasicGraph:
 
     def __init__(self):
+        self.lib = library.Library()
+        self.nodes = {}
         self.edges = []
+
+    def new_node(self, path):
+        node = nodes.BasicNode(self.lib, path)
+        self.nodes[id(node)] = node
+        return node
 
     def connect(self, node_from, arg_from, node_to, arg_to):
         edge = edges.BasicDirectedEdge(

@@ -1,7 +1,8 @@
 class BasicNode:
 
-    def __init__(self, template):
-        self.template = template
+    def __init__(self, library, path, node_id=None):
+        self.path = path
+        self.template = library.get(self.path)
         self.arguments = {}
         self.outputs = {}
 
