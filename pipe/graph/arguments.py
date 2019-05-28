@@ -9,5 +9,11 @@ class BasicArgument:
     def get_value(self):
         return None
 
+    def as_json(self):
+        return {
+            "name": self.name
+        }
+
+
 def from_json(data):
     return BasicArgument(data["name"])

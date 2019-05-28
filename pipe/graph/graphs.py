@@ -6,8 +6,11 @@ from pipe.graph import library
 
 class BasicGraph:
 
-    def __init__(self):
-        self.lib = library.Library()
+    def __init__(self, lib=None):
+        if lib is None:
+            self.lib = library.load_interal()
+        else:
+            self.lib = lib
         self.nodes = {}
         self.edges = []
 
@@ -59,3 +62,32 @@ class BasicGraph:
 
         # Then evaluate current
         current_node.evaluate()
+
+    def execute_by_id(self, id):
+        self.execute(self.get_node(id))
+
+    def as_json(self):
+        return {
+            "library": self.lib.as_json(),
+            "nodes": [n.as_json() for n in self.nodes.values()],
+            "edges": [e.as_json() for e in self.edges]
+        }
+
+
+def from_json(data):
+    lib = library.from_json(data["library"])
+    graph = BasicGraph(lib=lib)
+
+    for datum in data["nodes"]: 
+        node = nodes.from_json(lib, datum)
+        graph.add_node(node)
+
+    for datum in data["edges"]:
+        graph.connect_by_id(
+            datum["node_id_from"],
+            datum["arg_from"],
+            datum["node_id_to"],
+            datum["arg_to"]
+        )
+
+    return graph

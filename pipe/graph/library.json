@@ -1,0 +1,43 @@
+{
+    "Generate.Noise.Uniform": {
+        "args": [
+            {
+                "name": "seed"
+            },
+            {
+                "name": "n"
+            },
+            {
+                "name": "from"
+            },
+            {
+                "name": "to"
+            }
+        ],
+        "outs": [
+            {
+                "name": "points"
+            }
+        ],
+        "routine": {
+            "code": "import sys\nimport random\nseed = int(sys.argv[1])\nn    = int(sys.argv[2])\ns    = float(sys.argv[3])\ne    = float(sys.argv[4])\nrandom.seed(seed)\ndelta = e - s\npoints = [\n   s + random.random() * delta   for i in range(n)\n]\nprint(points)\n",
+            "extension": "py"
+        }
+    },
+    "Math.Sets.Sum": {
+        "args": [
+            {
+                "name": "points"
+            }
+        ],
+        "outs": [
+            {
+                "name": "summed"
+            }
+        ],
+        "routine": {
+            "code": "import sys\nimport json\npoints = json.loads(sys.argv[1])\nsummed = sum(points)\nprint(summed)\n",
+            "extension": "py"
+        }
+    }
+}
