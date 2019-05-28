@@ -54,3 +54,10 @@ def from_json(data):
         [outputs.from_json(datum) for datum in data["outs"]],
         routines.from_json(data["code"])
     )
+
+def from_data(args, outs, extension, code):
+    return BasicTemplate(
+        [arguments.from_json({"name": a}) for a in args],
+        [outputs.from_json({"name": o}) for o in outs],
+        routines.from_extension_and_code(extension, code)
+    )
