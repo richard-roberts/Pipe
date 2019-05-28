@@ -44,12 +44,12 @@ class BasicGraph:
     def assign_argument(self, id, name, value):
         self.get_node(id).set_argument(name, value)
 
-    def execute_to_root(self, current_node):
+    def execute(self, current_node):
         # Evaluate toward root first
         for edge in self.edges:
             if edge.node_to == current_node:
                 if not edge.node_from.has_output(edge.arg_from):
-                    self.execute_to_root(edge.node_from)
+                    self.execute(edge.node_from)
 
         # Propagate values in the root-leaf direction
         for edge in self.edges:
