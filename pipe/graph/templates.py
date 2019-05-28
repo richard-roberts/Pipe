@@ -5,21 +5,17 @@ from pipe.graph import routines
 
 class BasicTemplate:
 
-    def __init__(self, name, args, outs, routine):
-        self.name = name
+    def __init__(self, args, outs, routine):
         self.args = args
         self.outs = outs
         self.routine = routine
 
     def __str__(self):
-        return "%s(%s)->{%s}" % (
-            self.name.replace(" ", ""),
+        return "(%s)->{%s}" % (
             ", ".join([a.get_name() for a in self.args]),
             ",".join([o.get_name() for o in self.outs])
         )
 
-    def get_name(self):
-        return self.name
 
     def list_arguments(self):
         return [arg.get_name() for arg in self.args]
@@ -46,7 +42,6 @@ class BasicTemplate:
 
 def from_json(data):
     return BasicTemplate(
-        data["name"],
         [arguments.from_json(datum) for datum in data["args"]],
         [outputs.from_json(datum) for datum in data["outs"]],
         routines.from_json(data["code"])
