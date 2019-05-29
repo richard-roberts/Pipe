@@ -19,28 +19,9 @@ var nodes = {
         var background = svg.newRect(0, 0, w, h, parent=group);
         svg.setAttr(background, "rx", "15");
         svg.setStyle(background, "fill:red");
-        svg.setAttr(group, "selected", false);
-
-        svg.setEvent(background, "click", function(e) {
-            var selected = svg.getAttr(group, "selected");
-            if (selected == "true") {
-                svg.setAttr(group, "selected", false);
-            } else {
-                svg.setAttr(group, "selected", true);
-            }
-        })
-
-        svg.setEvent(background, "mousemove", function(e) {
-            var t = svg.getTranslateXY(group);
-            var selected = svg.getAttr(group, "selected");
-            if (selected == "true") {
-                svg.setAttr(
-                    group,
-                    "transform", 
-                    `translate(${t.x + e.movementX}, ${t.y + e.movementY})`
-                );
-            }
-        })
+        svg.setEvent(background, "mousedown", function(e) {
+            editor.addSelected(group);
+        });
 
         // Title
         var text = svg.newCenteringText(w / 2, nodes.label * 0.6, 25, name, parent=group);

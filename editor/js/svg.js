@@ -1,10 +1,13 @@
 var svg = {
     
     type: "http://www.w3.org/2000/svg",
+    ow: window.innerWidth,
+    oh: window.innerHeight * 0.8,
     w: window.innerWidth,
     h: window.innerHeight * 0.8,
     x: -window.innerWidth / 2,
     y: -(window.innerHeight * 0.8) / 2,
+    scale: 1.0,
 
     body: null,
 
@@ -35,7 +38,31 @@ var svg = {
     },
     
     setTranslateXY: function(element, x, y) {
-        svg.setAttr(element, "transform", `translate(${x},${y})`);
+        var sx = x * svg.scale;
+        var sy = y * svg.scale;
+        svg.setAttr(element, "transform", `translate(${sx},${sy})`);
+    },
+    
+    translateXY: function(element, x, y) {
+        var xy = svg.getTranslateXY(element);
+        var sx = xy.x + x * svg.scale;
+        var sy = xy.y + y * svg.scale;
+        svg.setAttr(element, "transform", `translate(${sx},${sy})`);
+    },
+
+    shiftView: function(x, y) {
+        svg.x -= x * svg.scale;
+        svg.y -= y * svg.scale;
+        svg.updateView();
+    },
+
+    zoomView: function(delta) {
+        svg.scale += delta * 0.0001;
+        svg.w = svg.ow * svg.scale;
+        svg.h = svg.oh * svg.scale;
+        svg.x = -svg.w / 2;
+        svg.y = -svg.h / 2;
+        svg.updateView();
     },
 
     updateView: function () {
@@ -100,7 +127,7 @@ var svg = {
         var e = svg.newElement(parent, 'text', id=id);
         e.appendChild(document.createTextNode(text));
         svg.setAttr(e, "font-size", size);
-        svg.setAttr(e, "x", x + e.getBBox().width);
+        svg.setAttr(e, "x", x - e.getBBox().width);
         svg.setAttr(e, "y", y + e.getBBox().height / 4);
         return e;
     },
