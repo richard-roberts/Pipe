@@ -1,10 +1,10 @@
 var svg = {
     
     type: "http://www.w3.org/2000/svg",
-    w: 1600,
-    h: 900,
-    x: -800,
-    y: -450,
+    w: window.innerWidth,
+    h: window.innerHeight * 0.8,
+    x: -window.innerWidth / 2,
+    y: -(window.innerHeight * 0.8) / 2,
 
     body: null,
 
@@ -18,6 +18,24 @@ var svg = {
 
     setStyle: function(element, style) {
         svg.setAttr(element, "style", style);
+    },
+
+    setEvent: function(element, eventType, callback) {
+        element.addEventListener(eventType, callback);
+    },
+
+    getTranslateXY: function(element) {
+        var str = svg.getAttr(element, "transform");
+        str = str.split("(")[1];
+        str = str.split(")")[0];
+        var parts = str.split(",");
+        var x = parseInt(parts[0].replace( /^\s+|\s+$/g, ''), 10);
+        var y = parseInt(parts[1].replace( /^\s+|\s+$/g, ''), 10); 
+        return {x: x, y: y};
+    },
+    
+    setTranslateXY: function(element, x, y) {
+        svg.setAttr(element, "transform", `translate(${x},${y})`);
     },
 
     updateView: function () {
@@ -38,9 +56,8 @@ var svg = {
     },
     
     newGroup: function (x, y, parent=null, id=null) {
-        var e = svg.newElement(parent, 'g', id=id);
-        svg.setAttr(e, "x", x);
-        svg.setAttr(e, "y", y);
+        var e = svg.newElement(parent, 'svg', id=id);
+        svg.setTranslateXY(e, x, y);
         return e;
     },
 

@@ -17,7 +17,14 @@ var variables = {
             parent=parent
         )
         svg.setStyle(background, "fill:blue;");
-        svg.newLeftAlignedText(x + variables.w / 4, y + variables.h / 2, 20, data.name);
+        
+        svg.newLeftAlignedText(
+            x + variables.w * 0.2,
+            y + variables.h / 2, 
+            20,
+            data.name, 
+            parent=parent
+        );
     },
 
     createOutFromData: function(parent, data, x, y) {
@@ -28,25 +35,28 @@ var variables = {
             parent=parent
         )
         svg.setStyle(background, "fill:blue;");
-        svg.newRightAlignedText(x - variables.w * 0.4, y + variables.h / 2, 20, data.name);
+        
+        svg.newRightAlignedText(
+            x + variables.w * 0.8,
+            y + variables.h / 2, 
+            20,
+            data.name, 
+            parent=parent
+        );
     },
 
     createArgsFromData: function(parent, data, x, y) {
-        var group = svg.newGroup(x, y, parent=parent, id=data.id);
-
         var y = y + variables.spacing;
         data.forEach(datum => {
-            variables.createArgFromData(group, datum, x, y);
+            variables.createArgFromData(parent, datum, x, y);
             y += variables.h + variables.spacing;
         });
     },
     
     createOutsFromData: function(parent, data, x, y) {
-        var group = svg.newGroup(x, y, parent=parent, id=data.id);
-
         var y = y + variables.spacing;
         data.forEach(datum => {
-            variables.createOutFromData(group, datum, x, y);
+            variables.createOutFromData(parent, datum, x, y);
             y += variables.h + variables.spacing;
         });
     },
