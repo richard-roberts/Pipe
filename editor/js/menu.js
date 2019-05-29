@@ -6,12 +6,9 @@ var menu = {
     set_new_template_menu: function() {
         editChildren.clear(menu.body);
 
-        pipe.list_templates(function(templateList) {
+        pipe.list_templates(function(paths) {
             var tree = templates.renderTemplateTreeAsInterface(
-                templateList,
-                function(template) {
-                    console.log(`Make a new ${template} please`);
-                }
+                paths, editor.newNode
             );
 
             editChildren.append(menu.body, tree);

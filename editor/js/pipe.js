@@ -19,5 +19,27 @@ var pipe = {
             callback(templates);
         });
     },
+
+    query_template: function(path, callback) {
+        var data = {
+            path: path
+        };
+        pipe.make_request("query_template", data, function(response) {
+            var template = JSON.parse(response);
+            callback(template);
+        });
+    },
+
+    new_node: function(path, x, y, callback) {
+        var data = {
+            path: path,
+            x: x,
+            y: y
+        }
+        pipe.make_request("new_node", data, function(response) {
+            var node = JSON.parse(response);
+            callback(node);
+        });
+    }
     
 }
