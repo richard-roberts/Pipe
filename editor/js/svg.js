@@ -53,10 +53,37 @@ var svg = {
         return e;
     },
 
-    newText: function (x, y, text, parent=null, id=null) {
+    newCircle: function(x, y, r, parent=null, id=null) {
+        var e = svg.newElement(parent, 'circle', id=id);
+        svg.setAttr(e, "cx", x);
+        svg.setAttr(e, "cy", y);
+        svg.setAttr(e, "r", r);
+        return e;
+    },
+
+    newCenteringText: function (x, y, size, text, parent=null, id=null) {
         var e = svg.newElement(parent, 'text', id=id);
         e.appendChild(document.createTextNode(text));
+        svg.setAttr(e, "font-size", size);
         svg.setAttr(e, "x", x - e.getBBox().width / 2);
+        svg.setAttr(e, "y", y + e.getBBox().height / 4);
+        return e;
+    },
+
+    newLeftAlignedText: function (x, y, size, text, parent=null, id=null) {
+        var e = svg.newElement(parent, 'text', id=id);
+        e.appendChild(document.createTextNode(text));
+        svg.setAttr(e, "font-size", size);
+        svg.setAttr(e, "x", x);
+        svg.setAttr(e, "y", y + e.getBBox().height / 4);
+        return e;
+    },
+
+    newRightAlignedText: function (x, y, size, text, parent=null, id=null) {
+        var e = svg.newElement(parent, 'text', id=id);
+        e.appendChild(document.createTextNode(text));
+        svg.setAttr(e, "font-size", size);
+        svg.setAttr(e, "x", x + e.getBBox().width);
         svg.setAttr(e, "y", y + e.getBBox().height / 4);
         return e;
     },
