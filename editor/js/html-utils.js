@@ -31,6 +31,13 @@ var editProperties = {
 
 var editChildren = {
 
+    clear: function(e) {
+        // See: https://stackoverflow.com/questions/3955229/remove-all-child-elements-of-a-dom-node-in-javascript
+        while (e.firstChild) {
+            e.removeChild(e.firstChild);
+        }
+    },
+
     append: function(e, toAppend) {
         e.appendChild(toAppend);
     }
