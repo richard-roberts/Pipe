@@ -1,22 +1,15 @@
 var menu = {
 
     body: null,
-    hidden: false,
 
-    toggleMenu: function() {
-        if (menu.hidden) {
-            menu.hidden = false;
-        } else {
-            menu.hidden = true;
-        }
+    showMenu: function() {
+        document.getElementById('menu-toggle').setAttribute("style", "display:none;");
+        document.getElementById('menu-body').setAttribute("style", "display:block;");
+    },
 
-        if (menu.hidden) {
-            document.getElementById('menu-inner').setAttribute("style", "display:none;");
-            document.getElementById('menu-toggle').setAttribute("style", "border-top-left-radius: 15px;border-bottom-left-radius: 15px;");
-        } else {
-            document.getElementById('menu-inner').setAttribute("style", "display:block;");
-            document.getElementById('menu-toggle').setAttribute("style", "border-top-left-radius: 0px;border-bottom-left-radius: 0px;");
-        }
+    hideMenu: function() {
+        document.getElementById('menu-toggle').setAttribute("style", "display:block;");
+        document.getElementById('menu-body').setAttribute("style", "display:none;");
     },
 
     set_new_template_menu: function() {
@@ -34,10 +27,11 @@ var menu = {
     setup: function() {
 
         // Store elements 
-        menu.body = document.getElementById('menu-body');
+        menu.body = document.getElementById('menu-inner');
 
         // Setup callbacks
-        document.getElementById('menu-toggle').onclick = menu.toggleMenu;
+        document.getElementById('hide-menu-button').onclick = menu.hideMenu;
+        document.getElementById('show-menu-button').onclick = menu.showMenu;
         document.getElementById('new-template-button').onclick = menu.set_new_template_menu;
 
     }
