@@ -18,13 +18,14 @@ var nodes = {
         // Background
         var background = svg.newRect(0, 0, w, h, parent=group);
         svg.setAttr(background, "rx", "15");
-        svg.setStyle(background, "fill:red");
+        svg.setStyle(background, `fill:${config.node.body};stroke:${config.node.bordercolor};stroke-width:${config.node.borderwidth};border-style:inset;}`);
         svg.setEvent(background, "mousedown", function(e) {
             editor.addSelected(group);
         });
 
         // Title
         var text = svg.newCenteringText(w / 2, nodes.label * 0.6, 25, name, parent=group);
+        svg.setStyle(text, `fill:${config.node.text};`)
             
         // Variables
         variables.createArgsFromData(group, templateData.args, variables.spacing, nodes.label);

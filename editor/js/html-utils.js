@@ -15,6 +15,11 @@ var makeHtml = {
         var e = document.createElement('li');
         return e;
     },
+
+    button: function() {
+        var e = document.createElement('button');
+        return e;
+    }
     
 }
 

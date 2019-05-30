@@ -1,17 +1,29 @@
 .template-tree {
-    width: 300px;
-    height: auto;
-    background-color: darkgray;
+    width: 100%;
+    height: 80%;
+    margin: auto;
 }
 
 .template-tree-branch {
     margin: 0;
-    padding: 0;
-    /* list-style-type: none; */
+    padding-top: 1em;
     list-style-position: inside;
+    list-style-type: none;
+    color: var(--template-text-color);
+    font-size: 1em;
 }
 
 .template-tree-leaf {
     margin: 0;
     padding: 0;
+    color: var(--template-text-color);
+}
+
+.template-tree-leaf-button {
+    padding: 0;
+    background-color: transparent;
+    text-decoration: underline;
+    border: none;
+    color: var(--template-text-color);
+    font-size: 1em;
 }

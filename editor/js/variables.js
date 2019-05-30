@@ -10,39 +10,55 @@ var variables = {
     },
 
     createArgFromData: function(parent, data, x, y) {
-        var background = svg.newCircle(
+        var connector = svg.newCircle(
             x + variables.w * 0.125, 
             y + variables.h / 2,
             variables.r,
             parent=parent
-        )
-        svg.setStyle(background, "fill:blue;");
+        );
+        var connectorInner = svg.newCircle(
+            x + variables.w * 0.125, 
+            y + variables.h / 2,
+            variables.r * 0.5,
+            parent=parent
+        );
+        svg.setStyle(connector, `fill:${config.variable.connector};`);
+        svg.setStyle(connectorInner, `fill:${config.node.body};`);
         
-        svg.newLeftAlignedText(
-            x + variables.w * 0.2,
+        var text = svg.newLeftAlignedText(
+            x + variables.w * 0.3,
             y + variables.h / 2, 
             20,
             data.name, 
             parent=parent
         );
+        svg.setStyle(text, `fill:${config.variable.text};`);
     },
 
     createOutFromData: function(parent, data, x, y) {
-        var background = svg.newCircle(
+        var connector = svg.newCircle(
             x + variables.w * 0.875, 
             y + variables.h / 2,
             variables.r,
             parent=parent
         )
-        svg.setStyle(background, "fill:blue;");
+        var connectorInner = svg.newCircle(
+            x + variables.w * 0.875, 
+            y + variables.h / 2,
+            variables.r * 0.5,
+            parent=parent
+        );
+        svg.setStyle(connector, `fill:${config.variable.connector};`);
+        svg.setStyle(connectorInner, `fill:${config.node.body};`);
         
-        svg.newRightAlignedText(
-            x + variables.w * 0.8,
+        var text = svg.newRightAlignedText(
+            x + variables.w * 0.7,
             y + variables.h / 2, 
             20,
             data.name, 
             parent=parent
         );
+        svg.setStyle(text, `fill:${config.variable.text};`);
     },
 
     createArgsFromData: function(parent, data, x, y) {

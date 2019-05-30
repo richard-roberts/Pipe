@@ -1,0 +1,20 @@
+:root {
+
+    /* Editor */
+    --editor-header-color: #161c25;
+    --editor-background-color: #344054;
+    --editor-footer-color: #161c25;
+    
+    /* Menu */
+    --menu-border-color: #ffffff;
+    --menu-navigation-color: #161c25;
+    --menu-background-color: #161c25;
+    --menu-toggle-color: #161c25;
+
+    /* Text */
+    --menu-text-color: #75b0ec;
+    --template-text-color: #75b0ec;
+    
+    /* Other */
+    --highlight-color: #75b0ec;
+  }

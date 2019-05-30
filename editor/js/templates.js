@@ -19,7 +19,7 @@ var templates = {
             
             var li = makeHtml.li();
             editProperties.setClass(li, "template-tree-branch");
-            editInner.set(li, `<b>${name}</b>`);
+            editInner.set(li, `${name}`);
             
             var ul =  makeHtml.ul();
             editChildren.append(li, ul);
@@ -35,7 +35,10 @@ var templates = {
             var e = makeHtml.li();
             editProperties.setClickFunction(e, function() { clickCallback(path) });
             editProperties.setClass(e, "template-tree-leaf");
-            editInner.set(e, `<a href="javascript:void(0)">${name}</a>`);
+            var b = makeHtml.button();
+            editProperties.setClass(b, "template-tree-leaf-button");
+            editInner.set(b, `${name}`);
+            editChildren.append(e, b);
             return e;    
         }
 
