@@ -2,14 +2,14 @@ var variables = {
 
     w: 100,
     h: 25,
-    r: 5,
+    r: 10,
     spacing: 10,
 
     measureHeight(vars) {
         return variables.h * vars.length + variables.spacing * (vars.length + 1);
     },
 
-    createArgFromData: function(parent, data, x, y) {
+    createArgFromData: function(parent, node_id, data, x, y) {
         var connector = svg.newCircle(
             x + variables.w * 0.125, 
             y + variables.h / 2,
@@ -33,9 +33,15 @@ var variables = {
             parent=parent
         );
         svg.setStyle(text, `fill:${config.variable.text};`);
+
+        var argCallback = function(e) {
+            editor.setInputToBeConnected(connectorInner, node_id, data.name);
+        }
+        editProperties.setMouseUpFunction(connector, argCallback);
+        editProperties.setMouseUpFunction(connectorInner, argCallback);
     },
 
-    createOutFromData: function(parent, data, x, y) {
+    createOutFromData: function(parent, node_id, data, x, y) {
         var connector = svg.newCircle(
             x + variables.w * 0.875, 
             y + variables.h / 2,
@@ -59,20 +65,26 @@ var variables = {
             parent=parent
         );
         svg.setStyle(text, `fill:${config.variable.text};`);
+        
+        var outCallback = function(e) {
+            editor.setOutputToBeConnected(connectorInner, node_id, data.name);
+        }
+        editProperties.setMouseDownFunction(connector, outCallback);
+        editProperties.setMouseDownFunction(connectorInner, outCallback);
     },
 
-    createArgsFromData: function(parent, data, x, y) {
+    createArgsFromData: function(parent, node_id, data, x, y) {
         var y = y + variables.spacing;
         data.forEach(datum => {
-            variables.createArgFromData(parent, datum, x, y);
+            variables.createArgFromData(parent, node_id, datum, x, y);
             y += variables.h + variables.spacing;
         });
     },
     
-    createOutsFromData: function(parent, data, x, y) {
+    createOutsFromData: function(parent, node_id, data, x, y) {
         var y = y + variables.spacing;
         data.forEach(datum => {
-            variables.createOutFromData(parent, datum, x, y);
+            variables.createOutFromData(parent, node_id, datum, x, y);
             y += variables.h + variables.spacing;
         });
     },

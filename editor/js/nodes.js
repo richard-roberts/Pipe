@@ -28,8 +28,8 @@ var nodes = {
         svg.setStyle(text, `fill:${config.node.text};`)
             
         // Variables
-        variables.createArgsFromData(group, templateData.args, variables.spacing, nodes.label);
-        variables.createOutsFromData(group, templateData.outs, w - variables.w - variables.spacing, nodes.label);
+        variables.createArgsFromData(group, nodeData.id, templateData.args, variables.spacing, nodes.label);
+        variables.createOutsFromData(group, nodeData.id, templateData.outs, w - variables.w - variables.spacing, nodes.label);
     }
 
 }

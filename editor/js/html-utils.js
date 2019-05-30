@@ -31,6 +31,14 @@ var editProperties = {
 
     setClickFunction: function(e, callback) {
         e.onclick = callback;
+    },
+
+    setMouseDownFunction: function(e, callback) {
+        e.onmousedown = callback;
+    },
+
+    setMouseUpFunction: function(e, callback) {
+        e.onmouseup = callback;
     }
 }
 

@@ -2,17 +2,34 @@ var svg = {
     
     type: "http://www.w3.org/2000/svg",
     ow: window.innerWidth,
-    oh: window.innerHeight * 0.8,
+    oh: window.innerHeight,
     w: window.innerWidth,
-    h: window.innerHeight * 0.8,
+    h: window.innerHeight,
     x: -window.innerWidth / 2,
-    y: -(window.innerHeight * 0.8) / 2,
+    y: -(window.innerHeight) / 2,
     scale: 1.0,
 
     body: null,
 
     getAttr: function (element, attr) {
         return element.getAttributeNS(null, attr);
+    },
+
+    getCxCy: function(element) {
+        var bbox = element.getBBox();
+        var x = bbox.x + (bbox.width / 2);
+        var y = bbox.y + (bbox.height / 2);
+        return {
+            x: x,
+            y: y
+        };
+    },
+
+    getMouseXY: function(e) {
+        return {
+            x: e.clientX * svg.scale + svg.x,
+            y: e.clientY * svg.scale + svg.y
+        }
     },
     
     setAttr: function (element, attr, value) {
@@ -67,6 +84,10 @@ var svg = {
 
     updateView: function () {
         svg.setAttr(svg.body, "viewBox", `${svg.x} ${svg.y} ${svg.w} ${svg.h}`);
+    },
+
+    removeElement: function(parent, element) {
+        parent.removeChild(element);
     },
 
     newElement: function (parent, elementType, id=null) {
@@ -130,6 +151,16 @@ var svg = {
         svg.setAttr(e, "x", x - e.getBBox().width);
         svg.setAttr(e, "y", y + e.getBBox().height / 4);
         return e;
+    },
+
+    newCurve: function(parent=null, id=null) {
+        var e = svg.newElement(parent, 'path', id=id);
+        return e;
+    },
+
+    setCurveCoordinates: function(e, x1, y1, x2, y2, x3, y3, x4, y4) {
+        // See https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+        svg.setAttr(e, "d", `M ${x1} ${y1} C ${x2} ${y2}, ${x3} ${y3}, ${x4} ${y4}`);
     },
 
     setup: function() {

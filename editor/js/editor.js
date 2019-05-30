@@ -1,6 +1,11 @@
 var editor = {
     
     selected: [],
+    pendingConnectionOutput: null,
+    pendingCurve: null,
+    pendingConnectionNode: null,
+    pendingConnectionOutputNodeId: null,
+    pendingConnectionOutputName: null,
 
     deselectAll: function() {
         editor.selected = [];
@@ -10,12 +15,65 @@ var editor = {
         editor.selected.push(element);
     },
 
+    setOutputToBeConnected: function(element, nodeId, name) {
+        editor.pendingConnectionOutput = element;
+        editor.pendingConnectionNode = document.getElementById(nodeId);
+        editor.pendingConnectionOutputNodeId = nodeId;
+        editor.pendingConnectionOutputName = name;
+        editor.startDrawingPendingCurve();
+    },
+
+    setInputToBeConnected: function(element, nodeId, name) {
+        if (editor.pendingConnectionOutput != null) {
+            console.log(
+                "Connecting",
+                editor.pendingConnectionOutputNodeId,editor.pendingConnectionOutputName,
+                "to",
+                nodeId, name
+            );
+        }
+        editor.stopDrawingPendingCurve();   
+    },
+
     newNode: function(path) {
         pipe.query_template(path, function(templateData) {
             pipe.new_node(path, 0, 0, function(nodeData) {
                 nodes.createFromData(templateData, nodeData);
             });
         });
+    },
+
+    startDrawingPendingCurve: function(e) {
+        editor.pendingCurve = svg.newCurve();
+        svg.setAttr(editor.pendingCurve, "stroke", `${config.edge.color}`);
+        svg.setAttr(editor.pendingCurve, "stroke-width", `${config.edge.width}`);
+        svg.setAttr(editor.pendingCurve, "fill", "transparent");
+    },
+
+    stopDrawingPendingCurve: function(e) {
+        svg.removeElement(svg.body, editor.pendingCurve);
+        editor.pendingCurve = null;
+        editor.pendingConnectionOutput = null;
+    },
+
+    drawPendingCurveEndAtMouse: function(e) {
+        var nodeXY = svg.getTranslateXY(editor.pendingConnectionNode);
+        var connectorRelativeXY = svg.getCxCy(editor.pendingConnectionOutput);
+        var connectorAbsoluteXY = {
+            x: nodeXY.x + connectorRelativeXY.x,
+            y: nodeXY.y + connectorRelativeXY.y,
+        }
+        var mouseXY = svg.getMouseXY(e);
+        
+        var a = connectorAbsoluteXY;
+        var b = mouseXY;
+        svg.setCurveCoordinates(
+            editor.pendingCurve,
+            a.x, a.y,
+            b.x, a.y,
+            a.x, b.y,
+            b.x, b.y
+        );
     },
 
     setup: function() {
@@ -56,15 +114,24 @@ var editor = {
 
         
         svg.setEvent(background, "mousedown", function(e) {
-            svg.setAttr(background, "following", true);
+            svg.setAttr(background, "following", true); 
         });
 
         svg.setEvent(svg.body, "mouseup", function(e) {
             svg.setAttr(background, "following", false);
+            if (editor.pendingCurve != null) {
+                editor.stopDrawingPendingCurve(e);
+            }
             editor.deselectAll();
         });
 
         svg.setEvent(svg.body, "mousemove", function(e) {
+
+            if (editor.pendingConnectionOutput != null) {
+                editor.drawPendingCurveEndAtMouse(e);    
+                return;
+            }
+
             if (editor.selected.length == 0) {
                 var following = svg.getAttr(background, "following");
                 if (following == "true") {

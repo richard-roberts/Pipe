@@ -11,6 +11,11 @@ var config = {
         borderwidth: 2
     },
 
+    edge: {
+        color: "#75b0ec",
+        width: 5,
+    },
+
     variable: {
         text: "#75b0ec",
         connector: "#75b0ec"
