@@ -45,6 +45,7 @@ class BasicGraph:
             node_to, arg_to
         )
         self.edges.append(edge)
+        return edge
 
     def connect_by_id(self, id_from, arg_from, id_to, arg_to):
         return self.connect(self.get_node(id_from), arg_from, self.get_node(id_to), arg_to)
