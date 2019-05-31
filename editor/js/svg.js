@@ -75,6 +75,17 @@ var svg = {
         svg.setAttr(element, "transform", `translate(${sx},${sy})`);
     },
 
+    resetView: function(x, y) {
+        svg.ow = window.innerWidth;
+        svg.oh = window.innerHeight;
+        svg.w = window.innerWidth;
+        svg.h = window.innerHeight;
+        svg.x = -window.innerWidth / 2;
+        svg.y = -(window.innerHeight) / 2;
+        svg.scale = 1.0;
+        svg.updateView();
+    },
+
     shiftView: function(x, y) {
         svg.x -= x * svg.scale;
         svg.y -= y * svg.scale;

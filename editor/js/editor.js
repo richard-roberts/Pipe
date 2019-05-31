@@ -293,6 +293,7 @@ var editor = {
         }
 
         svg.clear(svg.body);
+        svg.resetView();
         var actions = [renderBackground, renderGrid, renderNodes, renderEdges, setEvents, renderComplete];
         actions.shift()(actions);
     },
