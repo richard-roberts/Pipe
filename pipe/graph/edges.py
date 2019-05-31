@@ -11,9 +11,9 @@ class BasicDirectedEdge:
 
     def as_json(self):
         return {
-            "node_id_from" : id(self.node_from),
+            "node_id_from" : self.node_from.node_id,
             "arg_from" : self.arg_from,
-            "node_id_to" : id(self.node_to),
+            "node_id_to" : self.node_to.node_id,
             "arg_to" : self.arg_to
         }
 

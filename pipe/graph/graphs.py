@@ -42,7 +42,7 @@ class BasicGraph:
         self.edges.append(edge)
 
     def connect_by_id(self, id_from, arg_from, id_to, arg_to):
-        self.connect(self.get_node(id_from), arg_from, self.get_node(id_to), arg_to)
+        return self.connect(self.get_node(id_from), arg_from, self.get_node(id_to), arg_to)
 
     def assign_argument(self, id, name, value):
         self.get_node(id).set_argument(name, value)
