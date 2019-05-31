@@ -89,6 +89,21 @@ var pipe = {
         });
     },
 
+    execute: function(id, callback) {
+        var data = {
+            id: id
+        }
+        pipe.make_request("execute", data, function(response) {
+            if (response == "false") {
+                console.error("execution failed");
+                return;
+            }
+            
+            var nodeData = JSON.parse(response);
+            callback(nodeData);
+        });
+    },
+
     listNodes: function(callback) {
         pipe.make_request("list_nodes", {}, function(response) {
             var nodeData = JSON.parse(response);

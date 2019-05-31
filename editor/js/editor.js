@@ -77,6 +77,25 @@ var editor = {
         }  
     },
 
+    evaluate: function() {
+        if (editor.lastHoveredType != 'node') {
+            console.error(`You can only evalaute nodes.`);
+            return;
+        }
+
+        pipe.execute(editor.lastHovered, function(nodeData) {
+            Object.keys(nodeData.outs).forEach(key => {
+                var name = key;
+                var value = nodeData.outs[key];
+                if (value == "") {
+                    svg.setStyle(svg.getById(`${editor.lastHovered}.${name}`), `fill:${config.variable.connectorUnassigned};`);
+                } else {
+                    svg.setStyle(svg.getById(`${editor.lastHovered}.${name}`), `fill:${config.variable.connectorAssigned};`);
+                }
+            });
+        });
+    },
+
     handleMouseDown: function(e) {
         editor.following = true;
     },
@@ -123,6 +142,8 @@ var editor = {
 
         if (key == 'a') {
             editor.assignArgument();
+        } else if (key == 'e') {
+            editor.evaluate();
         } else {
             console.warn(`No action bound to '${key}', ignored`);
         }
