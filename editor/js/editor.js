@@ -209,7 +209,6 @@ var editor = {
             var e = svg.newRect(-svg.w / 2, -svg.h / 2, svg.w, svg.h);
             svg.setAttr(e, "following", false);
             svg.setAttr(e, "style", `fill:${config.background};`);
-            svg.setEvent(e, "mousedown", editor.handleMouseDown);
             nextFunctions.shift()(nextFunctions);
         }
 
@@ -282,6 +281,7 @@ var editor = {
         }
 
         function setEvents(nextFunctions) {
+            svg.setEvent(svg.body, "mousedown", editor.handleMouseDown);
             svg.setEvent(svg.body, "mouseup", editor.handleMouseUp);
             svg.setEvent(svg.body, "mousemove", editor.handleMouseMove);
             svg.setEvent(svg.body, "wheel", editor.handleMouseWheel);
