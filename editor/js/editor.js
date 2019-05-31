@@ -94,6 +94,27 @@ var editor = {
                 }
             });
         });
+
+    },
+
+    showOutput: function()  {
+        if (editor.lastHoveredType != 'arg' && editor.lastHoveredType != 'out') {
+            console.error(`You can only show variables (either inputs or outputs).`);
+            return;
+        }
+
+        var parts = editor.lastHovered.split(".");
+        var id = parts[0];
+        var name = parts[1];
+        pipe.queryNode(id, function(nodeData) {
+            var key = `${editor.lastHoveredType}s`;
+            var varMap = nodeData[key];
+            if (name in varMap) {
+                alert(`The value of ${name} is ${varMap[name]}\nid=${nodeData.id}.`);
+            } else {
+                console.error(`${name} not found in node data (id=${nodeData.id}).`);
+            }
+        });
     },
 
     handleMouseDown: function(e) {
@@ -142,6 +163,8 @@ var editor = {
 
         if (key == 'a') {
             editor.assignArgument();
+        } else if (key == 's') {
+            editor.showOutput();
         } else if (key == 'e') {
             editor.evaluate();
         } else {

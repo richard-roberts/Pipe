@@ -90,6 +90,13 @@ var variables = {
         }
         editProperties.setMouseDownFunction(connector, outCallback);
         editProperties.setMouseDownFunction(connectorInner, outCallback);
+
+        var hoverCallback = function(e) {  
+            editor.lastHovered = `${node_id}.${data.name}`;
+            editor.lastHoveredType = 'out';
+        }
+        editProperties.setMouseOverFunction(connector, hoverCallback);
+        editProperties.setMouseOverFunction(connectorInner, hoverCallback);
     },
 
     createArgsFromData: function(parent, node_id, values, data, x, y) {
