@@ -11,6 +11,10 @@ var svg = {
 
     body: null,
 
+    clear: function(element) {
+        editChildren.clear(element);
+    },
+
     getById: function(id) {
         return document.getElementById(id);
     },

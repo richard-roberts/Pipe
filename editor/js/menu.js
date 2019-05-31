@@ -32,6 +32,7 @@ var menu = {
         // Setup callbacks
         document.getElementById('hide-menu-button').onclick = menu.hideMenu;
         document.getElementById('show-menu-button').onclick = menu.showMenu;
+        document.getElementById('refresh-graph-button').onclick = editor.refresh;
         document.getElementById('new-template-button').onclick = menu.set_new_template_menu;
 
     }

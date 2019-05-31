@@ -40,6 +40,8 @@ var pipe = {
             var node = JSON.parse(response);
             callback(node);
         });
+    },
+
     setNodePosition: function(id, x, y, callback) {
         var data = {
             id: id,
@@ -65,6 +67,18 @@ var pipe = {
         });
     },
 
+    listNodes: function(callback) {
+        pipe.make_request("list_nodes", {}, function(response) {
+            var nodeData = JSON.parse(response);
+            callback(nodeData);
+        });
+    },
+
+    listEdges: function(callback) {
+        pipe.make_request("list_edges", {}, function(response) {
+            var edgeData = JSON.parse(response);
+            callback(edgeData);
+        });
     }
     
 }
