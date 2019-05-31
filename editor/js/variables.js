@@ -20,7 +20,8 @@ var variables = {
             x + variables.w * 0.125, 
             y + variables.h / 2,
             variables.r * 0.5,
-            parent=parent
+            parent=parent,
+            id=`${node_id}.${data.name}`
         );
         svg.setStyle(connector, `fill:${config.variable.connector};`);
         svg.setStyle(connectorInner, `fill:${config.node.body};`);
@@ -35,7 +36,7 @@ var variables = {
         svg.setStyle(text, `fill:${config.variable.text};`);
 
         var argCallback = function(e) {
-            editor.setInputToBeConnected(connectorInner, node_id, data.name);
+            editor.setInputToBeConnected(node_id, data.name);
         }
         editProperties.setMouseUpFunction(connector, argCallback);
         editProperties.setMouseUpFunction(connectorInner, argCallback);
@@ -52,7 +53,8 @@ var variables = {
             x + variables.w * 0.875, 
             y + variables.h / 2,
             variables.r * 0.5,
-            parent=parent
+            parent=parent,
+            id=`${node_id}.${data.name}`
         );
         svg.setStyle(connector, `fill:${config.variable.connector};`);
         svg.setStyle(connectorInner, `fill:${config.node.body};`);

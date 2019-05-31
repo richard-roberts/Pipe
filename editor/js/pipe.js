@@ -52,6 +52,19 @@ var pipe = {
         });
     },
 
+    newEdge: function(nodeIdFrom, argFrom, nodeIdTo, argTo, callback) {
+        var data = {
+            id_from: nodeIdFrom,
+            arg_from: argFrom,
+            id_to: nodeIdTo,
+            node_to: argTo
+        }
+        pipe.make_request("new_edge", data, function(response) {
+            var edgeDatum = JSON.parse(response);
+            callback(edgeDatum);
+        });
+    },
+
     }
     
 }

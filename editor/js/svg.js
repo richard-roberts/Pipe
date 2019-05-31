@@ -11,6 +11,10 @@ var svg = {
 
     body: null,
 
+    getById: function(id) {
+        return document.getElementById(id);
+    },
+
     getAttr: function (element, attr) {
         return element.getAttributeNS(null, attr);
     },
@@ -60,7 +64,7 @@ var svg = {
         svg.setAttr(element, "transform", `translate(${sx},${sy})`);
     },
     
-    translateXY: function(element, x, y) {
+    moveXY: function(element, x, y) {
         var xy = svg.getTranslateXY(element);
         var sx = xy.x + x * svg.scale;
         var sy = xy.y + y * svg.scale;

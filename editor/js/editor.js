@@ -19,16 +19,22 @@ var editor = {
         editor.startDrawingPendingCurve();
     },
 
-    setInputToBeConnected: function(element, nodeId, name) {
+    setInputToBeConnected: function(nodeId, name) {
         if (editor.pendingConnectionOutput != null) {
-            console.log(
-                "Connecting",
-                editor.pendingConnectionOutputNodeId,editor.pendingConnectionOutputName,
-                "to",
-                nodeId, name
+            pipe.newEdge(
+                editor.pendingConnectionOutputNodeId,
+                editor.pendingConnectionOutputName,
+                nodeId,
+                name,
+                function(edgeDatum) {
+                    edges.createFromData(edgeDatum);
+                }
             );
         }
-        editor.stopDrawingPendingCurve();   
+
+        if (editor.pendingCurve != null) {
+            editor.stopDrawingPendingCurve();   
+        }
     },
 
     newNode: function(path) {
@@ -72,6 +78,7 @@ var editor = {
         
         var a = connectorAbsoluteXY;
         var b = mouseXY;
+        b.x -= 10;
         svg.setCurveCoordinates(
             editor.pendingCurve,
             a.x, a.y,
@@ -146,9 +153,10 @@ var editor = {
                     svg.shiftView(e.movementX, e.movementY);
                 }
             } else {
-                editor.selected.forEach(o => {
-                    svg.translateXY(o, e.movementX, e.movementY);
-                });    
+                editor.selected.forEach(node => {
+                    svg.moveXY(node, e.movementX, e.movementY);
+                });
+                edges.updateAll();
             }
         });
 
