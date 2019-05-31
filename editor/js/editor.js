@@ -127,6 +127,10 @@ var editor = {
 
         function renderNodes(nextFunctions) {
             pipe.listNodes(function(nodeData) {
+                if (nodeData.length == 0) {
+                    nextFunctions.shift()(nextFunctions);
+                    return;
+                }
                 var nodesFinished = 0;
                 nodeData.forEach(nodeDatum => {
                     pipe.query_template(nodeDatum.path, function(templateDatum) {
@@ -143,6 +147,10 @@ var editor = {
 
         function renderEdges(nextFunctions) {   
             pipe.listEdges(function(edgeData) {
+                if (edgeData.length == 0) {
+                    nextFunctions.shift()(nextFunctions);
+                    return;
+                }
                 var edgesFinished = 0;
                 edgeData.forEach(edgeDatum => {
                     edges.createFromData(edgeDatum);
