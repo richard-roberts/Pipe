@@ -77,6 +77,35 @@ var editor = {
         }  
     },
 
+    deleteLastHovered: function() {
+        if (editor.lastHovered == null) {
+            console.error("Nothing selected to delete (hover over it)");
+            return;
+        }
+
+        if (editor.lastHoveredType == 'edge') {
+            pipe.deleteEdge(editor.lastHovered, function(success) {
+                if (success) {
+                    svg.removeElement(svg.body, svg.getById(editor.lastHovered));
+                    editor.lastHovered = null;
+                } else {
+                    console.error(`Failed to delete edge (id=${editor.lastHovered})`);
+                }
+            });
+        }
+        if (editor.lastHoveredType == 'node') {
+            pipe.deleteNode(editor.lastHovered, function(success) {
+                if (success) {
+                    // TODO: remove just the node in questions and any connected edges
+                    editor.refresh(); 
+                    editor.lastHovered = null;
+                } else {
+                    console.error(`Failed to delete node (id=${editor.lastHovered})`);
+                }
+            })
+        }
+    },
+
     evaluate: function() {
         if (editor.lastHoveredType != 'node') {
             console.error(`You can only evalaute nodes.`);
@@ -163,6 +192,8 @@ var editor = {
 
         if (key == 'a') {
             editor.assignArgument();
+        } else if (key == 'd') {
+            editor.deleteLastHovered();
         } else if (key == 's') {
             editor.showOutput();
         } else if (key == 'e') {

@@ -89,6 +89,34 @@ var pipe = {
         });
     },
 
+    deleteEdge: function(edgeId, callback) {
+        var parts = edgeId.split(".");
+        if (parts.length != 4) {
+            console.error(`${edgeId} is not a valid edge identifier`);
+            return;
+        }
+        var data = {
+            node_id_from: parts[0],
+            arg_from: parts[1],
+            node_id_to: parts[2],
+            arg_to: parts[3]
+        }
+        pipe.make_request("delete_edge", data, function(response) {
+            var success = JSON.parse(response);
+            callback(success);
+        });
+    },
+
+    deleteNode: function(id, callback) {
+        var data = {
+            id: id
+        }
+        pipe.make_request("delete_node", data, function(response) {
+            var success = JSON.parse(response);
+            callback(success);
+        });
+    },
+
     execute: function(id, callback) {
         var data = {
             id: id

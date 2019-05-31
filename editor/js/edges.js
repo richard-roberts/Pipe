@@ -40,7 +40,10 @@ var edges = {
     },
 
     createFromData: function(datum) {
-        var curve = svg.newCurve();
+        var curve = svg.newCurve(
+            parent=null,
+            id=`${datum.node_id_from}.${datum.arg_from}.${datum.node_id_to}.${datum.arg_to}`
+        );
         svg.setAttr(curve, "stroke", `${config.edge.color}`);
         svg.setAttr(curve, "stroke-width", `${config.edge.width}`);
         svg.setAttr(curve, "fill", "transparent");
@@ -50,6 +53,11 @@ var edges = {
         };
         edges.updateEdge(record);
         edges.records.push(record);
+
+        editProperties.setMouseOverFunction(curve, function(e) {  
+            editor.lastHovered = curve.id;
+            editor.lastHoveredType = 'edge';
+        });
     }
 
 }
