@@ -22,14 +22,18 @@ var nodes = {
         svg.setEvent(background, "mousedown", function(e) {
             editor.addSelected(group);
         });
+        editProperties.setMouseOverFunction(background, function() {
+            editor.lastHovered = `${nodeData.id}`;
+            editor.lastHoveredType = 'node';
+        })
 
         // Title
         var text = svg.newCenteringText(w / 2, nodes.label * 0.6, 25, name, parent=group);
         svg.setStyle(text, `fill:${config.node.text};`)
             
         // Variables
-        variables.createArgsFromData(group, nodeData.id, templateData.args, variables.spacing, nodes.label);
-        variables.createOutsFromData(group, nodeData.id, templateData.outs, w - variables.w - variables.spacing, nodes.label);
+        variables.createArgsFromData(group, nodeData.id, nodeData.args, templateData.args, variables.spacing, nodes.label);
+        variables.createOutsFromData(group, nodeData.id, nodeData.outs, templateData.outs, w - variables.w - variables.spacing, nodes.label);
     }
 
 }

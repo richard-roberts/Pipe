@@ -9,7 +9,7 @@ var variables = {
         return variables.h * vars.length + variables.spacing * (vars.length + 1);
     },
 
-    createArgFromData: function(parent, node_id, data, x, y) {
+    createArgFromData: function(parent, node_id, value, data, x, y) {
         var connector = svg.newCircle(
             x + variables.w * 0.125, 
             y + variables.h / 2,
@@ -25,6 +25,11 @@ var variables = {
         );
         svg.setStyle(connector, `fill:${config.variable.connector};`);
         svg.setStyle(connectorInner, `fill:${config.node.body};`);
+        if (value == "") {
+            svg.setStyle(connectorInner, `fill:${config.variable.connectorUnassigned};`);
+        } else {
+            svg.setStyle(connectorInner, `fill:${config.variable.connectorAssigned};`);
+        }
         
         var text = svg.newLeftAlignedText(
             x + variables.w * 0.3,
@@ -40,9 +45,16 @@ var variables = {
         }
         editProperties.setMouseUpFunction(connector, argCallback);
         editProperties.setMouseUpFunction(connectorInner, argCallback);
+
+        var hoverCallback = function(e) {  
+            editor.lastHovered = `${node_id}.${data.name}`;
+            editor.lastHoveredType = 'arg';
+        }
+        editProperties.setMouseOverFunction(connector, hoverCallback);
+        editProperties.setMouseOverFunction(connectorInner, hoverCallback);
     },
 
-    createOutFromData: function(parent, node_id, data, x, y) {
+    createOutFromData: function(parent, node_id, value, data, x, y) {
         var connector = svg.newCircle(
             x + variables.w * 0.875, 
             y + variables.h / 2,
@@ -58,6 +70,11 @@ var variables = {
         );
         svg.setStyle(connector, `fill:${config.variable.connector};`);
         svg.setStyle(connectorInner, `fill:${config.node.body};`);
+        if (value == "") {
+            svg.setStyle(connectorInner, `fill:${config.variable.connectorUnassigned};`);
+        } else {
+            svg.setStyle(connectorInner, `fill:${config.variable.connectorAssigned};`);
+        }
         
         var text = svg.newRightAlignedText(
             x + variables.w * 0.7,
@@ -75,18 +92,26 @@ var variables = {
         editProperties.setMouseDownFunction(connectorInner, outCallback);
     },
 
-    createArgsFromData: function(parent, node_id, data, x, y) {
+    createArgsFromData: function(parent, node_id, values, data, x, y) {
         var y = y + variables.spacing;
         data.forEach(datum => {
-            variables.createArgFromData(parent, node_id, datum, x, y);
+            var value = "";
+            if (datum.name in values) {
+                value = values[datum.name];
+            }
+            variables.createArgFromData(parent, node_id, value, datum, x, y);
             y += variables.h + variables.spacing;
         });
     },
     
-    createOutsFromData: function(parent, node_id, data, x, y) {
+    createOutsFromData: function(parent, node_id, values, data, x, y) {
         var y = y + variables.spacing;
         data.forEach(datum => {
-            variables.createOutFromData(parent, node_id, datum, x, y);
+            var value = "";
+            if (datum.name in values) {
+                value = values[datum.name];
+            }
+            variables.createOutFromData(parent, node_id, value, datum, x, y);
             y += variables.h + variables.spacing;
         });
     },

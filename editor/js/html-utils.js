@@ -39,6 +39,18 @@ var editProperties = {
 
     setMouseUpFunction: function(e, callback) {
         e.onmouseup = callback;
+    },
+
+    setMouseMoveFunction: function(e, callback) {
+        e.onmousemove = callback;
+    },
+
+    setMouseOverFunction: function(e, callback) {
+        e.onmouseover = callback;
+    },
+
+    setMouseOutFunction: function(e, callback) {
+        e.onmouseout = callback;
     }
 }
 

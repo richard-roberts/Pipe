@@ -7,6 +7,8 @@ var editor = {
     pendingConnectionNode: null,
     pendingConnectionOutputNodeId: null,
     pendingConnectionOutputName: null,
+    lastHovered: null,
+    lastHoveredType: null,
 
     addSelected: function(element) {
         editor.selected.push(element);
@@ -44,6 +46,35 @@ var editor = {
                 nodes.createFromData(templateData, nodeData);
             });
         });
+    },
+
+    assignArgument: function() {
+        if (editor.lastHoveredType == 'arg') {
+            var parts = editor.lastHovered.split(".");
+            var id = parts[0];
+            var name = parts[1];
+            
+            pipe.queryNode(id, function(nodeData) {
+                var previousValue = "";
+                if (name in nodeData.args) {
+                    previousValue = nodeData.args[name];
+                }
+                var value = prompt(`Enter value for ${name}:`,  previousValue); 
+                if (value != null) { 
+                    pipe.assignArgument(id, name, value, function(success) {
+                        if (success) {
+                            if (value == "") {
+                                svg.setStyle(svg.getById(editor.lastHovered), `fill:${config.variable.connectorUnassigned};`);
+                            } else {
+                                svg.setStyle(svg.getById(editor.lastHovered), `fill:${config.variable.connectorAssigned};`);
+                            }
+                        }
+                    });
+                }       
+            });
+        } else {
+            console.error(`You can only assign to arguments.`);
+        }  
     },
 
     handleMouseDown: function(e) {
@@ -84,7 +115,19 @@ var editor = {
         e.preventDefault();
         svg.zoomView(e.deltaY);
     },
-    
+
+    handleKeyPress: function(key) {
+        if (editor.lastHovered == null) {
+            console.error(`Nothing hovered (move the mouse over the widget your trying to control).`);
+        }
+
+        if (key == 'a') {
+            editor.assignArgument();
+        } else {
+            console.warn(`No action bound to '${key}', ignored`);
+        }
+    },
+
     refresh: function() {
 
         function renderBackground(nextFunctions) {

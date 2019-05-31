@@ -42,6 +42,16 @@ var pipe = {
         });
     },
 
+    queryNode: function(id, callback) {
+        var data = {
+            id: id
+        }
+        pipe.make_request("query_node", data, function(response) {
+            var node = JSON.parse(response);
+            callback(node);
+        });
+    },
+
     setNodePosition: function(id, x, y, callback) {
         var data = {
             id: id,
@@ -49,6 +59,18 @@ var pipe = {
             y: y
         }
         pipe.make_request("set_node_position", data, function(response) {
+            var success = JSON.parse(response);
+            callback(success);
+        });
+    },
+
+    assignArgument: function(id, name, value, callback) {
+        var data = {
+            id: id,
+            name: name,
+            value: value
+        };
+        pipe.make_request("assign_argument", data, function(response) {
             var success = JSON.parse(response);
             callback(success);
         });

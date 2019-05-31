@@ -18,7 +18,9 @@ var config = {
 
     variable: {
         text: "#75b0ec",
-        connector: "#75b0ec"
+        connector: "#75b0ec",
+        connectorUnassigned: "#161c25",
+        connectorAssigned: "#ffffff"
     }
     
 }
