@@ -34,6 +34,11 @@ class BasicGraph:
             raise KeyError("No known node with id=%s" % str(id))
         return self.nodes[id]
 
+    def set_node_position(self, id, x, y):
+        node = self.get_node(id)
+        node.x = x
+        node.y = y
+
     def connect(self, node_from, arg_from, node_to, arg_to):
         edge = edges.BasicDirectedEdge(
             node_from, arg_from,
