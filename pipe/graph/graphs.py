@@ -53,6 +53,36 @@ class BasicGraph:
     def assign_argument(self, id, name, value):
         self.get_node(id).set_argument(name, value)
 
+    def delete_edge(self, edge):
+        self.edges.remove(edge)
+
+    def delete_edges(self, edges):
+        for edge in edges:
+            self.delete_edge(edge)
+
+    def delete_edge_by_match(self, id_from, arg_from, id_to, arg_to):
+        edges_to_remove = []
+        for edge in self.edges:
+            if edge.matches(id_from, arg_from, id_to, arg_to):
+                edges_to_remove.append(edge)
+
+        self.delete_edges(edges_to_remove)
+        
+    def delete_node(self, id):
+        node = self.nodes[id]
+        del self.nodes[id]
+
+        edges_to_remove = []
+        for edge in self.edges:
+            for arg in node.template.list_arguments():
+                if edge.is_connected_to(id, arg):
+                    edges_to_remove.append(edge)
+            for out in node.template.list_outputs():
+                if edge.is_connected_to(id, out):
+                    edges_to_remove.append(edge)
+
+        self.delete_edges(edges_to_remove)
+
     def execute(self, current_node):
         # Evaluate toward root first
         for edge in self.edges:

@@ -35,6 +35,9 @@ class BasicTemplate:
     def list_arguments(self):
         return [arg.get_name() for arg in self.args]
 
+    def list_outputs(self):
+        return [out.get_name() for out in self.outs]
+
     def execute(self, arguments):
         arg_data = []
         for arg in self.args:
