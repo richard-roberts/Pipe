@@ -9,6 +9,7 @@ from pipe.graph import templates
 from pipe.graph import nodes
 from pipe.graph import graphs
 from pipe.graph import library
+from pipe import server
 
 
 class TestArguments(TestCase):
@@ -133,7 +134,7 @@ class TestLibrary(TestCase):
 
     def test_new(self):
         l = library.load_interal()
-        l.new("a", ["in"], ["out"], "py", "import sys; print(sys.argv[1])")
+        l.create_or_update_basic_template("a", ["in"], ["out"], "py", "import sys; print(sys.argv[1])")
         self.assertEqual(len(l.list_templates()), 3)
         template = l.get("a")
         data = template.as_json()
@@ -169,12 +170,12 @@ class TestLibrary(TestCase):
 
     def test_move(self):
         l = library.load_interal()
-        l.move("Math.Sets.Sum", "a")
+        l.rename_template"Math.Sets.Sum", "a")
         self.assertEqual(len(l.list_templates()), 2)
         self.assertIn('Generate.Noise.Uniform', l.list_templates())
         self.assertIn("a", l.list_templates())
         self.assertNotIn('Math.Sets.Sum', l.list_templates())
-        l.move("a", "Math.Sets.Sum")
+        l.rename_template"a", "Math.Sets.Sum")
         self.assertEqual(len(l.list_templates()), 2)
         self.assertIn('Generate.Noise.Uniform', l.list_templates())
         self.assertIn('Math.Sets.Sum', l.list_templates())
@@ -313,6 +314,169 @@ class TestGraphs(TestCase):
 
         graph = graphs.from_json(json_data)
         result = graph.as_json()
+        self.assertTrue(result)
+        self.assertEqual(len(result["library"]), 2)
+        self.assertEqual(len(result["nodes"]), 2)
+        self.assertEqual(len(result["edges"]), 1)
+
+
+class TestServer(TestCase):
+
+    def test_call_list_templates(self):
+        importlib.reload(server)
+        template_list = server.call_list_templates()
+        self.assertIn('Generate.Noise.Uniform', template_list)
+        self.assertIn('Math.Sets.Sum', template_list)
+
+    def test_call_query_template(self):
+        importlib.reload(server)
+        data = server.call_query_template("Generate.Noise.Uniform")
+        self.assertEqual(list(data["args"]), [{'name': 'seed'}, {'name': 'n'}, {'name': 'from'}, {'name': 'to'}])
+        self.assertEqual(list(data["outs"]), [{'name': 'points'}])        
+        data = server.call_query_template("Math.Sets.Sum")
+        self.assertEqual(list(data["args"]), [{'name': 'points'}])
+        self.assertEqual(list(data["outs"]), [{'name': 'summed'}])
+
+    def test_call_create_or_update_basic_template(self):
+        importlib.reload(server)
+        data = server.call_create_or_update_basic_template("test", ["a", "b"], ["o"], "py", "import sys; print(sys.argv[1] + sys.argv[2])")
+        self.assertEqual(list(data["args"]), [{'name': 'a'}, {'name': 'b'}])
+        self.assertEqual(list(data["outs"]), [{'name': 'o'}])
+
+    def test_call_replace_template(self):
+        importlib.reload(server)
+        server.call_create_or_update_basic_template("test", ["a", "b"], ["o"], "py", "import sys; print(sys.argv[1] + sys.argv[2])")
+        data = server.call_replace_template("test", ["a", "b", "c"], ["o", "p"], "py", "import sys; print(sys.argv[1] + sys.argv[2])")
+        self.assertEqual(list(data["args"]), [{'name': 'a'}, {'name': 'b'}, {'name': 'c'}])
+        self.assertEqual(list(data["outs"]), [{'name': 'o'}, {'name': 'p'}])
+
+    def test_call_new_node(self):
+        importlib.reload(server)
+        data = server.call_new_node("Math.Sets.Sum", x=500, y=200)
+        self.assertEqual(data["x"], 500)
+        self.assertEqual(data["y"], 200)
+
+    def test_call_query_node(self):
+        importlib.reload(server)
+        node = server.call_new_node("Math.Sets.Sum")
+        node_copy = server.call_query_node(node["id"])
+        self.assertEqual(node, node_copy)
+
+    def test_call_new_node_failure(self):
+        importlib.reload(server)
+        result = server.call_new_node("xxx")
+        self.assertEqual(result, False)
+
+    def test_call_assign_variable(self):
+        importlib.reload(server)
+        data = server.call_new_node("Math.Sets.Sum")
+        result = server.call_assign_argument(data["id"], "points", "[20.0, 10.0, 2.0]")
+        self.assertEqual(result, True)
+
+    def test_call_new_edge(self):
+        importlib.reload(server)
+        noise_node_data = server.call_new_node("Generate.Noise.Uniform")
+        sum_node_data = server.call_new_node("Math.Sets.Sum")
+        noise_node_id = noise_node_data["id"]
+        sum_node_id = sum_node_data["id"]
+        result = server.call_new_edge(noise_node_id, "points", sum_node_id, "points")
+        self.assertEqual(result, True)
+
+    def test_call_evaluate(self):
+        importlib.reload(server)
+        noise_node = server.call_new_node("Generate.Noise.Uniform")
+        server.call_assign_argument(noise_node["id"], "seed", "0")
+        server.call_assign_argument(noise_node["id"], "n", "5")
+        server.call_assign_argument(noise_node["id"], "from", "1")
+        server.call_assign_argument(noise_node["id"], "to", "10")
+        sum_node = server.call_new_node("Math.Sets.Sum")
+        server.call_new_edge(noise_node["id"], "points", sum_node["id"], "points")
+        server.call_execute(sum_node["id"])
+        sum_node = server.call_query_node(sum_node["id"])
+        result = sum_node["outs"]["summed"]
+        self.assertAlmostEqual(float(result), 30.138253762619907)
+
+    def test_call_list_nodes(self):
+        importlib.reload(server)
+        noise_node = server.call_new_node("Generate.Noise.Uniform")
+        sum_node = server.call_new_node("Math.Sets.Sum")
+        server.call_new_edge(noise_node["id"], "points", sum_node["id"], "points")
+        result = server.call_list_nodes()
+        self.assertEqual(len(result), 2)
+        self.assertEqual(noise_node, server.call_query_node(noise_node["id"]))
+        self.assertEqual(sum_node, server.call_query_node(sum_node["id"]))
+
+    def test_call_list_edges(self):
+        importlib.reload(server)
+        noise_node = server.call_new_node("Generate.Noise.Uniform")
+        sum_node = server.call_new_node("Math.Sets.Sum")
+        server.call_new_edge(noise_node["id"], "points", sum_node["id"], "points")
+        result = server.call_list_edges()
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["node_id_from"], noise_node["id"])
+        self.assertEqual(result[0]["node_id_to"], sum_node["id"])
+        self.assertEqual(result[0]["arg_from"], "points")
+        self.assertEqual(result[0]["arg_to"], "points")
+
+    def test_call_as_json(self):
+        importlib.reload(server)
+        noise_node = server.call_new_node("Generate.Noise.Uniform")
+        sum_node = server.call_new_node("Math.Sets.Sum")
+        server.call_new_edge(noise_node["id"], "points", sum_node["id"], "points")
+        result = server.call_as_json()
+
+        # Check library
+        self.assertEqual(len(result["library"]), 2)
+        self.assertIn('Generate.Noise.Uniform', result["library"].keys())
+        self.assertIn('Math.Sets.Sum', result["library"].keys())
+
+        # Check nodes
+        ids = [n["id"] for n in result["nodes"]]
+        self.assertEqual(len(ids), 2)
+        self.assertIn(noise_node["id"], ids)
+        self.assertIn(sum_node["id"], ids)
+
+        # Check edges
+        self.assertEqual(len(result["edges"]), 1)
+        self.assertEqual(result["edges"][0]["node_id_from"], noise_node["id"])
+        self.assertEqual(result["edges"][0]["node_id_to"], sum_node["id"])
+        self.assertEqual(result["edges"][0]["arg_from"], "points")
+        self.assertEqual(result["edges"][0]["arg_to"], "points")
+        
+    def test_call_from_json(self):
+        importlib.reload(server)
+
+        json_data = {
+            'library': 
+                {
+                    'Generate.Noise.Uniform': {
+                        'args': [{'name': 'seed'}, {'name': 'n'}, {'name': 'from'}, {'name': 'to'}], 
+                        'outs': [{'name': 'points'}],
+                        'routine': {
+                            'extension': 'py',
+                            'code': 'import sys\nimport random\nseed = int(sys.argv[1])\nn    = int(sys.argv[2])\ns    = float(sys.argv[3])\ne    = float(sys.argv[4])\nrandom.seed(seed)\ndelta = e - s\npoints = [\n   s + random.random() * delta   for i in range(n)\n]\nprint(points)\n'
+                        }
+                    },
+                    'Math.Sets.Sum': {
+                        'args': [{'name': 'points'}],
+                        'outs': [{'name': 'summed'}],
+                        'routine': {
+                            'extension': 'py',
+                            'code': 'import sys\nimport json\npoints = json.loads(sys.argv[1])\nsummed = sum(points)\nprint(summed)\n'
+                        }
+                    }
+            },            
+            'nodes': [
+                {'path': 'Generate.Noise.Uniform', 'id': 4417478384, 'args': {}, 'outs': {}, 'x': 100, 'y': 200},
+                {'path': 'Math.Sets.Sum', 'id': 4417562888, 'args': {}, 'outs': {}, 'x': 200, 'y': 300}
+            ], 
+            'edges': [
+                {'node_id_from': 4417478384, 'arg_from': 'points', 'node_id_to': 4417562888, 'arg_to': 'points'}
+            ]
+        }
+
+        server.call_from_json(json_data)
+        result = server.call_as_json()
         self.assertTrue(result)
         self.assertEqual(len(result["library"]), 2)
         self.assertEqual(len(result["nodes"]), 2)
