@@ -83,10 +83,12 @@ var svg = {
 
     zoomView: function(delta) {
         svg.scale += delta * 0.0001;
+        var offsetX = svg.x + svg.w / 2;
+        var offsetY = svg.y + svg.h / 2;
         svg.w = svg.ow * svg.scale;
         svg.h = svg.oh * svg.scale;
-        svg.x = -svg.w / 2;
-        svg.y = -svg.h / 2;
+        svg.x = -svg.w / 2 + offsetX;
+        svg.y = -svg.h / 2 + offsetY;
         svg.updateView();
     },
 
