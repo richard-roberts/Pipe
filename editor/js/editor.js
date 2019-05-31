@@ -300,6 +300,7 @@ var editor = {
         var a = connectorAbsoluteXY;
         var b = mouseXY;
         b.x -= 10;
+        b.y -= 10;
         svg.setCurveCoordinates(
             editor.pendingCurve,
             a.x, a.y,

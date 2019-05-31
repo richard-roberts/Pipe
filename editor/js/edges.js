@@ -11,7 +11,7 @@ var edges = {
         nodeXY = svg.getTranslateXY(svg.getById(`${datum.node_id_from}`));
         connectorXY = svg.getCxCy(svg.getById(`${datum.node_id_from}.${datum.arg_from}`));
         var a = {
-            x: nodeXY.x + connectorXY.x,
+            x: nodeXY.x + connectorXY.x + 8,
             y: nodeXY.y + connectorXY.y,
         }
 
@@ -20,7 +20,7 @@ var edges = {
         nodeXY = svg.getTranslateXY(svg.getById(`${datum.node_id_to}`));
         connectorXY = svg.getCxCy(svg.getById(`${datum.node_id_to}.${datum.arg_to}`));
         var b = {
-            x: nodeXY.x + connectorXY.x,
+            x: nodeXY.x + connectorXY.x - 8,
             y: nodeXY.y + connectorXY.y,
         }
 
