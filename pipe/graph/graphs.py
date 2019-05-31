@@ -68,9 +68,10 @@ class BasicGraph:
 
         # Then evaluate current
         current_node.evaluate()
+        return current_node
 
     def execute_by_id(self, id):
-        self.execute(self.get_node(id))
+        return self.execute(self.get_node(id))
 
     def as_json(self):
         return {
