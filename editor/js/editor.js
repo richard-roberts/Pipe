@@ -214,6 +214,25 @@ var editor = {
         );
     },
 
+    importFromFile: function(e) {
+        files.loadDroppedFileCotentAsString(e, function(str) {
+            pipe.fromJson(str, function(success) {
+                if (success) {
+                    editor.refresh();
+                }
+            });
+        });
+    },
+
+    exportToFile: function() {
+        pipe.asJson(function(json) {
+            var name = prompt("Name:",  "graph"); 
+            if (name != null) { 
+                files.downloadContent(`${name}.json`, json);
+            }
+        });
+    },
+
     setup: function() {
         editor.refresh();
     }

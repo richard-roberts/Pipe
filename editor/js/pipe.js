@@ -79,6 +79,23 @@ var pipe = {
             var edgeData = JSON.parse(response);
             callback(edgeData);
         });
+    },
+
+    asJson: function(callback) {
+        pipe.make_request("as_json", {}, function(response) {
+            var json = response;
+            callback(json);
+        });
+    },
+
+    fromJson: function(jsonString, callback) {
+        var data = {
+            data: jsonString
+        } 
+        pipe.make_request("from_json", data, function(response) {
+            var success = response;
+            callback(success);
+        });
     }
     
 }
