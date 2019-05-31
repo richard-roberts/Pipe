@@ -40,6 +40,18 @@ var pipe = {
             var node = JSON.parse(response);
             callback(node);
         });
+    setNodePosition: function(id, x, y, callback) {
+        var data = {
+            id: id,
+            x: x,
+            y: y
+        }
+        pipe.make_request("set_node_position", data, function(response) {
+            var success = JSON.parse(response);
+            callback(success);
+        });
+    },
+
     }
     
 }

@@ -7,10 +7,6 @@ var editor = {
     pendingConnectionOutputNodeId: null,
     pendingConnectionOutputName: null,
 
-    deselectAll: function() {
-        editor.selected = [];
-    },
-
     addSelected: function(element) {
         editor.selected.push(element);
     },
@@ -41,6 +37,15 @@ var editor = {
                 nodes.createFromData(templateData, nodeData);
             });
         });
+    },
+
+    sendNodePositionUpdate: function(node) {
+        var pos = svg.getTranslateXY(node);
+        pipe.setNodePosition(node.id, pos.x, pos.y, function(success) {
+            if (success != true) {
+                console.error(`failed to move node (id=${node.id}) to (x=${pos.x} y=${pos.y})`);
+            }
+        })
     },
 
     startDrawingPendingCurve: function(e) {
@@ -122,7 +127,10 @@ var editor = {
             if (editor.pendingCurve != null) {
                 editor.stopDrawingPendingCurve(e);
             }
-            editor.deselectAll();
+            editor.selected.forEach(node => {
+                editor.sendNodePositionUpdate(node);
+            });
+            editor.selected = [];
         });
 
         svg.setEvent(svg.body, "mousemove", function(e) {
