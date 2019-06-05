@@ -33,12 +33,14 @@
                     <button id='new-template-button' class='action-button'>(P)rogram</button>
                     <button id='new-node-button' class='action-button'>(N)ode</button>
                     <button id='export-graph-button' class='action-button'>(E)xport</button>
+                    <button id='theme-button' class='action-button'>Theme</button>
                 </div>
                 <div id='menu-inner'></div>
             </div>
         </div>
         <script type='text/javascript'>
             window.onload = function() {
+                config.setup();
                 svg.setup();
                 editor.setup();
                 menu.setup();

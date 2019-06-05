@@ -218,13 +218,6 @@ var editor = {
 
     refresh: function() {
 
-        function renderBackground(nextFunctions) {
-            var e = svg.newRect(-svg.w / 2, -svg.h / 2, svg.w, svg.h);
-            svg.setAttr(e, "following", false);
-            svg.setAttr(e, "style", `fill:${config.background};`);
-            nextFunctions.shift()(nextFunctions);
-        }
-
         function renderGrid(nextFunctions) {
             var w = 20000;
             var h = 20000;
@@ -237,7 +230,7 @@ var editor = {
             for (var i = 0; i < n; i++) {
                 y += thickness + spacing;
                 var hori = svg.newRect(-w / 2, y, w, thickness, parent=svg.body);
-                svg.setAttr(hori, "style", `fill:${config.highlight};opacity:0.5;`);
+                svg.setAttr(hori, "style", `fill:${config.editor.highlight};opacity:0.5;`);
             }
     
             // Vertical
@@ -245,13 +238,13 @@ var editor = {
             for (var i = 0; i < n; i++) {
                 x += thickness + spacing;
                 var hori = svg.newRect(x, -h / 2, thickness, h, parent=svg.body);
-                svg.setAttr(hori, "style", `fill:${config.highlight};opacity:0.5;`);
+                svg.setAttr(hori, "style", `fill:${config.editor.highlight};opacity:0.5;`);
             }
             
             var centerHori = svg.newRect(-w / 2, -thickness, w, thickness * 2, parent=svg.body);
             var centerVert = svg.newRect(-thickness, -h / 2, thickness * 2, h, parent=svg.body);
-            svg.setAttr(centerHori, "style", `fill:${config.highlight};opacity:0.5`);
-            svg.setAttr(centerVert, "style", `fill:${config.highlight};opacity:0.5`);
+            svg.setAttr(centerHori, "style", `fill:${config.editor.highlight};opacity:0.5`);
+            svg.setAttr(centerVert, "style", `fill:${config.editor.highlight};opacity:0.5`);
             nextFunctions.shift()(nextFunctions);
         }
 
@@ -309,7 +302,7 @@ var editor = {
 
         svg.clear(svg.body);
         svg.resetView();
-        var actions = [renderBackground, renderGrid, renderNodes, renderEdges, setEvents, renderComplete];
+        var actions = [renderGrid, renderNodes, renderEdges, setEvents, renderComplete];
         actions.shift()(actions);
     },
 

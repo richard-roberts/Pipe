@@ -149,6 +149,44 @@ var menu = {
         });
     },
 
+    themeMenu: function() {
+
+        var items = [];
+        ["darkIce", "vapour"].forEach( theme => {
+            var item = `<option value="${theme}">${theme}</option>`;
+            items.push(item);
+        });
+
+        var inner = `
+
+            <div class="menu-inner-container">
+
+                <div class="menu-small-section"></div>
+
+                <div class="menu-small-section">
+                    <div class="menu-small-section-inner">
+                        <div>Theme</div>
+                    </div>
+                    <div class="menu-large-section-inner">
+                        <select id="menu-theme-choice"> ${items}</select>
+                    </div>
+                </div>
+
+            </div>
+        `
+
+        editInner.set(menu.body, inner);
+
+        var choice = document.getElementById('menu-theme-choice');
+        choice.value = config.theme.key;
+        
+        choice.onchange = function(e) {
+            config.switchTheme(choice.value);
+            editor.refresh();
+        }
+
+    },
+
     setup: function() {
 
         // Store elements 
@@ -159,6 +197,7 @@ var menu = {
         document.getElementById('new-template-button').onclick = menu.newTemplateMenu;
         document.getElementById('new-node-button').onclick = menu.newNodeMenu;
         document.getElementById('export-graph-button').onclick = editor.exportToFile;
+        document.getElementById('theme-button').onclick = menu.themeMenu;
     }
 
 }

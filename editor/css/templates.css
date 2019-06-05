@@ -9,14 +9,14 @@
     padding-top: 1em;
     list-style-position: inside;
     list-style-type: none;
-    color: var(--template-text-color);
+    color: var(--menu-text-color);
     font-size: 1em;
 }
 
 .template-tree-leaf {
     margin: 0;
     padding: 0;
-    color: var(--template-text-color);
+    color: var(--menu-text-color);
 }
 
 .template-tree-leaf-button {
@@ -24,6 +24,6 @@
     background-color: transparent;
     text-decoration: underline;
     border: none;
-    color: var(--template-text-color);
+    color: var(--menu-text-color);
     font-size: 1em;
 }
