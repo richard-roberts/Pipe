@@ -1,18 +1,21 @@
 var menu = {
 
     body: null,
+    open: true,
 
     showMenu: function() {
+        menu.open = true;
         document.getElementById('menu-toggle').setAttribute("style", "display:none;");
         document.getElementById('menu-body').setAttribute("style", "display:block;");
     },
 
     hideMenu: function() {
+        menu.open = false;
         document.getElementById('menu-toggle').setAttribute("style", "display:block;");
         document.getElementById('menu-body').setAttribute("style", "display:none;");
     },
 
-    set_new_template_menu: function() {
+    newNodeMenu: function() {
         editChildren.clear(menu.body);
 
         pipe.list_templates(function(paths) {
@@ -30,15 +33,9 @@ var menu = {
         menu.body = document.getElementById('menu-inner');
 
         // Setup callbacks
-        document.getElementById('hide-menu-button').onclick = menu.hideMenu;
-        document.getElementById('show-menu-button').onclick = menu.showMenu;
-        document.getElementById('refresh-graph-button').onclick = editor.refresh;
-        document.getElementById('import-graph-button').onclick = editor.importFromFile;
+        document.getElementById('menu-toggle').onclick = menu.showMenu;
+        document.getElementById('new-node-button').onclick = menu.newNodeMenu;
         document.getElementById('export-graph-button').onclick = editor.exportToFile;
-        document.getElementById('new-template-button').onclick = menu.set_new_template_menu;
-        document.getElementById("import-graph-button").ondragover = files.showLinkIconOnDrag;
-        document.getElementById("import-graph-button").ondrop = editor.importFromFile;
-
     }
 
 }

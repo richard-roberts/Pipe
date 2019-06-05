@@ -186,16 +186,23 @@ var editor = {
     },
 
     handleKeyPress: function(key) {
-        if (key == 'a') {
-            editor.assignArgument();
-        } else if (key == 'd') {
-            editor.deleteLastHovered();
-        } else if (key == 's') {
-            editor.showOutput();
-        } else if (key == 'e') {
-            editor.evaluate();
-        } else {
-            console.warn(`No action bound to '${key}', ignored`);
+        
+        if (menu.open) {
+            switch(key) {
+                case 'Escape': menu.hideMenu(); break;
+                case '.': editor.refresh(); break;
+            }
+            return;
+        }
+
+        switch(key) {
+            case 'm': menu.showMenu(); break;
+            case 'e': menu.exportToFile(); break;
+            case 'n': menu.showMenu(); menu.newNodeMenu(); break;
+            case 'a': editor.assignArgument(); break;
+            case 'd': editor.deleteLastHovered(); break;
+            case 's': editor.showOutput(); break;
+            case 'x': editor.evaluate(); break;
         }
     },
 
@@ -281,6 +288,8 @@ var editor = {
             svg.setEvent(svg.body, "mouseup", editor.handleMouseUp);
             svg.setEvent(svg.body, "mousemove", editor.handleMouseMove);
             svg.setEvent(svg.body, "wheel", editor.handleMouseWheel);
+            svg.setEvent(svg.body, "dragover", files.showLinkIconOnDrag);
+            svg.setEvent(svg.body, "drop", editor.importFromFile);
             nextFunctions.shift()(nextFunctions);
         }
 
