@@ -106,7 +106,7 @@ var pipe = {
     deleteEdge: function(edgeId, callback) {
         var parts = edgeId.split(".");
         if (parts.length != 4) {
-            console.error(`${edgeId} is not a valid edge identifier`);
+            statusbar.displayError(`${edgeId} is not a valid edge identifier`);
             return;
         }
         var data = {
@@ -137,7 +137,7 @@ var pipe = {
         }
         pipe.make_request("execute", data, function(response) {
             if (response == "false") {
-                console.error("execution failed");
+                statusbar.displayError("execution failed");
                 return;
             }
             

@@ -1,3 +1,22 @@
+var logger = {
+    record: [],
+    
+    normal: function(message) {
+        console.log(message);
+        logger.record.push(message);
+    },
+    
+    warning: function(message) {
+        console.warn(message);
+        logger.record.push(message);
+    },
+    
+    error: function(message) {
+        console.error(message);
+        logger.record.push(message);
+    },
+};
+
 var statusbar = {
 
     left: null,
@@ -39,10 +58,26 @@ var statusbar = {
         statusbar.right = document.getElementById('statusbar-right');
 
         editInner.set(statusbar.left, "pipe >");
-
+        
         statusbar.updateSecondsPassedByServer();
         setInterval(statusbar.updateSecondsPassedByServer, 60000);
         setInterval(statusbar.updateSecondsPassedByClock, 1000);  
-    }
+    },
+
+    displayMessage: function(message) {
+        logger.normal(message);
+        editInner.set(statusbar.display, `${message}`);
+    },
+
+    displayWarning: function(message) {
+        logger.warning(message);
+        editInner.set(statusbar.display, `<b>Warning</b>: ${message}`);
+    },
+
+    displayError: function(message) {
+        logger.error(message);
+        editInner.set(statusbar.display, `<b>Error</b>: ${message}`);
+    },
+    
 
 };

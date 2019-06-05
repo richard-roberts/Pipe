@@ -44,7 +44,7 @@ var editor = {
         pipe.newTemplate(
             path, args, outs, extension, code,
             function(templateData) {
-                console.log(templateData)
+                statusbar.displayMessage(templateData)
             }
         );
     },
@@ -82,13 +82,13 @@ var editor = {
                 }       
             });
         } else {
-            console.error(`You can only assign to arguments.`);
+            statusbar.displayError(`You can only assign to arguments.`);
         }  
     },
 
     deleteLastHovered: function() {
         if (editor.lastHovered == null) {
-            console.error("Nothing selected to delete (hover over it)");
+            statusbar.displayError("Nothing selected to delete (hover over it)");
             return;
         }
 
@@ -98,7 +98,7 @@ var editor = {
                     svg.removeElement(svg.body, svg.getById(editor.lastHovered));
                     editor.lastHovered = null;
                 } else {
-                    console.error(`Failed to delete edge (id=${editor.lastHovered})`);
+                    statusbar.displayError(`Failed to delete edge (id=${editor.lastHovered})`);
                 }
             });
         }
@@ -109,7 +109,7 @@ var editor = {
                     editor.refresh(); 
                     editor.lastHovered = null;
                 } else {
-                    console.error(`Failed to delete node (id=${editor.lastHovered})`);
+                    statusbar.displayError(`Failed to delete node (id=${editor.lastHovered})`);
                 }
             })
         }
@@ -117,7 +117,7 @@ var editor = {
 
     evaluate: function() {
         if (editor.lastHoveredType != 'node') {
-            console.error(`You can only evalaute nodes.`);
+            statusbar.displayError(`You can only evalaute nodes.`);
             return;
         }
 
@@ -137,7 +137,7 @@ var editor = {
 
     showOutput: function()  {
         if (editor.lastHoveredType != 'arg' && editor.lastHoveredType != 'out') {
-            console.error(`You can only show variables (either inputs or outputs).`);
+            statusbar.displayError(`You can only show variables (either inputs or outputs).`);
             return;
         }
 
@@ -150,7 +150,7 @@ var editor = {
             if (name in varMap) {
                 alert(`The value of ${name} is ${varMap[name]}\nid=${nodeData.id}.`);
             } else {
-                console.error(`${name} not found in node data (id=${nodeData.id}).`);
+                statusbar.displayError(`${name} not found in node data (id=${nodeData.id}).`);
             }
         });
     },
@@ -297,7 +297,7 @@ var editor = {
         }
 
         function renderComplete() {
-            console.log("Graph render complete");
+            statusbar.displayMessage("Graph render complete");
         }
 
         svg.clear(svg.body);
@@ -310,7 +310,7 @@ var editor = {
         var pos = svg.getTranslateXY(node);
         pipe.setNodePosition(node.id, pos.x, pos.y, function(success) {
             if (success != true) {
-                console.error(`failed to move node (id=${node.id}) to (x=${pos.x} y=${pos.y})`);
+                statusbar.displayError(`failed to move node (id=${node.id}) to (x=${pos.x} y=${pos.y})`);
             }
         })
     },
