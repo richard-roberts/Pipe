@@ -175,6 +175,13 @@ var pipe = {
             var success = response;
             callback(success);
         });
+    },
+
+    timeSinceStart: function(callback) {
+        pipe.make_request("time_since_start", {}, function(response) {
+            var seconds = JSON.parse(response);
+            callback(seconds);
+        });
     }
     
 }

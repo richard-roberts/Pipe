@@ -7,6 +7,7 @@
         <link rel='stylesheet' type='text/css' href='css/templates.css'>
         <link rel='stylesheet' type='text/css' href='css/editor.css'>
         <link rel='stylesheet' type='text/css' href='css/menu.css'>
+        <link rel='stylesheet' type='text/css' href='css/statusbar.css'>
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
         <script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
         <script type='text/javascript' src='js/config.js'></script>
@@ -21,6 +22,7 @@
         <script type='text/javascript' src='js/edges.js'></script>
         <script type='text/javascript' src='js/editor.js'></script>
         <script type='text/javascript' src='js/menu.js'></script>
+        <script type='text/javascript' src='js/statusbar.js'></script>
     </head>
     <body>
         <div id='screen'>
@@ -37,6 +39,11 @@
                 </div>
                 <div id='menu-inner'></div>
             </div>
+            <div id='statusbar-body'>
+                <div id='statusbar-left'></div>
+                <div id='statusbar-display'></div>
+                <div id='statusbar-right'></div>
+            </div>
         </div>
         <script type='text/javascript'>
             window.onload = function() {
@@ -44,6 +51,7 @@
                 svg.setup();
                 editor.setup();
                 menu.setup();
+                statusbar.setup();
                 keyboard.setup();
                 menu.hideMenu();
             }; 

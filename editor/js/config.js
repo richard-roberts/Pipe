@@ -59,6 +59,10 @@ var themes = {
             config.menu.background = colors.darkGray;
             config.menu.toggle = colors.darkGray;
             config.menu.text = colors.paleBlue;
+            config.statusbar.leftBackground = colors.darkGray;
+            config.statusbar.displayBackground = colors.darkGray;
+            config.statusbar.rightBackground = colors.darkGray;
+            config.statusbar.text = colors.paleBlue;
         }
     },
 
@@ -90,6 +94,10 @@ var themes = {
             config.menu.background = colors.dark;
             config.menu.toggle = colors.dark;
             config.menu.text = colors.high;
+            config.statusbar.leftBackground = colors.dark;
+            config.statusbar.displayBackground = colors.dark;
+            config.statusbar.rightBackground = colors.dark;
+            config.statusbar.text = colors.high;
         }
     }
 
@@ -129,12 +137,24 @@ var config = {
         text: hslToHex(0,0,0),
     },
 
+    statusbar: {
+        leftBackground: hslToHex(0,0,0),
+        displayBackground: hslToHex(0,0,0),
+        rightBackground: hslToHex(0,0,0),
+        text: hslToHex(0,0,0),
+    },
+
     updateCSS: function() {
         var root = document.documentElement;
         root.style.setProperty('--editor-background-color', config.editor.background);
         root.style.setProperty('--menu-background-color', config.menu.background);
         root.style.setProperty('--menu-toggle-color', config.menu.toggle);
         root.style.setProperty('--menu-text-color', config.menu.text);
+        root.style.setProperty('--statusbar-background-color', config.statusbar.background);
+        root.style.setProperty('--statusbar-left-background-color', config.statusbar.leftBackground);
+        root.style.setProperty('--statusbar-display-background-color', config.statusbar.displayBackground);
+        root.style.setProperty('--statusbar-right-background-color', config.statusbar.rightBackground);
+        root.style.setProperty('--statusbar-text-color', config.statusbar.text);
     },
 
     setup: function() {
