@@ -5,7 +5,7 @@ var keyboard = {
     },
 
     setup: function() {
-        window.onkeypress = keyboard.press;
+        $(document).keydown(keyboard.press);
     }
 }
 
