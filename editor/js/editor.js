@@ -186,10 +186,6 @@ var editor = {
     },
 
     handleKeyPress: function(key) {
-        if (editor.lastHovered == null) {
-            console.error(`Nothing hovered (move the mouse over the widget your trying to control).`);
-        }
-
         if (key == 'a') {
             editor.assignArgument();
         } else if (key == 'd') {
