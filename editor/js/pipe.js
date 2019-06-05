@@ -30,6 +30,20 @@ var pipe = {
         });
     },
 
+    newTemplate: function(path, args, outs, extension, code, callback) {
+        var data = {
+            path: path,
+            args: args,
+            outs: outs,
+            extension: extension,
+            code: code
+        }
+        pipe.make_request("new_basic_template", data, function(response) {
+            var templateData = JSON.parse(response);
+            callback(templateData);
+        });
+    },
+
     new_node: function(path, x, y, callback) {
         var data = {
             path: path,

@@ -19,6 +19,12 @@ var makeHtml = {
     button: function() {
         var e = document.createElement('button');
         return e;
+    },
+
+    textbox: function() {
+        var e = document.createElement('input');
+        e.setAttribute("type", "text");
+        return e;
     }
     
 }

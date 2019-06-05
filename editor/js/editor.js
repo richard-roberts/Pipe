@@ -40,6 +40,15 @@ var editor = {
         }
     },
 
+    newTemplate: function(path, args, outs, extension, code) {
+        pipe.newTemplate(
+            path, args, outs, extension, code,
+            function(templateData) {
+                console.log(templateData)
+            }
+        );
+    },
+
     newNode: function(path) {
         pipe.query_template(path, function(templateData) {
             pipe.new_node(path, 0, 0, function(nodeData) {
@@ -198,6 +207,7 @@ var editor = {
         switch(key) {
             case 'm': menu.showMenu(); break;
             case 'e': menu.exportToFile(); break;
+            case 'p': menu.showMenu(); menu.newTemplateMenu(); break;
             case 'n': menu.showMenu(); menu.newNodeMenu(); break;
             case 'a': editor.assignArgument(); break;
             case 'd': editor.deleteLastHovered(); break;
