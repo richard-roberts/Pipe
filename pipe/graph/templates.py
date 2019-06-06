@@ -18,6 +18,7 @@ class BasicTemplate:
 
     def as_json(self):
         return {
+            "type": "basic",
             "args": [a.as_json() for a in self.args],
             "outs": [o.as_json() for o in self.outs],
             "routine": self.routine.as_json()
@@ -57,12 +58,48 @@ class BasicTemplate:
             outputs[out.name] = value
         return outputs
 
+class FileTemplate:
+
+    def __init__(self, filepath):
+        self.filepath = filepath
+        self.args = []
+        self.outs = [outputs.BasicOutput("filepath")]
+        self.execute({})
+
+    def __str__(self):
+        return f"FileTemplate[{self.filepath}]"
+
+    def as_json(self):
+        return {
+            "type": "file",
+            "args": [a.as_json() for a in self.args],
+            "outs": [o.as_json() for o in self.outs],
+            "filepath": self.filepath
+        }
+
+    def list_arguments(self):
+        return [arg.get_name() for arg in self.args]
+
+    def list_outputs(self):
+        return [out.get_name() for out in self.outs]
+
+    def execute(self, arguments):
+        outputs = {
+            "filepath": self.filepath
+        }
+        return outputs
+
 def from_json(data):
-    return BasicTemplate(
-        [arguments.from_json(datum) for datum in data["args"]],
-        [outputs.from_json(datum) for datum in data["outs"]],
-        routines.from_json(data["routine"])
-    )
+    if data["type"] == "basic":
+        return BasicTemplate(
+            [arguments.from_json(datum) for datum in data["args"]],
+            [outputs.from_json(datum) for datum in data["outs"]],
+            routines.from_json(data["routine"])
+        )
+    elif data["type"] == "file":
+        return FileTemplate(data["filepath"])
+    else:
+        raise ValueError(f"{data['type']} is not a valid template type")
 
 def from_data(args, outs, extension, code):
     return BasicTemplate(

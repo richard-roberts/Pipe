@@ -21,8 +21,13 @@ class Library:
             )
         self.templates[path] = template
 
-    def new(self, path, args, outs, extension, code):
+    def new_basic_template(self, path, args, outs, extension, code):
         template = templates.from_data(args, outs, extension, code)
+        self.add(path, template)
+        return template
+
+    def new_file_template(self, path, filepath):
+        template = templates.FileTemplate(filepath)
         self.add(path, template)
         return template
     

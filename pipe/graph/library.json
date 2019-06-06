@@ -1,5 +1,6 @@
 {
     "Generate.Noise.Uniform": {
+        "type": "basic",
         "args": [
             {
                 "name": "seed"
@@ -25,6 +26,7 @@
         }
     },
     "Math.Sets.Sum": {
+        "type": "basic",
         "args": [
             {
                 "name": "points"
