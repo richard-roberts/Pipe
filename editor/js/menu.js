@@ -149,6 +149,55 @@ var menu = {
         });
     },
 
+    uploadMenu: function() {
+        editChildren.clear(menu.body);
+
+        var inner = `
+
+            <div class="menu-inner-container">
+
+                <div class="menu-small-section"></div>
+
+                <form id="upload-menu-form" method="POST" enctype="multipart/form-data">
+                    <div class="menu-small-section"></div>
+                            <div class="menu-small-section-inner">
+                                <div>Key</div>
+                            </div>
+                            <div class="menu-large-section-inner">
+                                <input name="path" type="text" id="upload-menu-form-path"></input>
+                            </div>
+
+                            <div class="menu-small-section-inner">
+                                <input name="file" type="file">
+                            </div>
+                            <div class="menu-large-section-inner"></div>
+
+                            <div class="menu-small-section-inner">
+                                <input type="submit" value="Upload" />
+                            </div>
+                            <div class="menu-large-section-inner"></div>
+                    </div>
+
+                </form>
+
+            </div>
+        `
+
+        editInner.set(menu.body, inner);
+
+        var path = document.getElementById("upload-menu-form-path");
+        path.value = "Files.";
+
+        var form = document.getElementById("upload-menu-form");
+        form.onsubmit = function() {
+            pipe.upload(form, function(response) {
+                editChildren.clear(menu.body);
+                menu.hideMenu();
+            });
+            return false;
+        }
+    },
+
     settingsMenu: function() {
 
         var items = [];
@@ -211,6 +260,7 @@ var menu = {
         document.getElementById('menu-toggle').onclick = menu.showMenu;
         document.getElementById('new-template-button').onclick = menu.newTemplateMenu;
         document.getElementById('new-node-button').onclick = menu.newNodeMenu;
+        document.getElementById('upload-file-button').onclick = menu.uploadMenu;
         document.getElementById('export-graph-button').onclick = editor.exportToFile;
         document.getElementById('settings-button').onclick = menu.settingsMenu;
     }

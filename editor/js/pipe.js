@@ -13,6 +13,19 @@ var pipe = {
         });
     },
 
+    make_xhr_post_request: function(command, form, callback) {
+        var url = `${url_base}/${command}`
+        var formData = new FormData(form);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                callback(xhr.response);
+            }
+        }
+        xhr.open('POST', url, true);
+        xhr.send(formData);
+    },
+
     list_templates: function(callback) {
         pipe.make_request("list_templates", {}, function(response) {
             var templates = JSON.parse(response);
@@ -175,6 +188,10 @@ var pipe = {
             var success = response;
             callback(success);
         });
+    },
+
+    upload: function(form, callback) {
+        pipe.make_xhr_post_request("upload", form, callback);
     },
 
     timeSinceStart: function(callback) {
