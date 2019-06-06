@@ -194,6 +194,25 @@ var pipe = {
         pipe.make_xhr_post_request("upload", form, callback);
     },
 
+    // `download` by user iXs
+    // See https://stackoverflow.com/questions/17527713/force-browser-to-download-image-files-on-click
+    download: function(filepath) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", `${url_base}/download?filepath=${filepath}`, true);
+        xhr.responseType = "blob";
+        xhr.onload = function(){
+            var urlCreator = window.URL || window.webkitURL;
+            var imageUrl = urlCreator.createObjectURL(this.response);
+            var tag = document.createElement('a');
+            tag.href = imageUrl;
+            tag.download = filepath.split("/").slice(-1)[0];
+            document.body.appendChild(tag);
+            tag.click();
+            document.body.removeChild(tag);
+        }
+        xhr.send();
+    },
+
     timeSinceStart: function(callback) {
         pipe.make_request("time_since_start", {}, function(response) {
             var seconds = JSON.parse(response);

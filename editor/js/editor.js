@@ -211,6 +211,7 @@ var editor = {
         switch(key) {
             case 'm': menu.showMenu(); break;
             case 'e': menu.exportToFile(); break;
+            case 's': editor.downloadFilepathViaArgument(); break;
             case 'p': menu.showMenu(); menu.newTemplateMenu(); break;
             case 'n': menu.showMenu(); menu.newNodeMenu(); break;
             case 'u': menu.showMenu(); menu.uploadMenu(); break;
@@ -372,6 +373,29 @@ var editor = {
                 files.downloadContent(`${name}.json`, json);
             }
         });
+    },
+
+    downloadFilepathViaArgument: function() {
+        if (editor.lastHoveredType != 'arg' && editor.lastHoveredType != 'out') {
+            statusbar.displayWarning(`You can only download from "filepath" variables.`);
+            return;
+        }
+        var parts = editor.lastHovered.split(".");
+        var id = parts[0];
+        var name = parts[1];
+        if (name != "filepath") {
+            statusbar.displayWarning(`You can only download from "filepath" variables.`);
+            return;
+        }
+        
+        pipe.queryNode(id, function(nodeData) {
+            var key = `${editor.lastHoveredType}s`;
+            if ("filepath" in nodeData[key]) {
+                pipe.download(nodeData[key]["filepath"]);
+            } else {
+                statusbar.displayError(`filepath not found in node data (id=${nodeData.id})?`);
+            }
+        }); 
     },
 
     setup: function() {
