@@ -149,7 +149,7 @@ var menu = {
         });
     },
 
-    themeMenu: function() {
+    settingsMenu: function() {
 
         var items = [];
         ["darkIce", "vapour"].forEach( theme => {
@@ -168,7 +168,16 @@ var menu = {
                         <div>Theme</div>
                     </div>
                     <div class="menu-large-section-inner">
-                        <select id="menu-theme-choice"> ${items}</select>
+                        <select id="settings-menu-theme"> ${items}</select>
+                    </div>
+                </div>
+
+                <div class="menu-small-section">
+                    <div class="menu-small-section-inner">
+                        <div>Zoom Speed</div>
+                    </div>
+                    <div class="menu-large-section-inner">
+                        <input id="settings-menu-scroll" type="text"></input>
                     </div>
                 </div>
 
@@ -177,12 +186,18 @@ var menu = {
 
         editInner.set(menu.body, inner);
 
-        var choice = document.getElementById('menu-theme-choice');
-        choice.value = config.theme.key;
+        var theme = document.getElementById('settings-menu-theme');
+        theme.value = config.theme.key;
         
-        choice.onchange = function(e) {
-            config.switchTheme(choice.value);
+        theme.onchange = function(e) {
+            config.switchTheme(theme.value);
             editor.refresh();
+        }
+
+        var scrollSpeed = document.getElementById('settings-menu-scroll');
+        scrollSpeed.value = config.scrollSpeed;
+        scrollSpeed.onchange = function(e) {
+            config.scrollSpeed = parseFloat(scrollSpeed.value);
         }
 
     },
@@ -197,7 +212,7 @@ var menu = {
         document.getElementById('new-template-button').onclick = menu.newTemplateMenu;
         document.getElementById('new-node-button').onclick = menu.newNodeMenu;
         document.getElementById('export-graph-button').onclick = editor.exportToFile;
-        document.getElementById('theme-button').onclick = menu.themeMenu;
+        document.getElementById('settings-button').onclick = menu.settingsMenu;
     }
 
 }

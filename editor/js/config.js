@@ -107,6 +107,8 @@ var config = {
 
     theme: themes.darkIce,
 
+    scrollSpeed: 0.001,
+
     editor: {
         background: hslToHex(0,0,0),
         highlight: hslToHex(0,0,0),

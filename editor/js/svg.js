@@ -93,7 +93,7 @@ var svg = {
     },
 
     zoomView: function(delta) {
-        svg.scale += delta * 0.0001;
+        svg.scale += delta * config.scrollSpeed;
         var offsetX = svg.x + svg.w / 2;
         var offsetY = svg.y + svg.h / 2;
         svg.w = svg.ow * svg.scale;
