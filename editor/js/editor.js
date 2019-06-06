@@ -135,24 +135,28 @@ var editor = {
 
     },
 
-    showOutput: function()  {
-        if (editor.lastHoveredType != 'arg' && editor.lastHoveredType != 'out') {
-            statusbar.displayError(`You can only show variables (either inputs or outputs).`);
-            return;
+    showTooltip: function()  {
+        function showVariable() {
+            var parts = editor.lastHovered.split(".");
+            var id = parts[0];
+            var name = parts[1];
+            pipe.queryNode(id, function(nodeData) {
+                var key = `${editor.lastHoveredType}s`;
+                var varMap = nodeData[key];
+                if (name in varMap) {
+                    var message = `${name}=${varMap[name]}`;
+                    tooltip.show(message);
+                } else {
+                    statusbar.displayError(`${name} not found in node data (id=${nodeData.id}).`);
+                }
+            });
         }
 
-        var parts = editor.lastHovered.split(".");
-        var id = parts[0];
-        var name = parts[1];
-        pipe.queryNode(id, function(nodeData) {
-            var key = `${editor.lastHoveredType}s`;
-            var varMap = nodeData[key];
-            if (name in varMap) {
-                alert(`The value of ${name} is ${varMap[name]}\nid=${nodeData.id}.`);
-            } else {
-                statusbar.displayError(`${name} not found in node data (id=${nodeData.id}).`);
-            }
-        });
+        switch(editor.lastHoveredType) {
+            case 'arg': showVariable(); break;
+            case 'out': showVariable(); break;
+            default: statusbar.displayWarning("hover over something to display value");
+        }
     },
 
     handleMouseDown: function(e) {
@@ -211,7 +215,7 @@ var editor = {
             case 'n': menu.showMenu(); menu.newNodeMenu(); break;
             case 'a': editor.assignArgument(); break;
             case 'd': editor.deleteLastHovered(); break;
-            case 's': editor.showOutput(); break;
+            case ' ': editor.showTooltip(); break;
             case 'x': editor.evaluate(); break;
         }
     },

@@ -63,6 +63,8 @@ var themes = {
             config.statusbar.displayBackground = colors.darkGray;
             config.statusbar.rightBackground = colors.darkGray;
             config.statusbar.text = colors.paleBlue;
+            config.tooltip.background = colors.darkGray;
+            config.tooltip.text = colors.paleBlue;
         }
     },
 
@@ -98,6 +100,8 @@ var themes = {
             config.statusbar.displayBackground = colors.dark;
             config.statusbar.rightBackground = colors.dark;
             config.statusbar.text = colors.high;
+            config.tooltip.background = colors.dark;
+            config.tooltip.text = colors.high;
         }
     }
 
@@ -146,6 +150,11 @@ var config = {
         text: hslToHex(0,0,0),
     },
 
+    tooltip: {
+        background: hslToHex(0,0,0),
+        text: hslToHex(0,0,0)
+    },
+
     updateCSS: function() {
         var root = document.documentElement;
         root.style.setProperty('--editor-background-color', config.editor.background);
@@ -157,6 +166,8 @@ var config = {
         root.style.setProperty('--statusbar-display-background-color', config.statusbar.displayBackground);
         root.style.setProperty('--statusbar-right-background-color', config.statusbar.rightBackground);
         root.style.setProperty('--statusbar-text-color', config.statusbar.text);
+        root.style.setProperty('--tooltip-background-color', config.tooltip.background);
+        root.style.setProperty('--tooltip-text-color', config.tooltip.text);
     },
 
     setup: function() {

@@ -1,0 +1,10 @@
+#tooltip {
+    display: none;
+    position: absolute;
+    left: 300;
+    top: 0;
+    width: 200px;
+    height: 100px;
+    color: var(--tooltip-text-color);
+    background-color: var(--tooltip-background-color);
+}
