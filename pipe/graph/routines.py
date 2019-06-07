@@ -33,13 +33,16 @@ class AbstractRoutine(object):
     def __init__(self, code, extension):
         self.code = code
         self.extension = extension
-        self.code_path = "./pipe_%s_code.%s" % (self.extension, self.extension) # TODO: make temporary file
+        _, self.code_path = tempfile.mkstemp(prefix="pipe", suffix=f"pipe.${self.extension}")
         self.last_execution = None
 
     def write_code(self):
         f = open(self.code_path, "w")
         f.write(self.code)
         f.close()
+
+    def delete_code(self):
+        os.remove(self.code_path)
 
     def prepare_executable(self):
         pass
@@ -58,7 +61,9 @@ class AbstractRoutine(object):
     def execute(self, arguments):
         self.write_code()
         self.compile()
-        return self.run(arguments)
+        result = self.run(arguments)
+        self.delete_code()
+        return result
 
     def as_json(self):
         return {
