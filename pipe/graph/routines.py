@@ -105,11 +105,46 @@ class RubyRoutine(AbstractRoutine):
         self.last_execution = Execution("ruby", [self.code_path] + arguments)
 
 
+class BashRoutine(AbstractRoutine):
+
+    def __init__(self, code):
+        super(BashRoutine, self).__init__(code, "sh")
+
+    def prepare_executable(self):
+        f = open(self.code_path, "r")
+        content = f.read()
+        f.close()
+
+        with_shebang = "#!/bin/sh\n" + content
+        f = open(self.code_path, "w")
+        f.write(with_shebang)
+        f.close()
+        
+        os.chmod(self.code_path, os.stat(self.code_path).st_mode | stat.S_IEXEC)
+
+    def run_executable(self, arguments):
+        self.last_execution = Execution(self.code_path, arguments)
+
+
+class BatchRoutine(AbstractRoutine):
+
+    def __init__(self, code):
+        super(BatchRoutine, self).__init__(code, "batch")
+
+    def prepare_executable(self):
+        os.chmod(self.code_path, os.stat(self.code_path).st_mode | stat.S_IEXEC)
+
+    def run_executable(self, arguments):
+        self.last_execution = Execution(self.code_path, arguments)
+
+
 def from_extension_and_code(extension, code):
     types = {
         "c": CRoutine,
         "py": PythonRoutine,
-        "rb": RubyRoutine
+        "rb": RubyRoutine,
+        "sh": BashRoutine,
+        "bat": BatchRoutine
     }
     if extension not in types.keys():
         raise ValueError("Cannot initialize routine with `%s` extension " % extension)
