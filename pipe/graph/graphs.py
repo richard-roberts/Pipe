@@ -83,6 +83,41 @@ class BasicGraph:
 
         self.delete_edges(edges_to_remove)
 
+    def replace_template(self, old_template, new_template):
+        edges_to_remove = []
+
+        for node in self.nodes.values():
+            if node.template == old_template:
+                node.replace_template(new_template)
+
+                for edge in self.edges:
+                    
+                    for arg in old_template.list_arguments():
+                        if arg not in new_template.list_arguments():
+                            if edge.is_connected_to(node.node_id, arg):
+                                edges_to_remove.append(edge)                
+
+                    for out in node.template.list_outputs():
+                        if out not in new_template.list_outputs():
+                            if edge.is_connected_to(node.node_id, out):
+                                edges_to_remove.append(edge)
+
+        edges_to_remove = list(set(edges_to_remove))
+        self.delete_edges(edges_to_remove)
+
+    def rename_template(self, old_path, new_path):
+        for node in self.nodes.values():
+            if node.path == old_path:
+                node.path = new_path
+
+    def remove_template(self, template):
+        nodes_to_remove = []
+        for node in self.nodes.values():
+            if node.template == template:
+                nodes_to_remove.append(node)
+        for node in nodes_to_remove:
+            self.delete_node(node.node_id)
+
     def execute(self, current_node):
         # Evaluate toward root first
         for edge in self.edges:
