@@ -92,16 +92,28 @@ var menu = {
         var argsEditor = document.getElementById("new-template-menu-args");
         var outsEditor = document.getElementById("new-template-menu-outs");
         var codeEditor = ace.edit("code-editor");
-        codeEditor.setTheme("ace/theme/monokai");
-        codeEditor.session.setMode("ace/mode/python");
 
         pathEditor.value = usePath;
         extEditor.value = useExt;
         argsEditor.value = useArgs;
         outsEditor.value = useOuts;
 
+        codeEditor.setTheme(`ace/theme/${config.aceTheme}`);
         codeEditor.setValue(useCode);
         
+        // See mode list at
+        //   https://github.com/ajaxorg/ace/blob/master/lib/ace/ext/modelist.js
+        function setAceModeFromExt() {
+            switch (extEditor.value) {
+                case "py": codeEditor.session.setMode("ace/mode/python"); break;
+                case "rb": codeEditor.session.setMode("ace/mode/ruby"); break;
+                case "c": codeEditor.session.setMode("ace/mode/c_cpp"); break;
+                case "sh": codeEditor.session.setMode("ace/mode/sh"); break;
+                case "bat": codeEditor.session.setMode("ace/mode/batchfile"); break;
+            }
+        }
+        setAceModeFromExt();
+        extEditor.onchange = setAceModeFromExt;
 
         document.getElementById('new-template-menu-submit').onclick = function(e) {
             var path = pathEditor.value;
