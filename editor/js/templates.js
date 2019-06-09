@@ -1,6 +1,6 @@
 var templates = {
 
-    renderTemplateTreeAsInterface: function(templateList, clickCallback) {
+    renderTemplateTreeAsInterface: function(templateList) {
         treeInterface = makeHtml.ul();
         editProperties.setClass(treeInterface, "template-tree");
         
@@ -33,12 +33,15 @@ var templates = {
         function createLeaf(path) {
             var name = path.split(".").slice(-1)[0];
             var e = makeHtml.li();
-            editProperties.setClickFunction(e, function() { clickCallback(path) });
             editProperties.setClass(e, "template-tree-leaf");
-            var b = makeHtml.button();
-            editProperties.setClass(b, "template-tree-leaf-button");
-            editInner.set(b, `${name}`);
-            editChildren.append(e, b);
+            var inner = `
+            ${name}
+            <button class="template-tree-leaf-button" onclick="editor.newNode('${path}');">[create]</button>
+            <button class="template-tree-leaf-button" onclick="menu.editTemplate('${path}');">[edit]</button>
+            <button class="template-tree-leaf-button" onclick="menu.renameTemplate('${path}');">[rename]</button>
+            <button class="template-tree-leaf-button" onclick="menu.removeTemplate('${path}');">[delete]</button>
+            `;
+            editInner.set(e, inner);
             return e;    
         }
 

@@ -43,7 +43,7 @@ var pipe = {
         });
     },
 
-    newTemplate: function(path, args, outs, extension, code, callback) {
+    addOrUpdateTemplate: function(path, args, outs, extension, code, callback) {
         var data = {
             path: path,
             args: args,
@@ -51,9 +51,30 @@ var pipe = {
             extension: extension,
             code: code
         }
-        pipe.make_request("new_basic_template", data, function(response) {
+        pipe.make_request("add_or_update_template", data, function(response) {
             var templateData = JSON.parse(response);
             callback(templateData);
+        });
+    },
+
+    renameTemplate: function(oldPath, newPath, callback) {
+        var data = {
+            old_path: oldPath,
+            new_path: newPath
+        };
+        pipe.make_request("rename_template", data, function(response) {
+            var success = response;
+            callback(success);
+        });
+    },
+
+    removeTemplate: function(path, callback) {
+        var data = {
+            path: path
+        }
+        pipe.make_request("remove_template", data, function(response) {
+            var success = response;
+            callback(success);
         });
     },
 

@@ -15,7 +15,7 @@ var menu = {
         document.getElementById('menu-body').setAttribute("style", "display:none;");
     },
 
-    newTemplateMenu: function() {
+    newOrUpdateTemplateMenu: function(usePath="", useExt="py", useArgs="", useOuts="", useCode="") {
         editChildren.clear(menu.body);
 
         var items = [];
@@ -87,15 +87,27 @@ var menu = {
 
         editInner.set(menu.body, inner);
 
+        var pathEditor = document.getElementById("new-template-menu-path");
+        var extEditor = document.getElementById("new-template-menu-ext");
+        var argsEditor = document.getElementById("new-template-menu-args");
+        var outsEditor = document.getElementById("new-template-menu-outs");
         var codeEditor = ace.edit("code-editor");
         codeEditor.setTheme("ace/theme/monokai");
         codeEditor.session.setMode("ace/mode/python");
 
+        pathEditor.value = usePath;
+        extEditor.value = useExt;
+        argsEditor.value = useArgs;
+        outsEditor.value = useOuts;
+
+        codeEditor.setValue(useCode);
+        
+
         document.getElementById('new-template-menu-submit').onclick = function(e) {
-            var path = document.getElementById("new-template-menu-path").value;
-            var ext = document.getElementById("new-template-menu-ext").value;
-            var argStr = document.getElementById("new-template-menu-args").value;
-            var outStr = document.getElementById("new-template-menu-outs").value;
+            var path = pathEditor.value;
+            var ext = extEditor.value;
+            var argStr = argsEditor.value;
+            var outStr = outsEditor.value;
             var code = codeEditor.getValue();
 
             var args = "[";
@@ -122,9 +134,12 @@ var menu = {
                 outs = outs.substring(0, outs.length - 1) + "]";
             }
             
-            editor.newTemplate(path, args, outs, ext, code);
+            editor.addOrUpdateTemplate(path, args, outs, ext, code);
             editChildren.clear(menu.body);
-            menu.hideMenu();
+            editor.refresh();
+            menu.newOrUpdateTemplateMenu(
+                usePath=path, useExt=ext, useArgs=argStr, useOuts=outStr, useCode=code,
+            );
         }
         
         // Drop event
@@ -137,14 +152,54 @@ var menu = {
 
     },
 
+    openNewOrUpdateTemplateMenu: function(e) {
+        menu.newOrUpdateTemplateMenu();
+    },
+
+    editTemplate: function(path) {
+        pipe.query_template(path, function(templateData) {
+            if (templateData.type != "basic") {
+                statusbar.displayWarning(`can only edit basic templates (not ${templateData.type})`);
+                return;
+            }
+            
+            var args = [];
+            templateData.args.forEach( arg => {
+                args.push(arg.name);
+            });
+
+            var outs = [];
+            templateData.outs.forEach( out => {
+                outs.push(out.name);
+            });
+
+            menu.newOrUpdateTemplateMenu(
+                usePath=path,
+                useExt=templateData.routine.extension,
+                useArgs=args,
+                useOuts=outs,
+                useCode=templateData.routine.code
+            );
+            menu.showMenu();
+        });
+    },
+
+    renameTemplate: function(oldPath) {
+        var newPath = prompt(`Enter new path:`,  oldPath); 
+        pipe.renameTemplate(oldPath, newPath, function(){});
+        menu.newNodeMenu();
+    },
+
+    removeTemplate: function(path) {
+        pipe.removeTemplate(path, function(){});
+        menu.newNodeMenu();
+    },
+
     newNodeMenu: function() {
         editChildren.clear(menu.body);
 
         pipe.list_templates(function(paths) {
-            var tree = templates.renderTemplateTreeAsInterface(
-                paths, editor.newNode
-            );
-
+            var tree = templates.renderTemplateTreeAsInterface(paths);
             editChildren.append(menu.body, tree);
         });
     },
@@ -258,7 +313,7 @@ var menu = {
 
         // Setup callbacks
         document.getElementById('menu-toggle').onclick = menu.showMenu;
-        document.getElementById('new-template-button').onclick = menu.newTemplateMenu;
+        document.getElementById('new-template-button').onclick = menu.openNewOrUpdateTemplateMenu;
         document.getElementById('new-node-button').onclick = menu.newNodeMenu;
         document.getElementById('upload-file-button').onclick = menu.uploadMenu;
         document.getElementById('export-graph-button').onclick = editor.exportToFile;

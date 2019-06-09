@@ -40,8 +40,8 @@ var editor = {
         }
     },
 
-    newTemplate: function(path, args, outs, extension, code) {
-        pipe.newTemplate(
+    addOrUpdateTemplate: function(path, args, outs, extension, code) {
+        pipe.addOrUpdateTemplate(
             path, args, outs, extension, code,
             function(templateData) {
                 statusbar.displayMessage(templateData)
@@ -131,6 +131,19 @@ var editor = {
                     svg.setStyle(svg.getById(`${editor.lastHovered}.${name}`), `fill:${config.variable.connectorAssigned};`);
                 }
             });
+        });
+
+    },
+
+    editNodeTemplate: function() {
+        if (editor.lastHoveredType != "node") {
+            statusbar.displayWarning("hover over a node to edit it's template");
+            return;
+        }
+
+        var id = editor.lastHovered;
+        pipe.queryNode(id, function(nodeData) {
+            menu.editTemplate(nodeData.path);
         });
 
     },
