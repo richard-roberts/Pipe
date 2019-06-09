@@ -110,6 +110,7 @@ var themes = {
 var config = {
 
     theme: themes.darkIce,
+    aceTheme: "gob",
 
     scrollSpeed: 0.001,
 
