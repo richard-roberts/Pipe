@@ -267,10 +267,25 @@ var menu = {
 
     settingsMenu: function() {
 
-        var items = [];
+        var pipeThemes = [];
         ["darkIce", "vapour"].forEach( theme => {
             var item = `<option value="${theme}">${theme}</option>`;
-            items.push(item);
+            pipeThemes.push(item);
+        });
+
+        var aceThemes = [];
+        [
+            "gob", "dawn", "chaos", "xcode", "chrome", "clouds",
+            "cobalt", "github", "kuroir", "dracula", "eclipse", "gruvbox",
+            "monokai", "ambiance", "iplastic", "kr_theme", "terminal", "textmate",
+            "tomorrow", "twilight", "merbivore", "sqlserver", "dreamweaver",
+            "katzenmilch", "vibrant_ink", "idle_fingers", "crimson_editor",
+            "merbivore_soft", "pastel_on_dark", "solarized_dark", "tomorrow_night",
+            "clouds_midnight", "mono_industrial", "solarized_light", "tomorrow_night_blue",
+            "tomorrow_night_bright", "tomorrow_night_eighties"    
+        ].forEach( theme => {
+            var item = `<option value="${theme}">${theme}</option>`;
+            aceThemes.push(item);
         });
 
         var inner = `
@@ -281,10 +296,19 @@ var menu = {
 
                 <div class="menu-small-section">
                     <div class="menu-small-section-inner">
-                        <div>Theme</div>
+                        <div>Pipe Theme</div>
                     </div>
                     <div class="menu-large-section-inner">
-                        <select id="settings-menu-theme"> ${items}</select>
+                        <select id="settings-menu-pipe-theme"> ${pipeThemes}</select>
+                    </div>
+                </div>
+
+                <div class="menu-small-section">
+                    <div class="menu-small-section-inner">
+                        <div>Ace Theme</div>
+                    </div>
+                    <div class="menu-large-section-inner">
+                        <select id="settings-menu-ace-theme"> ${aceThemes}</select>
                     </div>
                 </div>
 
@@ -302,12 +326,17 @@ var menu = {
 
         editInner.set(menu.body, inner);
 
-        var theme = document.getElementById('settings-menu-theme');
-        theme.value = config.theme.key;
-        
-        theme.onchange = function(e) {
-            config.switchTheme(theme.value);
+        var pipeTheme = document.getElementById('settings-menu-pipe-theme');
+        pipeTheme.value = config.theme.key;
+        pipeTheme.onchange = function(e) {
+            config.switchTheme(pipeTheme.value);
             editor.refresh();
+        }
+
+        var aceTheme = document.getElementById('settings-menu-ace-theme');
+        aceTheme.value = config.aceTheme;
+        aceTheme.onchange = function(e) {
+            config.aceTheme = aceTheme.value;
         }
 
         var scrollSpeed = document.getElementById('settings-menu-scroll');
