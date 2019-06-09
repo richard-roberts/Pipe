@@ -121,14 +121,17 @@ var editor = {
             return;
         }
 
-        pipe.execute(editor.lastHovered, function(nodeData) {
+        var nodeid = editor.lastHovered;
+
+        pipe.execute(nodeid, function(nodeData) {
+            statusbar.displayMessage("Execution successful");
             Object.keys(nodeData.outs).forEach(key => {
                 var name = key;
                 var value = nodeData.outs[key];
                 if (value == "") {
-                    svg.setStyle(svg.getById(`${editor.lastHovered}.${name}`), `fill:${config.variable.connectorUnassigned};`);
+                    svg.setStyle(svg.getById(`${nodeid}.${name}`), `fill:${config.variable.connectorUnassigned};`);
                 } else {
-                    svg.setStyle(svg.getById(`${editor.lastHovered}.${name}`), `fill:${config.variable.connectorAssigned};`);
+                    svg.setStyle(svg.getById(`${nodeid}.${name}`), `fill:${config.variable.connectorAssigned};`);
                 }
             });
         });
@@ -212,27 +215,31 @@ var editor = {
     },
 
     handleKeyPress: function(key) {
+
+        if (document.activeElement == document.getElementsByTagName('body')[0]) {
+            switch(key) {
+                case '.': editor.refresh(); break;
+                case 'm': menu.showMenu(); break;
+                case 'e': editor.exportToFile(); break;
+                case 's': editor.downloadFilepathViaArgument(); break;
+                case 'p': menu.showMenu(); menu.newOrUpdateTemplateMenu(); break;
+                case 'n': menu.showMenu(); menu.newNodeMenu(); break;
+                case 'u': menu.showMenu(); menu.uploadMenu(); break;
+                case 'a': editor.assignArgument(); break;
+                case 'd': editor.deleteLastHovered(); break;
+                case ' ': editor.showTooltip(); break;
+                case 'x': editor.evaluate(); break;
+                case 't': editor.editNodeTemplate(); break;
+            }
+        } 
         
         if (menu.open) {
             switch(key) {
                 case 'Escape': menu.hideMenu(); break;
-                case '.': editor.refresh(); break;
             }
             return;
         }
 
-        switch(key) {
-            case 'm': menu.showMenu(); break;
-            case 'e': menu.exportToFile(); break;
-            case 's': editor.downloadFilepathViaArgument(); break;
-            case 'p': menu.showMenu(); menu.newTemplateMenu(); break;
-            case 'n': menu.showMenu(); menu.newNodeMenu(); break;
-            case 'u': menu.showMenu(); menu.uploadMenu(); break;
-            case 'a': editor.assignArgument(); break;
-            case 'd': editor.deleteLastHovered(); break;
-            case ' ': editor.showTooltip(); break;
-            case 'x': editor.evaluate(); break;
-        }
     },
 
     refresh: function() {
