@@ -34,6 +34,7 @@ class BasicNode:
         return self.template.list_arguments()
 
     def evaluate(self):
+        self.outputs = {}
         result = self.template.execute(self.arguments)
         for key in result.keys():
             value = result[key]
