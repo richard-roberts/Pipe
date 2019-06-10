@@ -204,6 +204,7 @@ var menu = {
 
     removeTemplate: function(path) {
         pipe.removeTemplate(path, function(){});
+        editor.refresh();
         menu.newNodeMenu();
     },
 
