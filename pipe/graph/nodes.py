@@ -18,8 +18,8 @@ class BasicNode:
         args = {}
         for arg in old_template.list_arguments():
             if arg in new_template.list_arguments():
-                args[arg] = self.arguments[arg]
-
+                if arg in self.arguments.keys():
+                    args[arg] = self.arguments[arg]
 
         self.arguments = args
         self.outputs = {}
