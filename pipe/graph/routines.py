@@ -134,7 +134,7 @@ class BashRoutine(AbstractRoutine):
 class BatchRoutine(AbstractRoutine):
 
     def __init__(self, code):
-        super(BatchRoutine, self).__init__(code, "batch")
+        super(BatchRoutine, self).__init__(code, "bat")
 
     def prepare_executable(self):
         os.chmod(self.code_path, os.stat(self.code_path).st_mode | stat.S_IEXEC)
