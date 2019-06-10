@@ -2,6 +2,10 @@ var edges = {
 
     records: [],
 
+    reset: function() {
+        edges.records = [];
+    },
+
     updateEdge: function(record) {
         var datum = record.datum;
         var curve = record.curve;

@@ -295,6 +295,8 @@ var editor = {
         }
 
         function renderEdges(nextFunctions) {   
+            edges.reset();
+            
             pipe.listEdges(function(edgeData) {
                 if (edgeData.length == 0) {
                     nextFunctions.shift()(nextFunctions);
