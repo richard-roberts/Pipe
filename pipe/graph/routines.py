@@ -137,7 +137,7 @@ class BatchRoutine(AbstractRoutine):
         super(BatchRoutine, self).__init__(code, "bat")
 
     def prepare_executable(self):
-        os.chmod(self.code_path, os.stat(self.code_path).st_mode | stat.S_IEXEC)
+        pass
 
     def run_executable(self, arguments):
         self.last_execution = Execution(self.code_path, arguments)
