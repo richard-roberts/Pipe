@@ -20,14 +20,9 @@ class BasicNode:
             if arg in new_template.list_arguments():
                 args[arg] = self.arguments[arg]
 
-        
-        outs = {}
-        for out in old_template.list_outputs():
-            if out in new_template.list_outputs():
-                outs[out] = self.outputs[out]
 
         self.arguments = args
-        self.outputs = outs
+        self.outputs = {}
         self.template = new_template
 
     def list_arguments(self):
