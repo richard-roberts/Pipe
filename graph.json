@@ -1,0 +1,469 @@
+{
+    "edges": [
+        {
+            "arg_from": "directory",
+            "arg_to": "directory",
+            "node_id_from": 2461281617288,
+            "node_id_to": 2461281431392
+        },
+        {
+            "arg_from": "get",
+            "arg_to": " index",
+            "node_id_from": 2461281381736,
+            "node_id_to": 2461281547880
+        },
+        {
+            "arg_from": "filepaths",
+            "arg_to": "input",
+            "node_id_from": 2461281431392,
+            "node_id_to": 2461281547880
+        },
+        {
+            "arg_from": "directory",
+            "arg_to": "directory",
+            "node_id_from": 2461281617288,
+            "node_id_to": 1914009518488
+        },
+        {
+            "arg_from": "output",
+            "arg_to": "input",
+            "node_id_from": 2461281547880,
+            "node_id_to": 1914007985008
+        },
+        {
+            "arg_from": "start",
+            "arg_to": " start",
+            "node_id_from": 1914007985008,
+            "node_id_to": 1914009518488
+        },
+        {
+            "arg_from": " end",
+            "arg_to": " end",
+            "node_id_from": 1914007985008,
+            "node_id_to": 1914009518488
+        },
+        {
+            "arg_from": "filepath",
+            "arg_to": "csv",
+            "node_id_from": 1914009518488,
+            "node_id_to": 1914008031584
+        },
+        {
+            "arg_from": "output",
+            "arg_to": "input_filepath",
+            "node_id_from": 2461281547880,
+            "node_id_to": 1914009467088
+        },
+        {
+            "arg_from": "start",
+            "arg_to": "a",
+            "node_id_from": 1914008031584,
+            "node_id_to": 2777783408064
+        },
+        {
+            "arg_from": "start",
+            "arg_to": "b",
+            "node_id_from": 1914007985008,
+            "node_id_to": 2777783408064
+        },
+        {
+            "arg_from": "start",
+            "arg_to": "b",
+            "node_id_from": 1914007985008,
+            "node_id_to": 2777783376920
+        },
+        {
+            "arg_from": " end",
+            "arg_to": "a",
+            "node_id_from": 1914008031584,
+            "node_id_to": 2777783376920
+        },
+        {
+            "arg_from": "o",
+            "arg_to": " start",
+            "node_id_from": 2777783408064,
+            "node_id_to": 1914009467088
+        },
+        {
+            "arg_from": " end",
+            "arg_to": "a",
+            "node_id_from": 1914008031584,
+            "node_id_to": 2618984914896
+        },
+        {
+            "arg_from": "start",
+            "arg_to": "b",
+            "node_id_from": 1914008031584,
+            "node_id_to": 2618984914896
+        },
+        {
+            "arg_from": "o",
+            "arg_to": " duration",
+            "node_id_from": 2618984914896,
+            "node_id_to": 1914009467088
+        }
+    ],
+    "library": {
+        "Files.Find.CSV": {
+            "args": [
+                {
+                    "name": "directory"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "filepaths"
+                }
+            ],
+            "routine": {
+                "code": "import os, sys, glob, json\ndirectory = sys.argv[1]\nfiles = glob.glob(\"%s/*.csv\" % directory)\nprint(json.dumps(files))\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Files.Find.FromExtension": {
+            "args": [
+                {
+                    "name": "directory"
+                },
+                {
+                    "name": " extension"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "filepaths"
+                }
+            ],
+            "routine": {
+                "code": "import os, sys, json\n\ndirectory = sys.argv[1]\nextension = sys.argv[2]\nfilepaths = []\nfor current_directory, subdirectories, filenames in os.walk(directory):\n    for filename in filenames:\n        if filename.lower().endswith(\".%s\" % extension.lower()):\n            filepath = os.path.join(current_directory, filename)\n            filepaths.append(filepath)\nprint(json.dumps(filepaths))",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Files.Find.Video": {
+            "args": [
+                {
+                    "name": "directory"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "filepaths"
+                }
+            ],
+            "routine": {
+                "code": "import os, sys, json\n\nfilepaths = []\ndirectory = sys.argv[1]\nextension = sys.argv[2]\n\nfor current_directory, subdirectories, filenames in os.walk(directory):\n    for filename in filenames:\n        if filename.lower().endswith(\".%s\" % extension.lower()):\n            filepath = os.path.join(current_directory, filename)\n            filepaths.append(filepath)\n\nprint(json.dumps(filepaths))\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Files.FindMocapInTimeFrame": {
+            "args": [
+                {
+                    "name": "directory"
+                },
+                {
+                    "name": " start"
+                },
+                {
+                    "name": " end"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "filepath"
+                }
+            ],
+            "routine": {
+                "code": "import math\nimport re\nimport os\nimport sys\n\nsearch_directory = sys.argv[1]\nvideo_start = sys.argv[2]\nvideo_end = sys.argv[3]\n\ndef as_total_seconds(timecode):\n    parts = [v for v in re.split(':|\\.', timecode) if v.strip() != \"\"]\n    h = int(parts[0])\n    m = int(parts[1])\n    s = int(parts[2])\n    # ignore milliseconds and subframe\n    return h * 60 + m * 60 + s\nmust_start_after = as_total_seconds(video_start)\nmust_end_before = as_total_seconds(video_end)\n\ndef get_mocap_start_and_end(filepath):\n    f = open(filepath, \"r\")\n    lines = f.readlines()\n    f.close()\n\n    mocap_header_row = 0\n    while True:\n        line = lines[mocap_header_row]\n        parts = line.split(\",\")\n        if parts[0] == \"Frame\":\n            break\n        else:\n            mocap_header_row += 1\n\n    timecode_column = 0\n    parts = lines[mocap_header_row].split(\",\")\n    while parts[timecode_column] != \"TimeCode\":\n        timecode_column += 1\n\n    mocap_start_row = mocap_header_row + 1\n\n    mocap_end_row = len(lines) - 1\n    while lines[mocap_end_row].strip() == \"\":\n        mocap_end_row -= 1\n    while lines[mocap_end_row].split(\",\")[timecode_column] == \"00:00:00:00.00\":\n        mocap_end_row -= 1\n\n    return (\n        lines[mocap_start_row].split(\",\")[timecode_column],\n        lines[mocap_end_row].split(\",\")[timecode_column]\n    )\n\n\ndef find_first_matching_mocap_clip():\n    for current_directory, _, filenames in os.walk(search_directory):\n        for filename in filenames:\n            if filename.lower().endswith(\".csv\"):\n                filepath = os.path.join(current_directory, filename)\n                start_timecode, end_timecode = get_mocap_start_and_end(filepath)\n                start = as_total_seconds(start_timecode)\n                end = as_total_seconds(end_timecode)\n                if start >= must_start_after and end <= must_end_before:\n                    return filepath\n    return None\n\nresult = find_first_matching_mocap_clip()\nif result is not None:\n    print(result)\nelse:\n    raise ValueError(\"Did not find a mocap clip between %s and %s\" % (video_start, video_end))\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Files.Predefined.ProjectDir": {
+            "args": [
+                {
+                    "name": "set_directory"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "directory"
+                }
+            ],
+            "routine": {
+                "code": "import sys\nprint(sys.argv[1])",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Literals.Index": {
+            "args": [
+                {
+                    "name": "set"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "get"
+                }
+            ],
+            "routine": {
+                "code": "import sys\nprint(sys.argv[1])",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Mocap.ReadStartEnd": {
+            "args": [
+                {
+                    "name": "csv"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "start"
+                },
+                {
+                    "name": " end"
+                }
+            ],
+            "routine": {
+                "code": "import json, sys, re\n\nfilepath = sys.argv[1]\n\nf = open(filepath, \"r\")\nlines = f.readlines()\nf.close()\n\ndef get_mocap_header_row():\n    index = 0\n    while True:\n        line = lines[index]\n        parts = line.split(\",\")\n        if parts[0] == \"Frame\":\n            return index\n        else:\n            index += 1\nmocap_header_row = get_mocap_header_row()\n\ndef get_timecode_column():\n    index = 0\n    parts = lines[mocap_header_row].split(\",\")\n    while parts[index] != \"TimeCode\":\n        index += 1\n    return index\ntimecode_column = get_timecode_column()\n\ndef get_mocap_start_row():\n    return mocap_header_row + 1\nmocap_start_row = get_mocap_start_row()\n\ndef get_mocap_end_row():\n    index = len(lines) - 1\n    while lines[index].strip() == \"\":\n        index -= 1\n    while lines[index].split(\",\")[timecode_column] == \"00:00:00:00.00\":\n        index -= 1\n    return index\nmocap_end_row = get_mocap_end_row()\n\n\ndef motive_to_smpte(timecode):\n    parts = [v for v in re.split(':|\\.', timecode) if v.strip() != \"\"]\n    h = int(parts[0])\n    m = int(parts[1])\n    s = int(parts[2])\n    ms = int(parts[3])\n    return \"%02d:%02d:%02d.%03d\" % (h, m, s, ms)\n    \nmotive_start = lines[mocap_start_row].split(\",\")[timecode_column]\nsmpte_start = motive_to_smpte(motive_start)\nprint(smpte_start)\n\nmotive_end = lines[mocap_end_row].split(\",\")[timecode_column]\nsmpte_end = motive_to_smpte(motive_end)\nprint(smpte_end)\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Structures.Index": {
+            "args": [
+                {
+                    "name": "input"
+                },
+                {
+                    "name": " index"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "output"
+                }
+            ],
+            "routine": {
+                "code": "import json, sys\ninputs = json.loads(sys.argv[1])\nindex = int(sys.argv[2])\nprint(inputs[index])\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Timecode.Subtract": {
+            "args": [
+                {
+                    "name": "a"
+                },
+                {
+                    "name": "b"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "o"
+                }
+            ],
+            "routine": {
+                "code": "import sys\nimport re\n\na = sys.argv[1].strip()\nb = sys.argv[2].strip()\n\nh_a, m_a, s_a, ms_a = [int(v) for v in re.split(':|\\.',a)]\nh_b, m_b, s_b, ms_b = [int(v) for v in re.split(':|\\.',b)]\n\nh = h_a - h_b\nm = m_a - m_b\ns = s_a - s_b\nms = ms_a - ms_b\n\nwhile ms < 0:\n    s -= 1\n    ms += 1000\nwhile s < 0:\n    m -= 1\n    s += 60\nwhile m < 0:\n    h -= 1\n    m += 60\n# if h < 0:\n#     raise ValueError(\"Invalid timecode, hours cannot be below zero\")\n\nout = \"%02d:%02d:%02d.%03d\" % (h, m, s, ms)\nprint(out)\n\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Video.ReadMeta": {
+            "args": [
+                {
+                    "name": "input"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "start"
+                },
+                {
+                    "name": " end"
+                },
+                {
+                    "name": " fps"
+                }
+            ],
+            "routine": {
+                "code": "import sys\nimport math\nimport re\nimport subprocess\n\n\ninput_filepath = sys.argv[1]\n\n\ndef add_seconds_to_timecode(seconds, timecode):\n    h, m, s, ms = [int(v) for v in re.split(':|,',timecode)]\n    decimal, whole = math.modf(seconds)\n    ms += decimal\n    s += whole\n    while s > 59:\n        s -= 60\n        m += 1\n    while m > 59:\n        m -= 60\n        h += 1\n    return \"%02d:%02d:%02d.%03d\" % (h, m, s, ms)\n\ndef read_probe(args):\n    command = \"ffprobe\"\n    output = subprocess.run([command] + args, stdout=subprocess.PIPE).stdout\n    return output.decode('utf-8')\n\ndef start_timecode():\n    output = read_probe([\n        \"-v\", \"0\",\n        \"-of\", \"csv=p=0\",\n        \"-select_streams\", \"v:0\",\n        \"-show_entries\", \"format_tags=timecode\",\n        input_filepath\n    ]).strip()\n    return output\n\ndef end_timecode():\n    output = read_probe([\n        \"-v\", \"0\",\n        \"-of\", \"csv=p=0\",\n        \"-select_streams\", \"v:0\",\n        \"-show_entries\", \"format=duration\",\n        input_filepath\n    ]).strip()\n\n    length_in_seconds = float(output)\n    return add_seconds_to_timecode(length_in_seconds, start_timecode())\n\ndef fps():\n    output = read_probe([\n        \"-v\", \"0\",\n        \"-of\", \"csv=p=0\",\n        \"-select_streams\", \"v:0\",\n        \"-show_entries\", \"stream=r_frame_rate\",\n        input_filepath\n    ]).strip()\n\n    n_frames, n_seconds = output.split(\"/\")\n    if n_seconds != \"1\":\n        raise ValueError(\"Do not understand how to process\", output, \"as n_seconds\")\n    return float(n_frames)\n\n\nprint(start_timecode())\nprint(end_timecode())\nprint(fps())\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Video.Trimmer": {
+            "args": [
+                {
+                    "name": "input_filepath"
+                },
+                {
+                    "name": " start"
+                },
+                {
+                    "name": " duration"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "filepath"
+                }
+            ],
+            "routine": {
+                "code": "import os \nimport sys\nimport subprocess\n\n\ninput_filepath = sys.argv[1]\nstart_timecode = sys.argv[2]\nduration_timecode = sys.argv[3]\n\nfilepath_no_ext, ext = os.path.os.path.splitext(input_filepath)\noutput_filepath = filepath_no_ext + \"-trimmed\" + ext\n\ndef run_ffmpeg(args):\n    command = \"ffmpeg\"\n    output = subprocess.run([command] + args, stdout=subprocess.PIPE).stdout\n    return output.decode('utf-8')\n\nrun_ffmpeg([\n    \"-ss\", start_timecode,\n    \"-i\", input_filepath,\n    \"-t\", duration_timecode,\n    \"-codec\", \"copy\",\n    \"-async\", \"1\",\n    \"-y\",\n    output_filepath\n])\n\nprint(output_filepath)\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        }
+    },
+    "nodes": [
+        {
+            "args": {
+                "set_directory": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7"
+            },
+            "id": 2461281617288,
+            "outs": {
+                "directory": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7"
+            },
+            "path": "Files.Predefined.ProjectDir",
+            "x": "-1533",
+            "y": "-157"
+        },
+        {
+            "args": {
+                " extension": "mxf",
+                "directory": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7"
+            },
+            "id": 2461281431392,
+            "outs": {
+                "filepaths": "[\"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0042\\\\AA004201.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0041\\\\AA004101.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0043\\\\AA004301.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0040\\\\AA004001.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0047\\\\AA004701.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0046\\\\AA004601.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0044\\\\AA004401.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0045\\\\AA004501.MXF\"]"
+            },
+            "path": "Files.Find.FromExtension",
+            "x": "-1218",
+            "y": "531"
+        },
+        {
+            "args": {
+                "set": "1"
+            },
+            "id": 2461281381736,
+            "outs": {
+                "get": "1"
+            },
+            "path": "Literals.Index",
+            "x": "-1217",
+            "y": "665"
+        },
+        {
+            "args": {
+                " index": "1",
+                "input": "[\"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0042\\\\AA004201.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0041\\\\AA004101.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0043\\\\AA004301.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS001_19_20\\\\AA0040\\\\AA004001.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0047\\\\AA004701.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0046\\\\AA004601.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0044\\\\AA004401.MXF\", \"Z:\\\\eMotionCapture\\\\20190611\\\\2019-06-11EmoP7\\\\CLIPS002_21_22\\\\AA0045\\\\AA004501.MXF\"]"
+            },
+            "id": 2461281547880,
+            "outs": {
+                "output": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7\\CLIPS001_19_20\\AA0041\\AA004101.MXF"
+            },
+            "path": "Structures.Index",
+            "x": "-876",
+            "y": "576"
+        },
+        {
+            "args": {
+                " end": "11:13:58.015",
+                " start": "11:08:07:15",
+                "directory": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7"
+            },
+            "id": 1914009518488,
+            "outs": {
+                "filepath": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7\\Participants019-020Test_001.csv"
+            },
+            "path": "Files.FindMocapInTimeFrame",
+            "x": "-23",
+            "y": "76"
+        },
+        {
+            "args": {
+                " duration": "00:05:39.008",
+                " start": "00:00:08.999",
+                "input_filepath": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7\\CLIPS001_19_20\\AA0041\\AA004101.MXF"
+            },
+            "id": 1914009467088,
+            "outs": {},
+            "path": "Video.Trimmer",
+            "x": "1545",
+            "y": "706"
+        },
+        {
+            "args": {
+                "input": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7\\CLIPS001_19_20\\AA0041\\AA004101.MXF"
+            },
+            "id": 1914007985008,
+            "outs": {
+                " end": "11:13:58.015",
+                " fps": "25.0",
+                "start": "11:08:07:15"
+            },
+            "path": "Video.ReadMeta",
+            "x": "-373",
+            "y": "156"
+        },
+        {
+            "args": {
+                "csv": "Z:\\eMotionCapture\\20190611\\2019-06-11EmoP7\\Participants019-020Test_001.csv"
+            },
+            "id": 1914008031584,
+            "outs": {
+                " end": "11:13:55.022",
+                "start": "11:08:16.014"
+            },
+            "path": "Mocap.ReadStartEnd",
+            "x": "325",
+            "y": "76"
+        },
+        {
+            "args": {
+                "a": "11:08:16.014",
+                "b": "11:08:07:15"
+            },
+            "id": 2777783408064,
+            "outs": {
+                "o": "00:00:08.999"
+            },
+            "path": "Timecode.Subtract",
+            "x": "816",
+            "y": "525"
+        },
+        {
+            "args": {
+                "a": "11:13:55.022",
+                "b": "11:08:07:15"
+            },
+            "id": 2777783376920,
+            "outs": {
+                "o": "00:05:48.007"
+            },
+            "path": "Timecode.Subtract",
+            "x": "809",
+            "y": "675"
+        },
+        {
+            "args": {
+                "a": "11:13:55.022",
+                "b": "11:08:16.014"
+            },
+            "id": 2618984914896,
+            "outs": {
+                "o": "00:05:39.008"
+            },
+            "path": "Timecode.Subtract",
+            "x": "1079",
+            "y": "328"
+        }
+    ]
+}
