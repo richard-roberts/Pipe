@@ -5,27 +5,20 @@ import tempfile
 import json
 
 
-class Execution:
-
-    def __init__(self, command, args):
-        call = [command] + args
-        stdout = subprocess.PIPE
-        stderr = subprocess.PIPE
-        env = os.environ.copy()
-        process_result = subprocess.Popen(call, stdout=stdout, stderr=stderr, env=env)
-        process_result.wait()
-        self.output, self.error = process_result.communicate()
-        process_result.kill()
-
-    def get_error(self):
-        return self.error.decode("utf-8")
-    
-    def raise_if_errored(self):
-        if self.error:
-            raise ValueError(self.get_error())
-
-    def get_output(self):
-        return self.output.decode("utf-8")
+def execute(command, args):
+    p = subprocess.Popen(
+        [command] + args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=os.environ.copy()
+    )
+    p.wait()
+    output_bytes, error_bytes = p.communicate()
+    p.kill()
+    error = error_bytes.decode("utf-8")
+    if error:
+        raise ValueError(error)
+    return output_bytes.decode("utf-8")
 
 
 class AbstractRoutine(object):
@@ -33,37 +26,22 @@ class AbstractRoutine(object):
     def __init__(self, code, extension):
         self.code = code
         self.extension = extension
-        _, self.code_path = tempfile.mkstemp(prefix="pipe", suffix=f"pipe.${self.extension}")
+        self.code_path = ""
         self.last_execution = None
 
-    def write_code(self):
-        f = open(self.code_path, "w")
-        f.write(self.code)
-        f.close()
-
-    def delete_code(self):
-        os.remove(self.code_path)
-
     def prepare_executable(self):
-        pass
-
-    def compile(self):
-        self.prepare_executable()
+        pass        
 
     def run_executable(self, arguments):
         raise NotImplementedError("routines must implement `%s`" % self.run_executable.__name__)
         
-    def run(self, arguments):
-        self.run_executable(arguments)
-        self.last_execution.raise_if_errored()
-        return self.last_execution.get_output()
-
     def execute(self, arguments):
-        self.write_code()
-        self.compile()
-        result = self.run(arguments)
-        self.delete_code()
-        return result
+        _, self.code_path = tempfile.mkstemp(prefix="pipe", suffix=f".{self.extension}")
+        with open(self.code_path, "w") as f:
+            f.write(self.code)
+            f.seek(0)
+            self.prepare_executable()
+            return self.run_executable(arguments)
 
     def as_json(self):
         return {
@@ -79,11 +57,10 @@ class CRoutine(AbstractRoutine):
         self.exe_path = "./pipe_%s_exe" % (self.extension)
 
     def prepare_executable(self):
-        e = Execution("gcc", [self.code_path, "-o", self.exe_path])
-        e.raise_if_errored()
+        execute("gcc", [self.code_path, "-o", self.exe_path])
 
     def run_executable(self, arguments):
-        self.last_execution = Execution(self.exe_path, arguments)
+        return execute(self.exe_path, arguments)
 
 
 class PythonRoutine(AbstractRoutine):
@@ -95,7 +72,7 @@ class PythonRoutine(AbstractRoutine):
         pass
 
     def run_executable(self, arguments):
-        self.last_execution = Execution("python3", [self.code_path] + arguments)
+        return execute("python", [self.code_path] + arguments)
 
 
 class RubyRoutine(AbstractRoutine):
@@ -107,7 +84,7 @@ class RubyRoutine(AbstractRoutine):
         pass
 
     def run_executable(self, arguments):
-        self.last_execution = Execution("ruby", [self.code_path] + arguments)
+        return execute("ruby", [self.code_path] + arguments)
 
 
 class BashRoutine(AbstractRoutine):
@@ -128,7 +105,7 @@ class BashRoutine(AbstractRoutine):
         os.chmod(self.code_path, os.stat(self.code_path).st_mode | stat.S_IEXEC)
 
     def run_executable(self, arguments):
-        self.last_execution = Execution(self.code_path, arguments)
+        return execute(self.code_path, arguments)
 
 
 class BatchRoutine(AbstractRoutine):
@@ -140,7 +117,7 @@ class BatchRoutine(AbstractRoutine):
         pass
 
     def run_executable(self, arguments):
-        self.last_execution = Execution(self.code_path, arguments)
+        return execute(self.code_path, arguments)
 
 
 def from_extension_and_code(extension, code):
