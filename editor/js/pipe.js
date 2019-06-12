@@ -1,4 +1,4 @@
-var url_base = 'http://127.0.0.1:5000';
+var url_base;
 
 var pipe = {
 
@@ -239,6 +239,21 @@ var pipe = {
             var seconds = JSON.parse(response);
             callback(seconds);
         });
+    },
+
+    setup: function() {
+        var address = "localhost:5000";
+        var addressStorageId = "PIPE_LAST_KNOWN_SEVER_ADRESS";
+
+        storedAddress = localStorage.getItem(addressStorageId);
+        if (storedAddress != null) {
+            address = storedAddress;
+        }
+
+        address = prompt(`Enter server address:`,  `localhost`); 
+        localStorage.setItem(addressStorageId, address);
+        
+        url_base = `http://${address}`;
     }
     
 }
