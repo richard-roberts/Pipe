@@ -17,6 +17,10 @@ graph = graphs.BasicGraph()
 library = graph.lib
 start_time = time.time()
 
+file_storage_directory = f"{os.path.dirname(os.path.abspath(__file__))}/uploads"
+if not os.path.exists(file_storage_directory):
+    os.makedirs(file_storage_directory)
+
 #
 # ---------------------------------------------------------------------------- #
 
@@ -104,16 +108,15 @@ def call_from_json(data):
     return True
 
 def call_upload(path, file):
-    directory = "/Users/richard-roberts/Development/Pipe/pipe/uploads"
-    filepath = os.path.join(directory, file.filename)
+    filepath = os.path.join(file_storage_directory, file.filename)
     file.save(filepath)
     library.create_or_update_file_template(path, filepath)
     return True
 
 def call_download(filepath):
-    directory = os.path.dirname(filepath)
+    file_storage_directory = os.path.dirname(filepath)
     filename = os.path.basename(filepath)
-    return send_from_directory(directory, filename, as_attachment=True)
+    return send_from_directory(file_storage_directory, filename, as_attachment=True)
 
 def call_time_since_start():
     return time.time() - start_time
