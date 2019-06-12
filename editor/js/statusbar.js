@@ -57,7 +57,8 @@ var statusbar = {
         statusbar.display = document.getElementById('statusbar-display');
         statusbar.right = document.getElementById('statusbar-right');
 
-        editInner.set(statusbar.left, "pipe >");
+        var ip = url_base.split("//")[1].split(":")[0];
+        editInner.set(statusbar.left, `${ip} >`);
         
         statusbar.updateSecondsPassedByServer();
         setInterval(statusbar.updateSecondsPassedByServer, 60000);
