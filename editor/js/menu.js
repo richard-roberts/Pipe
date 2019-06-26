@@ -213,9 +213,37 @@ var menu = {
     newNodeMenu: function() {
         editChildren.clear(menu.body);
 
+        editChildren.clear(menu.body);
+
+        var inner = `
+
+            <div class="menu-inner-container">
+
+                <div class="menu-small-section">
+                    <div class="menu-large-section-inner">
+                    </div>
+                </div>
+
+                <div class="menu-large-section">
+                    <h2>Available Templates</h2>
+                    <div class="menu-full-section-inner">
+                        <div id="template-tree"></div>
+                    </div>
+                </div>
+
+                <div class="menu-small-section">
+                </div>
+                
+            </div>
+        `
+
+        editInner.set(menu.body, inner);
+
+        var templateTree = document.getElementById("template-tree");
+
         pipe.list_templates(function(paths) {
             var tree = templates.renderTemplateTreeAsInterface(paths);
-            editChildren.append(menu.body, tree);
+            editChildren.append(templateTree, tree);
         });
     },
 
