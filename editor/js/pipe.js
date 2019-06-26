@@ -177,13 +177,13 @@ var pipe = {
             id: id
         }
         pipe.make_request("execute", data, function(response) {
-            if (response == "false") {
-                statusbar.displayError("execution failed");
-                return;
+            var response = JSON.parse(response);
+            if (response.success) {
+                var nodeData = response.output;
+                callback(nodeData);
+            } else {
+                statusbar.displayError(`execution failed: ${response.error}`);
             }
-            
-            var nodeData = JSON.parse(response);
-            callback(nodeData);
         });
     },
 
