@@ -26,6 +26,13 @@ var pipe = {
         xhr.send(formData);
     },
 
+    list_extensions: function(callback) {
+        pipe.make_request("list_extensions", {}, function(response) {
+            var extensions = JSON.parse(response);
+            callback(extensions);
+        });
+    },
+
     list_templates: function(callback) {
         pipe.make_request("list_templates", {}, function(response) {
             var templates = JSON.parse(response);

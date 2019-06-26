@@ -18,12 +18,6 @@ var menu = {
     newOrUpdateTemplateMenu: function(usePath="", useExt="py", useArgs="", useOuts="", useCode="") {
         editChildren.clear(menu.body);
 
-        var items = [];
-        ["py", "c", "rb", "sh", "bat"].forEach( ext => {
-            var item = `<option value="${ext}">${ext}</option>`;
-            items.push(item);
-        });
-
         var inner = `
 
             <div class="menu-inner-container">
@@ -44,7 +38,7 @@ var menu = {
                         <div>Type</div>
                     </div>
                     <div class="menu-large-section-inner">
-                        <select id="new-template-menu-ext"> ${items}</select>
+                        <select id="new-template-menu-ext"></select>
                     </div>
                 </div>
 
@@ -94,9 +88,17 @@ var menu = {
         var codeEditor = ace.edit("code-editor");
 
         pathEditor.value = usePath;
-        extEditor.value = useExt;
         argsEditor.value = useArgs;
         outsEditor.value = useOuts;
+
+        pipe.list_extensions(function(extensions) {
+            var exts = "";
+            extensions.forEach( ext => {
+                exts += `<option value="${ext}">${ext}</option>`;
+            });
+            editInner.set(extEditor, exts);
+            extEditor.value = useExt;
+        })
 
         codeEditor.setTheme(`ace/theme/${config.aceTheme}`);
         codeEditor.setValue(useCode);
