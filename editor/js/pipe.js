@@ -249,14 +249,17 @@ var pipe = {
     },
 
     setup: function() {
-        var address = "localhost:5000";
+        var address = "localhost:8000";
         var addressStorageId = "PIPE_LAST_KNOWN_SEVER_ADRESS";
         var storedAddress = localStorage.getItem(addressStorageId);
         if (storedAddress != null) {
             address = storedAddress;
         }
 
-        address = prompt(`Enter server address:`,  address); 
+        do {
+            address = prompt(`Enter server address:`,  storedAddress); 
+        } while (address == null); 
+        
         localStorage.setItem(addressStorageId, address);
         url_base = `http://${address}`;
     }
