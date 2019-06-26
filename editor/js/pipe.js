@@ -241,6 +241,18 @@ var pipe = {
         xhr.send();
     },
 
+    downloadData: function(filepath, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", `${url_base}/download?filepath=${filepath}`, true);
+        xhr.responseType = "blob";
+        xhr.onload = function(){
+            var urlCreator = window.URL || window.webkitURL;
+            var imageUrl = urlCreator.createObjectURL(this.response);
+            callback(imageUrl);
+        }
+        xhr.send();
+    },
+
     timeSinceStart: function(callback) {
         pipe.make_request("time_since_start", {}, function(response) {
             var seconds = JSON.parse(response);

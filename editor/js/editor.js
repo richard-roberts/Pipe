@@ -225,6 +225,7 @@ var editor = {
                 case 'n': menu.showMenu(); menu.newOrUpdateTemplateMenu(); break;
                 case 'p': menu.showMenu(); menu.newNodeMenu(); break;
                 case 'u': menu.showMenu(); menu.uploadMenu(); break;
+                case 'l': menu.showMenu(); menu.openLogger(); break;
                 case 'a': editor.assignArgument(); break;
                 case 'd': editor.deleteLastHovered(); break;
                 case ' ': editor.showTooltip(); break;
@@ -240,6 +241,9 @@ var editor = {
             return;
         }
 
+        switch(key) {
+            case 'Escape': menu.toggleMenu(); break;
+        }
     },
 
     refresh: function() {

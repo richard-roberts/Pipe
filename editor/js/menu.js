@@ -15,6 +15,14 @@ var menu = {
         document.getElementById('menu-body').setAttribute("style", "display:none;");
     },
 
+    toggleMenu: function() {
+        if (menu.open) {
+            menu.hideMenu();
+        } else {
+            menu.showMenu();
+        }
+    },
+
     newOrUpdateTemplateMenu: function(usePath="", useExt="py", useArgs="", useOuts="", useCode="") {
         editChildren.clear(menu.body);
 
@@ -378,6 +386,88 @@ var menu = {
 
     },
 
+    openLogger: function() {
+        editChildren.clear(menu.body);
+
+        var inner = `
+
+            <div class="menu-inner-container">
+
+                <div class="menu-small-section">
+                </div>
+
+                <div class="menu-small-section">
+                    <div class="menu-small-section-inner">
+                        <div>Target</div>
+                    </div>
+                    <div class="menu-large-section-inner">
+                        <div id="logger-target"></div>
+                    </div>
+                </div>
+
+                <div class="menu-large-section">
+                    <div class="menu-full-section-inner">
+                        <div id="logging-area"></div>
+                    </div>
+                </div>
+
+                <div class="menu-small-section">
+                </div>
+                
+            </div>
+        `
+
+        var target = editor.lastHovered;
+        var targetType = editor.lastHoveredType;
+
+        editInner.set(menu.body, inner);
+
+        var loggingTarget = document.getElementById("logger-target");
+        editInner.set(loggingTarget, target);
+
+        var loggingArea = document.getElementById("logging-area");
+
+        function logText() {
+            var parts = target.split(".");
+            var id = parts[0];
+            var name = parts[1];
+            pipe.queryNode(id, function(nodeData) {
+                var key = `${targetType}s`;
+                var varMap = nodeData[key];
+                if (name in varMap) {
+                    var message = `<p class="logging-text">${name}=${varMap[name]}</p>`;
+                    editInner.set(loggingArea, message);
+                } else {
+                }
+            });
+        }
+
+        function logFile() {
+            var parts = target.split(".");
+            var id = parts[0];
+            var name = parts[1];
+            pipe.queryNode(id, function(nodeData) {
+                var key = `${targetType}s`;
+                pipe.downloadData(nodeData[key]["filepath"], function(url) {
+                    var message = `<img class="logging-image" src="${url}"/>`;
+                    editInner.set(loggingArea, message);
+                });
+            });
+        }
+
+        if (targetType != 'arg' && targetType != 'out') {
+            statusbar.displayWarning(`cannot log values from ${targetType}`);
+        }
+
+        if (false) {
+            setInterval(logText, 200);
+        } else if (true) {
+            logFile();
+        } else {
+            statusbar.displayWarning("hover over a variable to start logging");
+        }
+    },
+
     setup: function() {
 
         // Store elements 
@@ -387,6 +477,7 @@ var menu = {
         document.getElementById('menu-toggle').onclick = menu.showMenu;
         document.getElementById('new-template-button').onclick = menu.openNewOrUpdateTemplateMenu;
         document.getElementById('new-node-button').onclick = menu.newNodeMenu;
+        document.getElementById('open-logger-button').onclick = menu.openLogger;
         document.getElementById('upload-file-button').onclick = menu.uploadMenu;
         document.getElementById('export-graph-button').onclick = editor.exportToFile;
         document.getElementById('settings-button').onclick = menu.settingsMenu;
