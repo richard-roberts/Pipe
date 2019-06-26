@@ -23,65 +23,73 @@ def execute(command, args):
 
 class AbstractRoutine(object):
 
-    def __init__(self, code, extension):
+    ext = None
+
+    def __init__(self, code):
         self.code = code
-        self.extension = extension
         self.code_path = ""
         self.last_execution = None
-
-    def prepare_executable(self):
-        pass        
 
     def run_executable(self, arguments):
         raise NotImplementedError("routines must implement `%s`" % self.run_executable.__name__)
         
     def execute(self, arguments):
-        _, self.code_path = tempfile.mkstemp(prefix="pipe", suffix=f".{self.extension}")
+        _, self.code_path = tempfile.mkstemp(prefix="pipe", suffix=f".{self.ext}")
         with open(self.code_path, "w") as f:
             f.write(self.code)
             f.seek(0)
-            self.prepare_executable()
             return self.run_executable(arguments)
 
     def as_json(self):
         return {
-            "extension": self.extension,
+            "extension": self.ext,
             "code": self.code
         }
 
 
 class CRoutine(AbstractRoutine):
 
-    def __init__(self, code):
-        super(CRoutine, self).__init__(code, "c")
-        self.exe_path = "./pipe_%s_exe" % (self.extension)
+    ext = "c"
 
-    def prepare_executable(self):
-        execute("gcc", [self.code_path, "-o", self.exe_path])
+    def __init__(self, code):
+        super(CRoutine, self).__init__(code)
 
     def run_executable(self, arguments):
-        return execute(self.exe_path, arguments)
+        _, exe_path = tempfile.mkstemp(prefix="pipe_exe", suffix=self.ext)
+        
+        p = subprocess.Popen(
+            ["gcc"] + [self.code_path, "-o", exe_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=os.environ.copy()
+        )   
+        p.wait()
+        _, error_bytes = p.communicate()
+        p.kill()
+        error = error_bytes.decode("utf-8")
+        if error: raise SystemError(error)
+        result = execute(exe_path, arguments)
+        os.remove(exe_path)
+        return result
 
 
 class PythonRoutine(AbstractRoutine):
 
-    def __init__(self, code):
-        super(PythonRoutine, self).__init__(code, "py")
+    ext = "py"
 
-    def prepare_executable(self):
-        pass
+    def __init__(self, code):
+        super(PythonRoutine, self).__init__(code)
 
     def run_executable(self, arguments):
         return execute("python", [self.code_path] + arguments)
-
+        
 
 class RubyRoutine(AbstractRoutine):
 
-    def __init__(self, code):
-        super(RubyRoutine, self).__init__(code, "rb")
+    ext = "rb"
 
-    def prepare_executable(self):
-        pass
+    def __init__(self, code):
+        super(RubyRoutine, self).__init__(code)
 
     def run_executable(self, arguments):
         return execute("ruby", [self.code_path] + arguments)
@@ -89,10 +97,12 @@ class RubyRoutine(AbstractRoutine):
 
 class BashRoutine(AbstractRoutine):
 
-    def __init__(self, code):
-        super(BashRoutine, self).__init__(code, "sh")
+    ext = "sh"
 
-    def prepare_executable(self):
+    def __init__(self, code):
+        super(BashRoutine, self).__init__(code)
+
+    def run_executable(self, arguments):
         f = open(self.code_path, "r")
         content = f.read()
         f.close()
@@ -104,33 +114,46 @@ class BashRoutine(AbstractRoutine):
         
         os.chmod(self.code_path, os.stat(self.code_path).st_mode | stat.S_IEXEC)
 
-    def run_executable(self, arguments):
         return execute(self.code_path, arguments)
 
 
 class BatchRoutine(AbstractRoutine):
 
-    def __init__(self, code):
-        super(BatchRoutine, self).__init__(code, "bat")
+    ext = "bat"
 
-    def prepare_executable(self):
-        pass
+    def __init__(self, code):
+        super(BatchRoutine, self).__init__(code)
 
     def run_executable(self, arguments):
         return execute(self.code_path, arguments)
 
 
+def list_extensions():
+    return [
+        CRoutine.ext,
+        PythonRoutine.ext,
+        MayaRoutine.ext,
+        RubyRoutine.ext,
+        BashRoutine.ext,
+        BatchRoutine.ext
+    ]
+
+
+def class_from_extension(ext):
+    return {
+        CRoutine.ext: CRoutine,
+        PythonRoutine.ext: PythonRoutine,
+        MayaRoutine.ext: MayaRoutine,
+        RubyRoutine.ext: RubyRoutine,
+        BashRoutine.ext: BashRoutine,
+        BashRoutine.ext: BashRoutine
+    }[ext]
+
+
 def from_extension_and_code(extension, code):
-    types = {
-        "c": CRoutine,
-        "py": PythonRoutine,
-        "rb": RubyRoutine,
-        "sh": BashRoutine,
-        "bat": BatchRoutine
-    }
-    if extension not in types.keys():
+    if extension not in list_extensions():
         raise ValueError("Cannot initialize routine with `%s` extension " % extension)
-    return types[extension](code)
+    return class_from_extension(extension)(code)
 
     
 def from_json(data):
