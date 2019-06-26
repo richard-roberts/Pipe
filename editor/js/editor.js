@@ -222,8 +222,8 @@ var editor = {
                 case 'm': menu.showMenu(); break;
                 case 'e': editor.exportToFile(); break;
                 case 's': editor.downloadFilepathViaArgument(); break;
-                case 'p': menu.showMenu(); menu.newOrUpdateTemplateMenu(); break;
-                case 'n': menu.showMenu(); menu.newNodeMenu(); break;
+                case 'n': menu.showMenu(); menu.newOrUpdateTemplateMenu(); break;
+                case 'p': menu.showMenu(); menu.newNodeMenu(); break;
                 case 'u': menu.showMenu(); menu.uploadMenu(); break;
                 case 'a': editor.assignArgument(); break;
                 case 'd': editor.deleteLastHovered(); break;
