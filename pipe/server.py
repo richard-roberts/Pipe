@@ -7,6 +7,7 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
 
+from pipe.graph import routines
 from pipe.graph import graphs
 
 
@@ -29,6 +30,9 @@ if not os.path.exists(file_storage_directory):
 # ---------------------------------------------------------------------------- #
 # Pipe API Wrapper
   
+def call_list_extensions():
+    return routines.list_extensions()
+
 def call_list_templates():
     return library.list_templates()
 
@@ -133,6 +137,10 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+@app.route("/list_extensions", methods=["GET"])
+@cross_origin()
+def list_extensions():
+    return json.dumps(call_list_extensions())
 
 @app.route("/list_templates", methods=["GET"])
 @cross_origin()
