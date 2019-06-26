@@ -63,6 +63,13 @@ var statusbar = {
         statusbar.updateSecondsPassedByServer();
         setInterval(statusbar.updateSecondsPassedByServer, 60000);
         setInterval(statusbar.updateSecondsPassedByClock, 1000);  
+
+        statusbar.left.addEventListener("click", function() {
+            pipe.changeUrlBase(function() {
+                location.reload();
+            });
+        });
+        
     },
 
     displayMessage: function(message) {

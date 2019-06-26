@@ -248,20 +248,40 @@ var pipe = {
         });
     },
 
-    setup: function() {
-        var address = "localhost:8000";
-        var addressStorageId = "PIPE_LAST_KNOWN_SEVER_ADRESS";
-        var storedAddress = localStorage.getItem(addressStorageId);
-        if (storedAddress != null) {
-            address = storedAddress;
-        }
+    addressStorageId: "PIPE_LAST_KNOWN_SERVER_ADRESS",
 
+    getStoredAddress: function() {
+        return localStorage.getItem(pipe.addressStorageId);
+    },
+
+    setStoredAddress: function(address) {
+        localStorage.setItem(pipe.addressStorageId, address);
+    },
+
+    setUrlBase: function(defaultAddress='localhost:8000') {
+        var address = pipe.getStoredAddress();
+        if (address == null) {
+            address = defaultAddress;
+        }
+        while (pipe.getStoredAddress() == null) {
+            pipe.setStoredAddress(
+                prompt(`Enter server address:`,  defaultAddress)
+            );
+        }
+        url_base = `http://${pipe.getStoredAddress()}`;
+    },
+
+    changeUrlBase: function(callback) {
         do {
-            address = prompt(`Enter server address:`,  storedAddress); 
-        } while (address == null); 
-        
-        localStorage.setItem(addressStorageId, address);
-        url_base = `http://${address}`;
+            pipe.setStoredAddress(
+                prompt(`Enter server address:`, pipe.getStoredAddress())
+            );
+        } while (pipe.getStoredAddress() == null);
+        callback();
+    },
+
+    setup: function() {
+        pipe.setUrlBase();
     }
     
 }
