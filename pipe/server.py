@@ -92,9 +92,29 @@ def call_delete_node(id):
 
 def call_execute(id):
     try:
-        return graph.execute_by_id(id).as_json()
-    except KeyError:
-        return False
+        return {
+            "success": True,
+            "output": graph.execute_by_id(id).as_json(),
+            "error": ""
+        }
+    except KeyError as e:
+        return {
+            "success": False,
+            "output": "",
+            "error": "No value is assigned to " + str(e)
+        }
+    except SystemError as e:
+        return {
+            "success": False,
+            "output": "",
+            "error": str(e)
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "output": "",
+            "error": "Unexpected failure: " + str(e)
+        }
 
 def call_list_nodes():
     return graph.list_nodes()
