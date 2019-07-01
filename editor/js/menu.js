@@ -338,7 +338,7 @@ var menu = {
                         <div>Pipe Theme</div>
                     </div>
                     <div class="menu-large-section-inner">
-                        <select id="settings-menu-pipe-theme"> ${pipeThemes}</select>
+                        <select id="settings-menu-pipe-theme">${pipeThemes}</select>
                     </div>
                 </div>
 
@@ -389,6 +389,12 @@ var menu = {
     openLogger: function() {
         editChildren.clear(menu.body);
 
+        var loggingTypes = [];
+        ["text", "image"].forEach( type => {
+            var item = `<option value="${type}">${type}</option>`;
+            loggingTypes.push(item);
+        });
+
         var inner = `
 
             <div class="menu-inner-container">
@@ -402,6 +408,15 @@ var menu = {
                     </div>
                     <div class="menu-large-section-inner">
                         <div id="logger-target"></div>
+                    </div>
+                </div>
+
+                <div class="menu-small-section">
+                    <div class="menu-small-section-inner">
+                        <div>Type</div>
+                    </div>
+                    <div class="menu-large-section-inner">
+                        <select id="logging-type">${loggingTypes}</select>
                     </div>
                 </div>
 
@@ -424,9 +439,9 @@ var menu = {
 
         var loggingTarget = document.getElementById("logger-target");
         editInner.set(loggingTarget, target);
-
+        var loggingType = document.getElementById("logging-type");
         var loggingArea = document.getElementById("logging-area");
-
+        
         function logText() {
             var parts = target.split(".");
             var id = parts[0];
@@ -435,22 +450,27 @@ var menu = {
                 var key = `${targetType}s`;
                 var varMap = nodeData[key];
                 if (name in varMap) {
-                    var message = `<p class="logging-text">${name}=${varMap[name]}</p>`;
+                    var message = `<p class="logging-text">${varMap[name]}</p>`;
                     editInner.set(loggingArea, message);
                 } else {
                 }
             });
         }
 
-        function logFile() {
+        function logImage() {
             var parts = target.split(".");
             var id = parts[0];
             var name = parts[1];
             pipe.queryNode(id, function(nodeData) {
                 var key = `${targetType}s`;
-                pipe.downloadData(nodeData[key]["filepath"], function(url) {
-                    var message = `<img class="logging-image" src="${url}"/>`;
-                    editInner.set(loggingArea, message);
+                pipe.downloadData(nodeData[key][name], function(url) {
+                    var e = document.getElementById("logging-image");
+                    if (e == null) {
+                        var img = `<img id="logging-image" class="logging-image" src="${url}"/>`;
+                        editInner.set(loggingArea, img);
+                    } else {
+                        e.setAttribute("src", url);
+                    }
                 });
             });
         }
@@ -459,13 +479,21 @@ var menu = {
             statusbar.displayWarning(`cannot log values from ${targetType}`);
         }
 
-        if (false) {
-            setInterval(logText, 200);
-        } else if (true) {
-            logFile();
-        } else {
-            statusbar.displayWarning("hover over a variable to start logging");
+        var pid = null;
+        function changeLoggingType() {
+            if (pid != null) {
+                clearInterval(pid);
+                pid = null;
+            }
+            switch(loggingType.value) {
+                case 'text': logText(); pid = setInterval(logText, 5000); break;
+                case 'image': logImage(); pid = setInterval(logImage, 5000); break;
+                default: statusbar.displayError(`${loggingType.value} is not a valid logging type`); break;
+            }    
         }
+
+        loggingType.onchange = changeLoggingType;
+        changeLoggingType();
     },
 
     setup: function() {
