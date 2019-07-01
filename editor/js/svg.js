@@ -1,15 +1,19 @@
 var svg = {
     
     type: "http://www.w3.org/2000/svg",
-    ow: window.innerWidth,
-    oh: window.innerHeight,
-    w: window.innerWidth,
-    h: window.innerHeight,
-    x: -window.innerWidth / 2,
-    y: -(window.innerHeight) / 2,
-    scale: 1.0,
+    ow: null,
+    oh: null,
+    w: null,
+    h: null,
+    x: null,
+    y: null,
+    scale: null,
 
     body: null,
+
+    storageKeyX: "PIPE-X",
+    storageKeyY: "PIPE-Y",
+    storageKeyScale: "PIPE-S",
 
     clear: function(element) {
         editChildren.clear(element);
@@ -83,12 +87,17 @@ var svg = {
         svg.x = -window.innerWidth / 2;
         svg.y = -(window.innerHeight) / 2;
         svg.scale = 1.0;
+        localStorage.setItem(svg.storageKeyX, svg.x);
+        localStorage.setItem(svg.storageKeyY, svg.y);
+        localStorage.setItem(svg.storageKeyScale, svg.scale);
         svg.updateView();
     },
 
     shiftView: function(x, y) {
         svg.x -= x * svg.scale;
         svg.y -= y * svg.scale;
+        localStorage.setItem(svg.storageKeyX, svg.x);
+        localStorage.setItem(svg.storageKeyY, svg.y);
         svg.updateView();
     },
 
@@ -100,6 +109,9 @@ var svg = {
         svg.h = svg.oh * svg.scale;
         svg.x = -svg.w / 2 + offsetX;
         svg.y = -svg.h / 2 + offsetY;
+        localStorage.setItem(svg.storageKeyX, svg.x);
+        localStorage.setItem(svg.storageKeyY, svg.y);
+        localStorage.setItem(svg.storageKeyScale, svg.scale);
         svg.updateView();
     },
 
@@ -185,7 +197,15 @@ var svg = {
     },
 
     setup: function() {
+        svg.ow = window.innerWidth;
+        svg.oh = window.innerHeight;
+        svg.x = localStorage.getItem(svg.storageKeyX) == undefined || localStorage.getItem(svg.storageKeyX) == NaN ? -window.innerWidth / 2 : parseInt(localStorage.getItem(svg.storageKeyX));
+        svg.y = localStorage.getItem(svg.storageKeyY) == undefined || localStorage.getItem(svg.storageKeyY) == NaN ? -(window.innerHeight) / 2 : parseInt(localStorage.getItem(svg.storageKeyY));
+        svg.scale = localStorage.getItem(svg.storageKeyScale) == undefined || localStorage.getItem(svg.storageKeyScale) == NaN ? 1.0 : parseInt(localStorage.getItem(svg.storageKeyScale));
+        svg.w = svg.ow * svg.scale;
+        svg.h = svg.oh * svg.scale;
         svg.body = document.getElementById("editor-body");
+        svg.clear(svg.body);
         svg.updateView();
     },
 }

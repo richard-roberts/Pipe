@@ -13,7 +13,7 @@ var nodes = {
         );
 
         // Group
-        var group = svg.newGroup(nodeData.x, nodeData.y, parent=null, id=nodeData.id);
+        var group = svg.newGroup(nodeData.x / svg.scale, nodeData.y / svg.scale, parent=null, id=nodeData.id);
 
         // Background
         var background = svg.newRect(0, 0, w, h, parent=group);

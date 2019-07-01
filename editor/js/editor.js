@@ -332,8 +332,6 @@ var editor = {
             statusbar.displayMessage("Graph render complete");
         }
 
-        svg.clear(svg.body);
-        svg.resetView();
         var actions = [renderGrid, renderNodes, renderEdges, setEvents, renderComplete];
         actions.shift()(actions);
     },
