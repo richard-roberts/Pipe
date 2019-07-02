@@ -9,7 +9,12 @@ var pipe = {
             type: 'GET', 
             crossDomain: true,
             data: data, 
-            success: callback
+            success: callback,
+            error: function(e) { 
+                statusbar.displayError("Server error: " + e.status + ", " + e.statusText);
+                console.log(command);
+                console.log(data);
+            }
         });
     },
 
