@@ -56,7 +56,7 @@ def call_rename_template(old_path, new_path):
 
 def call_remove_template(path):
     library.remove(path)
-    graph.remove_template(path)
+    graph.remove_template_by_path(path)
     return True
 
 def call_new_node(path, x=0, y=0):

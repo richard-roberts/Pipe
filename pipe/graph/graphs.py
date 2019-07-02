@@ -110,10 +110,10 @@ class BasicGraph:
             if node.path == old_path:
                 node.path = new_path
 
-    def remove_template(self, template):
+    def remove_template_by_path(self, path):
         nodes_to_remove = []
         for node in self.nodes.values():
-            if node.template == template:
+            if node.path == path:
                 nodes_to_remove.append(node)
         for node in nodes_to_remove:
             self.delete_node(node.node_id)
