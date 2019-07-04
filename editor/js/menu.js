@@ -369,6 +369,7 @@ var menu = {
         pipeTheme.value = config.theme.key;
         pipeTheme.onchange = function(e) {
             config.switchTheme(pipeTheme.value);
+            localStorage.setItem("PIPE-PIPE-THEME", pipeTheme.value);
             editor.refresh();
         }
 
@@ -376,12 +377,14 @@ var menu = {
         aceTheme.value = config.aceTheme;
         aceTheme.onchange = function(e) {
             config.aceTheme = aceTheme.value;
+            localStorage.setItem("PIPE-ACE-THEME", aceTheme.value);
         }
 
         var scrollSpeed = document.getElementById('settings-menu-scroll');
         scrollSpeed.value = config.scrollSpeed;
         scrollSpeed.onchange = function(e) {
             config.scrollSpeed = parseFloat(scrollSpeed.value);
+            localStorage.setItem("PIPE-SCROLL-SPEED", scrollSpeed.value);
         }
 
     },

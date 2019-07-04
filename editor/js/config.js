@@ -30,6 +30,16 @@ function hslToHex(h, s, l) {
 }
 
 var themes = {
+
+    fromKey: function(key) {
+        var selectedTheme = null;
+        [themes.darkIce, themes.vapour].forEach( theme => {
+            if (key == theme.key) {
+                selectedTheme = theme;
+            }
+        });
+        return selectedTheme;
+    },
     
     darkIce: {
 
@@ -109,10 +119,9 @@ var themes = {
 
 var config = {
 
-    theme: themes.darkIce,
-    aceTheme: "gob",
-
-    scrollSpeed: 0.001,
+    theme: null,
+    aceTheme: null,
+    scrollSpeed: null,
 
     editor: {
         background: hslToHex(0,0,0),
@@ -172,6 +181,9 @@ var config = {
     },
 
     setup: function() {
+        config.theme = localStorage.getItem("PIPE-PIPE-THEME") == undefined ? themes.darkIce : themes.fromKey(localStorage.getItem("PIPE-PIPE-THEME")),
+        config.aceTheme = localStorage.getItem("PIPE-ACE-THEME") == undefined ? "gob" : localStorage.getItem("PIPE-ACE-THEME"),
+        config.scrollSpeed = localStorage.getItem("PIPE-SCROLL-SPEED") == undefined ? 0.001 : parseFloat(localStorage.getItem("PIPE-SCROLL-SPEED")),
         config.theme.apply();
         config.updateCSS();
     },
