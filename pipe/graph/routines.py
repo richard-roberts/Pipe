@@ -5,7 +5,7 @@ import tempfile
 import json
 
 
-def execute(command, args):
+def execute(command, args, raise_on_error=True):
     p = subprocess.Popen(
         [command] + args,
         stdout=subprocess.PIPE,
@@ -16,7 +16,7 @@ def execute(command, args):
     output_bytes, error_bytes = p.communicate()
     p.kill()
     error = error_bytes.decode("utf-8")
-    if error:
+    if raise_on_error and error:
         raise ValueError(error)
     return output_bytes.decode("utf-8")
 
