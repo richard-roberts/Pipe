@@ -116,6 +116,7 @@ var menu = {
         function setAceModeFromExt() {
             switch (extEditor.value) {
                 case "py": codeEditor.session.setMode("ace/mode/python"); break;
+                case "mayapy": codeEditor.session.setMode("ace/mode/python"); break;
                 case "rb": codeEditor.session.setMode("ace/mode/ruby"); break;
                 case "c": codeEditor.session.setMode("ace/mode/c_cpp"); break;
                 case "sh": codeEditor.session.setMode("ace/mode/sh"); break;

@@ -84,6 +84,17 @@ class PythonRoutine(AbstractRoutine):
         return execute("python", [self.code_path] + arguments)
         
 
+class MayaRoutine(AbstractRoutine):
+
+    ext = "mayapy"
+
+    def __init__(self, code):
+        super(MayaRoutine, self).__init__(code)
+
+    def run_executable(self, arguments):
+        return execute("mayapy", [self.code_path] + arguments, False)
+        
+
 class RubyRoutine(AbstractRoutine):
 
     ext = "rb"
