@@ -5,7 +5,8 @@ var nodes = {
 
     createFromData: function(templateData, nodeData) {
         // Calculate metadata
-        var name = nodeData.path;
+        var parts = nodeData.path.split(".")
+        var name = parts[parts.length-1];
         var w = variables.w * 2 + variables.spacing * 2 + nodes.innerW;
         var h = nodes.label + Math.max(
             variables.measureHeight(templateData.args),
