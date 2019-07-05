@@ -12,7 +12,7 @@ def execute(command, args, raise_on_error=True):
         stderr=subprocess.PIPE,
         env=os.environ.copy()
     )
-    p.wait()
+    # p.wait()
     output_bytes, error_bytes = p.communicate()
     p.kill()
     error = error_bytes.decode("utf-8")
