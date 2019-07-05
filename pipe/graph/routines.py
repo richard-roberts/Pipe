@@ -16,8 +16,11 @@ def execute(command, args, raise_on_error=True):
     output_bytes, error_bytes = p.communicate()
     p.kill()
     error = error_bytes.decode("utf-8")
-    if raise_on_error and error:
-        raise ValueError(error)
+    if error:
+        if raise_on_error:
+            raise ValueError(error)
+        else:
+            print(error)
     return output_bytes.decode("utf-8")
 
 
