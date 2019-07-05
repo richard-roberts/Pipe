@@ -393,10 +393,7 @@ var editor = {
 
     exportToFile: function() {
         pipe.asJson(function(json) {
-            var name = prompt("Name:",  "graph"); 
-            if (name != null) { 
-                files.downloadContent(`${name}.json`, json);
-            }
+            files.downloadContent(`graph.json`, json);
         });
     },
 
