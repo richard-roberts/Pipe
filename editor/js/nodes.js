@@ -1,7 +1,7 @@
 var nodes = {
     
     label: 50,
-    innerW: 100,
+    innerW: 200,
 
     createFromData: function(templateData, nodeData) {
         // Calculate metadata

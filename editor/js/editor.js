@@ -420,8 +420,28 @@ var editor = {
         }); 
     },
 
+    // saveToLocal: function() {
+    //     pipe.asJson(function(json) {
+    //         localStorage.setItem("PIPE-LAST-KNOWN-GRAPH", JSON.stringify(json));
+    //         console.log("SAVING");
+    //     });
+    // },
+
+    // restoreFromLocal: function() {
+    //     var json = localStorage.getItem("PIPE-LAST-KNOWN-GRAPH");
+    //     pipe.fromJson(JSON.parse(json), function(success) {
+    //         if (success) {
+    //             editor.refresh();
+    //         }
+    //     });
+    // },
+
     setup: function() {
         editor.refresh();
+        // if (localStorage.getItem("PIPE-LAST-KNOWN-GRAPH") != null && localStorage.getItem("PIPE-LAST-KNOWN-GRAPH") != undefined) {
+        //     editor.restoreFromLocal();
+        // }
+        // setInterval(editor.saveToLocal, 1000);  
     }
     
 }
