@@ -30,7 +30,7 @@ class BasicNode:
 
     def evaluate(self):
         self.outputs = {}
-        result = self.template.execute(self.arguments)
+        result = self.template.execute(self.arguments, self.node_id)
         for key in result.keys():
             value = result[key]
             self.outputs[key] = value

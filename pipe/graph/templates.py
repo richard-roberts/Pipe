@@ -39,7 +39,7 @@ class BasicTemplate:
     def list_outputs(self):
         return [out.get_name() for out in self.outs]
 
-    def execute(self, arguments):
+    def execute(self, arguments, node_id):
         arg_data = []
         for arg in self.args:
             value = arguments[arg.name]
@@ -50,7 +50,7 @@ class BasicTemplate:
         if n_arg_data != n_args:
             raise ValueError("required %d arguments, but %d were given." % (n_arg_data, n_args))
 
-        result = self.routine.execute(arg_data)
+        result = self.routine.execute(arg_data, node_id)
 
         values = [v.strip() for v in result.split("\n") if v.strip() != ""]
         outputs = {}
