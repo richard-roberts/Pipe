@@ -1,0 +1,107 @@
+{
+    "edges": [
+        {
+            "arg_from": "Array_ref",
+            "arg_to": "Array_ref",
+            "node_id_from": 2338892556440,
+            "node_id_to": 2338891775280
+        }
+    ],
+    "library": {
+        "Generate.Noise.Uniform": {
+            "args": [
+                {
+                    "name": "seed"
+                },
+                {
+                    "name": "n"
+                },
+                {
+                    "name": "from"
+                },
+                {
+                    "name": "to"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "points"
+                }
+            ],
+            "routine": {
+                "code": "import sys\nimport random\nseed = int(sys.argv[1])\nn    = int(sys.argv[2])\ns    = float(sys.argv[3])\ne    = float(sys.argv[4])\nrandom.seed(seed)\ndelta = e - s\npoints = [\n   s + random.random() * delta   for i in range(n)\n]\nprint(points)\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "Math.Sets.Sum": {
+            "args": [
+                {
+                    "name": "points"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "summed"
+                }
+            ],
+            "routine": {
+                "code": "import sys\nimport json\npoints = json.loads(sys.argv[1])\nsummed = sum(points)\nprint(summed)\n",
+                "extension": "py"
+            },
+            "type": "basic"
+        },
+        "test.Mean": {
+            "args": [
+                {
+                    "name": "Array_ref"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "Mean"
+                }
+            ],
+            "routine": {
+                "code": "import numpy as np\n\nx = deref(nodeIn[0])\n\ny = np.mean(x)\n\nnodeOut = y",
+                "extension": "pyInternal"
+            },
+            "type": "basic"
+        },
+        "test.RandomValues": {
+            "args": [
+                {
+                    "name": "N"
+                }
+            ],
+            "outs": [
+                {
+                    "name": "Array_ref"
+                }
+            ],
+            "routine": {
+                "code": "import numpy as np\n\nx = nodeIn[0]\n\ny = np.random.uniform(0,1,x)\n\nnodeOut = toref(y)",
+                "extension": "pyInternal"
+            },
+            "type": "basic"
+        }
+    },
+    "nodes": [
+        {
+            "args": {},
+            "id": 2338892556440,
+            "outs": {},
+            "path": "test.RandomValues",
+            "x": "-377",
+            "y": "-183"
+        },
+        {
+            "args": {},
+            "id": 2338891775280,
+            "outs": {},
+            "path": "test.Mean",
+            "x": "190",
+            "y": "28"
+        }
+    ]
+}
